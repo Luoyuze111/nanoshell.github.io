@@ -1,0 +1,1043 @@
+
+                <!DOCTYPE html>
+                <html lang="zh">
+                <head>
+                  <meta charset="UTF-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  <title>封号页</title>
+                  <style>
+                    *,
+                    *::before,
+                    *::after {
+                      box-sizing: border-box;
+                      margin: 0;
+                    }
+                    .iframe-outer {
+                      position: fixed;
+                      top: 0;
+                      left: 0;
+                      bottom: 0;
+                      right: 0;
+                      display: flex;
+                      justify-content: center;
+                      background-color: #E0E0E0;
+                    }
+                    .iframe-wrapper {
+                      width: 100%;
+                      height: 100%;
+                      margin: 0 auto;
+                      transform-origin: center top;
+                      flex-shrink: 0;
+                    }
+                    #dynamicIframe {
+                      border: none;
+                      width: 100%;
+                      height: 100%;
+                    }
+                  </style>
+                  <script>
+                const width = 402
+                const height = 874
+                const resolutionRatio = width && height ? width / height : 1
+                const pageNameMap = {
+                  'login_selection_page': '登录选择页',
+    'admin_login_page': '管理员登录页',
+    'user_login_page': '用户登录页',
+    'product_detail_page': '商品详情页',
+    'payment_selection_page': '支付方式选择页',
+    'pending_order_page': '待处理订单页',
+    'shopping_cart_page': '购物车页',
+    'messages_page': '消息页',
+    'customer_service_chat_page': '客服聊天页',
+    'my_page': '我的页',
+    'user_info_page': '用户信息页',
+    'order_history_page': '订单记录页',
+    'settings_page': '设置页',
+    'admin_dashboard_page': '管理员仪表盘',
+    'admin_product_management_page': '商品管理页',
+    'admin_customer_service_page': '管理员客服页',
+    'page_857254': '封号页',
+    'page_860225': '订单管理页面',
+    'page_861458': '主页',
+    'page_863059': '微信支付',
+    'page_863244': '论坛交流'
+                }
+                function setIframeSize(w, h) {
+                  const currentContainerRadio = w / h
+                  let widthValue = w
+                  let heightValue = h
+                  let zoom = 1
+                  if (currentContainerRadio > resolutionRatio) {
+                    widthValue = h * resolutionRatio
+                    heightValue = h
+                  } else {
+                    widthValue = w
+                    heightValue = w / resolutionRatio
+                  }
+                  zoom = width ? widthValue / width : 1
+                  return {
+                    width: widthValue / zoom + 'px',
+                    height: heightValue / zoom + 'px',
+                    zoom,
+                  }
+                }
+                function adjustIframeSize() {
+                  const iframeWrapper = document.querySelector(".iframe-wrapper")
+                  const { width, height, zoom } = setIframeSize(window.innerWidth, window.innerHeight)
+                  iframeWrapper.style.height = height
+                  iframeWrapper.style.width = width
+                  iframeWrapper.style.transform = 'scale(' + zoom + ')'
+                }
+                function sanitizeFilename(name) {
+                  return name.replace(/[\/:*?"<>|]/g, '_')
+                }
+                function handlePostMessage(event) {
+                  if (!event.data) {
+                    return
+                  }
+                  const { type, targetPageId } = event.data
+                  const targetPageName = pageNameMap[targetPageId]
+                  if (type === "iframeNavigation" && targetPageId && targetPageName) {
+                    window.location.href = targetPageName + '.html'
+                  }
+                }
+                window.addEventListener('message', handlePostMessage)
+                window.onload = adjustIframeSize
+                window.onresize = adjustIframeSize
+                window.onunload = () => {
+                  window.removeEventListener('message', handlePostMessage)
+                }
+              </script>
+                </head>
+                <body>
+                  <div class="iframe-outer">
+                    <div class="iframe-wrapper">
+                      <iframe id="dynamicIframe" srcdoc='<html lang="zh" data-theme="business"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>封号页</title>
+    <link href="./assets/static/uxbot/daisyui@5.css" rel="stylesheet" type="text/css">
+    <script src="./assets/static/uxbot/tailwind-browser@4.js"></script>
+    <link href="./assets/static/uxbot/daisyui-themes.css" rel="stylesheet" type="text/css">
+    <script src="./assets/3/3.1.1/iconify.min.js"></script>
+    <style>
+/* CSS code for common usage*/
+/* daisyUI Theme Variables Customization
+* Based on the selected daisyUI theme and UI guidance requirements,
+* customize only the CSS variables that need to be different from the theme defaults.
+* Available theme variables for customization:
+*/
+
+/* Only modify if different from chosen theme defaults */
+:root {
+    /* Brand Colors based on UI guidance - deep navy blue corporate theme */
+    --color-primary: rgba(10, 28, 63, 1); /* #0A1C3F deep navy blue for CTAs */
+    --color-primary-content: rgba(248, 248, 248, 1); /* Off-white text on primary */
+    --color-secondary: rgba(44, 44, 44, 1); /* #2C2C2C charcoal for secondary elements */
+    --color-secondary-content: rgba(248, 248, 248, 1);
+    --color-accent: rgba(107, 114, 128, 1); /* #6B7280 medium grey for accents */
+    --color-accent-content: rgba(255, 255, 255, 1);
+
+    /* Base colors for dark corporate background */
+    --color-base-100: rgba(26, 26, 26, 1); /* #1A1A1A charcoal main background */
+    --color-base-200: rgba(44, 44, 44, 1); /* #2C2C2C graphite for cards */
+    --color-base-300: rgba(75, 85, 99, 1); /* #4B5563 for borders */
+    --color-base-content: rgba(248, 248, 248, 1); /* #F8F8F8 off-white text */
+
+    /* Semantic colors - muted and desaturated */
+    --color-success: rgba(34, 139, 34, 1); /* #228B22 muted dark green */
+    --color-success-content: rgba(255, 255, 255, 1);
+    --color-warning: rgba(184, 134, 11, 1); /* #B8860B subtle amber */
+    --color-warning-content: rgba(0, 0, 0, 1);
+    --color-error: rgba(139, 69, 19, 1); /* #8B4513 deep muted red */
+    --color-error-content: rgba(255, 255, 255, 1);
+    --color-info: rgba(70, 130, 180, 1); /* #4682B4 desaturated blue */
+    --color-info-content: rgba(255, 255, 255, 1);
+
+    /* Border radius for restrained rounded corners */
+    --radius-box: 0.375rem; /* 6px rounded corners */
+    --radius-field: 0.5rem; /* 8px for input fields */
+    --radius-selector: 0.25rem; /* 4px for smaller elements */
+
+    /* Border for subtle separations */
+    --border: 1px;
+}
+
+/* Mobile-specific optimizations */
+.mobile-container {
+    max-width: 402px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background-color: var(--color-base-100);
+}
+
+/* Touch-friendly buttons and interactive elements */
+.touch-target {
+    min-height: 48px;
+    min-width: 48px;
+}
+
+/* Secondary text color for metadata */
+.text-secondary-gray {
+    color: rgba(156, 163, 175, 1); /* #9CA3AF lighter grey for secondary text */
+}
+
+/* Safe area padding for mobile devices */
+.safe-area-top {
+    padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Material and craftsmanship feel with subtle micro-textures */
+.card-surface {
+    background: linear-gradient(135deg, var(--color-base-200) 0%, rgba(44, 44, 44, 0.95) 100%);
+    backdrop-filter: blur(10px);
+}
+
+/* Subtle shadow effects for depth */
+.elevated-surface {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+/* Typography adjustments for spacious line height */
+.spacious-text {
+    line-height: 1.6;
+}
+
+.comfortable-spacing {
+    margin-bottom: 1rem;
+}
+</style> <style>
+.card-surface::before {
+    content: &#39;&#39;;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.02) 1px, transparent 0);
+    background-size: 24px 24px;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0.5;
+}
+.user-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid transparent;
+}
+.user-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.5);
+    border-color: var(--color-base-300);
+}
+.user-card:has(input:checked) {
+    border-color: var(--color-primary);
+}
+.user-card .collapse-title {
+    transition: all 0.3s ease;
+}
+.user-card:has(input:checked) .collapse-title {
+    background-color: hsla(var(--p) / 0.1);
+}
+
+.user-avatar {
+    border-radius: var(--radius-box);
+    overflow: hidden;
+    border: 1px solid var(--color-base-300);
+}
+
+.status-badge {
+    animation: subtle-pulse 2.5s infinite ease-in-out;
+}
+@keyframes subtle-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.85; transform: scale(0.98); }
+}
+
+.dropdown-content a:hover {
+    background-color: var(--color-primary);
+    color: var(--color-primary-content);
+}
+
+.input:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+.ban-history-item {
+    border-left: 3px solid var(--color-base-300);
+    padding-left: 1rem;
+    position: relative;
+}
+.ban-history-item.active {
+    border-left-color: var(--color-error);
+}
+.ban-history-item::before {
+    content: &#39;&#39;;
+    position: absolute;
+    left: -6.5px;
+    top: 6px;
+    width: 10px;
+    height: 10px;
+    border-radius: 9999px;
+    background-color: var(--color-base-300);
+    border: 2px solid var(--color-base-100);
+}
+.ban-history-item.active::before {
+    background-color: var(--color-error);
+}
+.admin-badge {
+    border-color: var(--color-info);
+    color: var(--color-info);
+    font-weight: bold;
+    background: transparent;
+    animation: none; /* Override pulse for admin badge */
+}
+
+/* 封禁信息显示样式 */
+.ban-info-display {
+    background: hsla(var(--er) / 0.1);
+    padding: 2px 6px;
+    border-radius: var(--radius-selector);
+    border-left: 2px solid var(--color-error);
+}
+</style>
+  <script src="https://assets.qingshuxuetang.com/static/uxbot/25_6/holder.js"></script></head>
+  <body class="mobile-container bg-base-100">
+    <div data-section-id="common_header" data-section-type="common_header" class="sticky top-0 z-40 bg-base-200 border-b border-base-300 safe-area-top elevated-surface">
+    <div class="navbar px-4 py-2 min-h-14">
+        <!-- Left side - Back button -->
+        <div class="navbar-start">
+            <button class="btn btn-ghost btn-sm btn-circle touch-target header-back-btn" onclick="handleBackNavigation()">
+                <span class="iconify text-base-content" data-icon="heroicons:arrow-left" data-width="20"></span>
+            </button>
+        </div>
+
+        <!-- Center - Title or Search -->
+        <div class="navbar-center flex-1 mx-4">
+            <!-- Default title display -->
+            <h1 class="text-lg font-semibold text-base-content header-title w-max spacious-text">页面标题</h1>
+            
+            <!-- Search input (hidden by default) -->
+            <div class="form-control w-full max-w-xs header-search hidden">
+                <input type="text" placeholder="搜索商品..." class="input input-bordered input-sm w-full bg-base-100 text-base-content">
+            </div>
+        </div>
+
+        <!-- Right side - Action buttons -->
+        <div class="navbar-end">
+            <!-- Search toggle button -->
+            <button class="btn btn-ghost btn-sm btn-circle touch-target header-search-btn hidden">
+                <span class="iconify text-base-content" data-icon="heroicons:magnifying-glass" data-width="20"></span>
+            </button>
+
+            <!-- Cart button with badge -->
+            <div class="indicator header-cart-btn hidden">
+                <span class="indicator-item badge badge-primary cart-badge hidden">0</span>
+                <button class="btn btn-ghost btn-sm btn-circle touch-target" onclick="navigateTo(&#39;shopping_cart_page&#39;)">
+                    <span class="iconify text-base-content" data-icon="heroicons:shopping-cart" data-width="20"></span>
+                </button>
+            </div>
+
+            <!-- More options menu -->
+            <div class="dropdown dropdown-end header-more-menu hidden">
+                <button tabindex="0" class="btn btn-ghost btn-sm btn-circle touch-target">
+                    <span class="iconify text-base-content" data-icon="heroicons:ellipsis-vertical" data-width="20"></span>
+                </button>
+                <ul tabindex="0" class="dropdown-content z-50 menu p-2 shadow bg-base-200 rounded-box w-52 mt-2 elevated-surface">
+                    <li><a onclick="showToast(&#39;分享功能开发中&#39;)" class="text-base-content">分享</a></li>
+                    <li><a onclick="showToast(&#39;举报功能开发中&#39;)" class="text-base-content">举报</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+[data-section-id="common_header"] .navbar {
+    height: 56px;
+}
+
+[data-section-id="common_header"] .header-back-btn:hover {
+    background-color: var(--color-base-300);
+    transition: background-color 0.2s ease;
+}
+
+[data-section-id="common_header"] .header-title {
+    text-align: center;
+    line-height: 1.2;
+}
+
+[data-section-id="common_header"] .header-search input:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+[data-section-id="common_header"] .btn-circle:hover {
+    transform: scale(1.05);
+    transition: transform 0.1s ease;
+}
+
+[data-section-id="common_header"] .cart-badge {
+    font-size: 10px;
+    min-height: 16px;
+    height: 16px;
+    padding: 0 4px;
+}
+</style>
+
+<script>
+(function() {
+    // Header configuration function
+    window.configureHeader = function(options = {}) {
+        const header = document.querySelector(&#39;[data-section-id="common_header"]&#39;);
+        if (!header) return;
+
+        const {
+            title = &#39;页面标题&#39;,
+            showBackButton = true,
+            showSearchButton = false,
+            showSearchInput = false,
+            showCartButton = false,
+            showMoreMenu = false,
+            onSearch = null,
+            onCart = null
+        } = options;
+
+        // Update title
+        const titleElement = header.querySelector(&#39;.header-title&#39;);
+        titleElement.textContent = title;
+
+        // Toggle back button
+        const backBtn = header.querySelector(&#39;.header-back-btn&#39;);
+        backBtn.style.display = showBackButton ? &#39;flex&#39; : &#39;none&#39;;
+
+        // Toggle search elements
+        const searchBtn = header.querySelector(&#39;.header-search-btn&#39;);
+        const searchInput = header.querySelector(&#39;.header-search&#39;);
+        searchBtn.classList.toggle(&#39;hidden&#39;, !showSearchButton);
+        searchInput.classList.toggle(&#39;hidden&#39;, !showSearchInput);
+        titleElement.classList.toggle(&#39;hidden&#39;, showSearchInput);
+
+        // Toggle cart button
+        const cartBtn = header.querySelector(&#39;.header-cart-btn&#39;);
+        cartBtn.classList.toggle(&#39;hidden&#39;, !showCartButton);
+
+        // Toggle more menu
+        const moreMenu = header.querySelector(&#39;.header-more-menu&#39;);
+        moreMenu.classList.toggle(&#39;hidden&#39;, !showMoreMenu);
+
+        // Handle search toggle
+        if (showSearchButton &amp;&amp; !showSearchInput) {
+            searchBtn.onclick = function() {
+                searchInput.classList.remove(&#39;hidden&#39;);
+                titleElement.classList.add(&#39;hidden&#39;);
+                searchBtn.classList.add(&#39;hidden&#39;);
+                const input = searchInput.querySelector(&#39;input&#39;);
+                input.focus();
+            };
+        }
+
+        // Handle search input
+        if (showSearchInput &amp;&amp; onSearch) {
+            const input = searchInput.querySelector(&#39;input&#39;);
+            input.addEventListener(&#39;input&#39;, function(e) {
+                onSearch(e.target.value);
+            });
+        }
+
+        // Update cart badge
+        if (showCartButton) {
+            updateCartBadge();
+        }
+    };
+
+    function updateCartBadge() {
+        const cartBadge = document.querySelector(&#39;[data-section-id="common_header"] .cart-badge&#39;);
+        const count = window.getCartItemCount ? window.getCartItemCount() : 0;
+        if (cartBadge) {
+            if (count > 0) {
+                cartBadge.textContent = count > 99 ? &#39;99+&#39; : count;
+                cartBadge.classList.remove(&#39;hidden&#39;);
+            } else {
+                cartBadge.classList.add(&#39;hidden&#39;);
+            }
+        }
+    }
+
+    // Default header configuration
+    document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
+        configureHeader();
+    });
+
+})();
+</script>
+    <main class="p-4 space-y-6 pb-24">
+      <section id="UserAccountOverview">
+        <div data-type="container" class="grid grid-cols-3 gap-4">
+          <div class="card-surface rounded-box p-4 text-center elevated-surface">
+            <p data-type="text" id="totalUsersCount" class="text-2xl font-semibold text-base-content">
+              0
+            </p>
+            <p data-type="text" class="text-xs text-base-content/70 mt-1 spacious-text">
+              总用户数
+            </p>
+          </div>
+          <div class="card-surface rounded-box p-4 text-center elevated-surface">
+            <p data-type="text" id="bannedUsersCount" class="text-2xl font-semibold text-error">
+              0
+            </p>
+            <p data-type="text" class="text-xs text-base-content/70 mt-1 spacious-text">
+              已封禁
+            </p>
+          </div>
+          <div class="card-surface rounded-box p-4 text-center elevated-surface">
+            <p data-type="text" id="activeUsersCount" class="text-2xl font-semibold text-success">
+              0
+            </p>
+            <p data-type="text" class="text-xs text-base-content/70 mt-1 spacious-text">
+              激活用户
+            </p>
+          </div>
+        </div>
+      </section>
+      <section id="AccountSearchFilter">
+        <div data-type="container" class="flex flex-col gap-4">
+          <div class="flex items-center gap-2">
+            <div class="join flex-1 relative">
+              <input type="text" placeholder="搜索用户ID或昵称" data-type="input" id="searchInput" class="input input-bordered join-item w-full bg-base-200 focus:bg-base-100 spacious-text pr-10"><button id="clearSearchBtn" class="btn btn-ghost btn-circle absolute right-12 top-1/2 -translate-y-1/2 hidden" onclick="clearSearch()">
+                <span class="iconify text-base-content/50" data-icon="heroicons:x-circle-solid" data-width="20"></span></button><button data-type="button" class="btn btn-primary join-item touch-target" onclick="handleSearch()">
+                <span class="iconify text-primary-content" data-icon="heroicons:magnifying-glass" data-width="20"></span>
+              </button>
+            </div>
+            <div class="dropdown dropdown-end">
+              <button tabindex="0" role="button" data-type="button" class="btn btn-ghost btn-square touch-target">
+                <span class="iconify text-base-content/70" data-icon="heroicons:funnel" data-width="20"></span>
+              </button>
+              <ul tabindex="0" class="dropdown-content z-[10] menu p-2 shadow bg-base-200 rounded-box w-48 mt-2 elevated-surface">
+                <li>
+                  <a class="spacious-text" onclick="handleFilter(&#39;all&#39;)">所有用户</a>
+                </li>
+                <li>
+                  <a class="spacious-text" onclick="handleFilter(&#39;banned&#39;)">仅看已封禁</a>
+                </li>
+                <li>
+                  <a class="spacious-text" onclick="handleFilter(&#39;active&#39;)">仅看正常</a>
+                </li>
+                <li>
+                  <a class="spacious-text" onclick="handleFilter(&#39;date&#39;)">按注册日期排序</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <div data-tip="功能开发中" class="tooltip">
+              <button data-type="button" disabled="" class="btn btn-sm btn-outline btn-secondary">
+                <span class="iconify" data-icon="heroicons:bolt" data-width="16"></span>
+                批量操作
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="UserAccountList" class="space-y-3 UserAccountList spark-custom-UserAccountList">
+        <!-- User cards will be dynamically generated here -->
+      </section>
+      <section id="UserActivityLog_Hidden" class="hidden">
+        <h3 class="text-lg font-semibold mb-3">用户活动日志</h3>
+        <div class="card card-surface p-4 text-base-content/70 text-center">
+          日志功能开发中
+        </div>
+      </section>
+    </main>
+    <dialog id="banUserModal" class="modal modal-bottom sm:modal-middle">
+      <div class="modal-box card-surface elevated-surface">
+        <h3 id="banModalTitle" class="font-bold text-lg spacious-text">
+          封禁用户
+        </h3>
+        <div class="py-4 space-y-4">
+          <div class="form-control">
+            <label class="label"><span class="label-text">封禁原因</span></label><textarea id="banReason" placeholder="请输入封禁原因..." rows="3" class="textarea textarea-bordered bg-base-200 focus:bg-base-100 spacious-text"></textarea>
+          </div>
+          <div class="form-control">
+            <label class="label"><span class="label-text">封禁时长</span></label><select id="banDuration" class="select select-bordered bg-base-200 focus:bg-base-100 spacious-text">
+              <option>1天</option>
+              <option>3天</option>
+              <option>7天</option>
+              <option>30天</option>
+              <option>永久</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-action">
+          <button id="confirmBanBtn" class="btn btn-error" onclick="confirmBan()">
+            确认封禁
+          </button>
+          <form method="dialog">
+            <button class="btn btn-ghost">取消</button>
+          </form>
+        </div>
+      </div>
+      <form method="dialog" class="modal-backdrop"><button>close</button></form>
+    </dialog>
+    <script>
+/* JavaScript code for common usage, should be wrapped in a closure */
+(function() {
+    // Navigation function for page transitions
+    window.navigateTo = function(targetPageId) {
+        // Trigger navigation to another page using the provided snippet
+        const isInIframe = window.self !== window.top;
+        const targetFileName = `${targetPageId}.html`;
+        if (isInIframe) {
+            window.parent.postMessage({
+                type: &#39;iframeNavigation&#39;,
+                targetPageId: targetPageId
+            }, &#39;*&#39;);
+        } else {
+            window.location.href = targetFileName;
+        }
+    };
+
+    // Utility function to handle back navigation
+    window.handleBackNavigation = function() {
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            navigateTo(&#39;home_page&#39;);
+        }
+    };
+
+    // Function to show toast notifications
+    window.showToast = function(message, type = &#39;info&#39;) {
+        const toast = document.createElement(&#39;div&#39;);
+        toast.className = `toast toast-bottom toast-center z-50`;
+        toast.innerHTML = `<div class="alert alert-${type}"><span>${message}</span></div>`;
+        document.body.appendChild(toast);
+        
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        }, 3000);
+    };
+
+    // Smooth scroll to top function
+    window.scrollToTop = function() {
+        window.scrollTo({
+            top: 0,
+            behavior: &#39;smooth&#39;
+        });
+    };
+
+    // Function to update bottom dock active state
+    window.updateBottomDockActive = function(activeTabId) {
+        const dockItems = document.querySelectorAll(&#39;[data-section-id="common_bottom_dock"] .dock-item&#39;);
+        dockItems.forEach(item => {
+            if (item.dataset.tabId === activeTabId) {
+                item.classList.add(&#39;dock-item-active&#39;);
+            } else {
+                item.classList.remove(&#39;dock-item-active&#39;);
+            }
+        });
+    };
+
+    // Initialize global app state
+    window.APP_GLOBALS = window.APP_GLOBALS || {};
+    
+    // Shopping cart management
+    window.APP_GLOBALS.cart = window.APP_GLOBALS.cart || [];
+    
+    window.addToCart = function(product) {
+        const existingItem = window.APP_GLOBALS.cart.find(item => item.id === product.id);
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            window.APP_GLOBALS.cart.push({...product, quantity: 1});
+        }
+        showToast(&#39;商品已添加到购物车&#39;, &#39;success&#39;);
+        updateCartBadge();
+    };
+
+    window.removeFromCart = function(productId) {
+        window.APP_GLOBALS.cart = window.APP_GLOBALS.cart.filter(item => item.id !== productId);
+        updateCartBadge();
+    };
+
+    window.updateCartQuantity = function(productId, quantity) {
+        const item = window.APP_GLOBALS.cart.find(item => item.id === productId);
+        if (item) {
+            if (quantity <= 0) {
+                removeFromCart(productId);
+            } else {
+                item.quantity = quantity;
+            }
+        }
+        updateCartBadge();
+    };
+
+    window.getCartTotal = function() {
+        return window.APP_GLOBALS.cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    };
+
+    window.getCartItemCount = function() {
+        return window.APP_GLOBALS.cart.reduce((total, item) => total + item.quantity, 0);
+    };
+
+    function updateCartBadge() {
+        const cartBadge = document.querySelector(&#39;[data-section-id="common_bottom_dock"] .cart-badge&#39;);
+        const count = getCartItemCount();
+        if (cartBadge) {
+            if (count > 0) {
+                cartBadge.textContent = count > 99 ? &#39;99+&#39; : count;
+                cartBadge.classList.remove(&#39;hidden&#39;);
+            } else {
+                cartBadge.classList.add(&#39;hidden&#39;);
+            }
+        }
+    }
+
+    // User session management
+    window.APP_GLOBALS.user = window.APP_GLOBALS.user || null;
+    window.APP_GLOBALS.isAdmin = window.APP_GLOBALS.isAdmin || false;
+
+    window.setUser = function(user, isAdmin = false) {
+        window.APP_GLOBALS.user = user;
+        window.APP_GLOBALS.isAdmin = isAdmin;
+    };
+
+    window.logout = function() {
+        window.APP_GLOBALS.user = null;
+        window.APP_GLOBALS.isAdmin = false;
+        window.APP_GLOBALS.cart = [];
+        navigateTo(&#39;login_selection_page&#39;);
+    };
+
+    // Form validation utilities
+    window.validateEmail = function(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    };
+
+    window.validatePhone = function(phone) {
+        const re = /^1[3-9]\d{9}$/;
+        return re.test(phone);
+    };
+
+    window.validatePassword = function(password) {
+        return password.length >= 6;
+    };
+
+})();
+</script><script>
+document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
+    if (window.configureHeader) {
+        window.configureHeader({
+            title: &#39;用户管理&#39;,
+            showBackButton: true
+        });
+    }
+
+    // "默认软件出厂是没有用户", 此处模拟用户数据在后续被加载
+    setTimeout(() => {
+        addInitialUsers();
+        updateUserStats();
+        renderUserList();
+    }, 100);
+
+    const searchInput = document.getElementById(&#39;searchInput&#39;);
+    const clearSearchBtn = document.getElementById(&#39;clearSearchBtn&#39;);
+
+    searchInput.addEventListener(&#39;input&#39;, function(e) {
+        const term = e.target.value.trim();
+        clearSearchBtn.classList.toggle(&#39;hidden&#39;, term.length === 0);
+        
+        clearTimeout(window.searchTimeout);
+        window.searchTimeout = setTimeout(() => {
+            handleSearch();
+        }, 300);
+    });
+    
+    searchInput.addEventListener(&#39;keypress&#39;, function(e) {
+        if (e.key === &#39;Enter&#39;) {
+            handleSearch();
+        }
+    });
+});
+
+const USER_DATA = {
+    users: [], // 默认没有用户
+    currentFilter: &#39;all&#39;,
+    searchTerm: &#39;&#39;
+};
+
+function addInitialUsers() {
+    // 增加一个用户NanoShell并标出管理员
+    // 根据登录页变量A增加其他用户 - 这里模拟增加3个用户
+    USER_DATA.users = [
+        { 
+            id: &#39;000001&#39;, 
+            name: &#39;NanoShell&#39;, 
+            status: &#39;active&#39;, 
+            registerDate: &#39;2020-01-01&#39;, 
+            avatar: &#39;https://placehold.co/48x48.png?text=NS&#39;,
+            banHistory: [],
+            isAdmin: true
+        },
+        { 
+            id: &#39;100003&#39;, 
+            name: &#39;TroubleMaker&#39;, 
+            status: &#39;banned&#39;, 
+            registerDate: &#39;2024-03-10&#39;,
+            avatar: &#39;https://placehold.co/48x48.png?text=TM&#39;,
+            banHistory: [
+                { reason: &#39;发布不当内容&#39;, duration: &#39;30天&#39;, date: &#39;2025-09-18&#39;, active: true, endDate: &#39;2025-10-18&#39; }
+            ],
+            isAdmin: false
+        },
+        { 
+            id: &#39;100004&#39;, 
+            name: &#39;ActiveUser&#39;, 
+            status: &#39;active&#39;, 
+            registerDate: &#39;2024-04-05&#39;,
+            avatar: &#39;https://placehold.co/48x48.png?text=AU&#39;,
+            banHistory: [],
+            isAdmin: false
+        },
+        { 
+            id: &#39;100005&#39;, 
+            name: &#39;RegularUser&#39;, 
+            status: &#39;active&#39;, 
+            registerDate: &#39;2024-05-12&#39;,
+            avatar: &#39;https://placehold.co/48x48.png?text=RU&#39;,
+            banHistory: [],
+            isAdmin: false
+        }
+    ];
+}
+
+function updateUserStats() {
+    const totalUsers = USER_DATA.users.length;
+    const bannedUsers = USER_DATA.users.filter(user => user.status === &#39;banned&#39;).length;
+    const activeUsers = totalUsers - bannedUsers;
+    
+    document.getElementById(&#39;totalUsersCount&#39;).textContent = totalUsers;
+    document.getElementById(&#39;bannedUsersCount&#39;).textContent = bannedUsers;
+    document.getElementById(&#39;activeUsersCount&#39;).textContent = activeUsers;
+}
+
+function getFilteredUsers() {
+    const searchTerm = document.getElementById(&#39;searchInput&#39;).value.toLowerCase();
+    let filtered = [...USER_DATA.users];
+    
+    if (searchTerm) {
+        filtered = filtered.filter(user => 
+            user.id.toLowerCase().includes(searchTerm) ||
+            user.name.toLowerCase().includes(searchTerm)
+        );
+    }
+    
+    switch (USER_DATA.currentFilter) {
+        case &#39;banned&#39;:
+            filtered = filtered.filter(user => user.status === &#39;banned&#39;);
+            break;
+        case &#39;active&#39;:
+            filtered = filtered.filter(user => user.status === &#39;active&#39;);
+            break;
+        case &#39;date&#39;:
+            filtered.sort((a, b) => new Date(b.registerDate) - new Date(a.registerDate));
+            break;
+    }
+    
+    filtered.sort((a, b) => (b.isAdmin ? 1 : 0) - (a.isAdmin ? 1 : 0));
+    return filtered;
+}
+
+function renderUserList() {
+    const container = document.getElementById(&#39;UserAccountList&#39;);
+    const users = getFilteredUsers();
+    
+    if (users.length === 0) {
+        container.innerHTML = `
+            <div class="text-center py-12 card-surface rounded-box">
+                <span class="iconify text-base-content/30" data-icon="heroicons:users" data-width="48"></span>
+                <p class="text-base-content/60 mt-4 spacious-text">${document.getElementById(&#39;searchInput&#39;).value ? &#39;未找到匹配的用户&#39; : &#39;当前没有注册用户&#39;}</p>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = users.map(user => createUserCard(user)).join(&#39;&#39;);
+}
+
+function createUserCard(user) {
+    const statusBadge = user.status === &#39;active&#39; 
+        ? &#39;<div class="badge badge-success badge-sm status-badge">正常</div>&#39;
+        : &#39;<div class="badge badge-error badge-sm status-badge">已封禁</div>&#39;;
+
+    const adminBadge = user.isAdmin ? &#39;<div class="badge badge-outline admin-badge badge-sm">管理员</div>&#39; : &#39;&#39;;
+
+    const currentBanInfo = user.status === &#39;banned&#39; ? user.banHistory.find(ban => ban.active) : null;
+    const banInfoDisplay = currentBanInfo 
+        ? `<div class="text-xs text-error mt-1 spacious-text ban-info-display">
+             原因: ${currentBanInfo.reason} | 至: ${currentBanInfo.endDate || &#39;永久&#39;}
+           </div>` : &#39;&#39;;
+
+    const banHistoryContent = user.banHistory.length > 0 
+        ? user.banHistory.map(ban => `
+            <div class="ban-history-item ${ban.active ? &#39;active&#39; : &#39;&#39;} mb-3">
+              <div class="flex justify-between items-start">
+                <div>
+                  <p class="font-medium text-base-content/90 spacious-text">理由: ${ban.reason}</p>
+                  <p class="text-xs text-base-content/70 spacious-text">时长: ${ban.duration}</p>
+                </div>
+                <div class="text-right flex-shrink-0 ml-4">
+                  <p class="text-xs text-base-content/70 spacious-text">${ban.date}</p>
+                  ${ban.active &amp;&amp; ban.endDate ? `<p class="text-xs text-error spacious-text">至: ${ban.endDate}</p>` : &#39;&#39;}
+                </div>
+              </div>
+            </div>`).join(&#39;&#39;)
+        : &#39;<p class="text-base-content/70 spacious-text text-center py-2">暂无封禁历史</p>&#39;;
+
+    return `
+        <div data-repeatable="true" data-type="container" class="collapse collapse-arrow user-card card-surface rounded-box">
+          <input type="checkbox" class="peer" />
+          <div class="collapse-title p-4 flex items-center justify-between min-h-0">
+            <div class="flex items-center gap-3 overflow-hidden flex-1">
+              <div class="avatar flex-shrink-0">
+                <div class="w-12 h-12 user-avatar">
+                    <img src="${user.avatar}" alt="${user.name} avatar" data-type="image" />
+                </div>
+              </div>
+              <div class="overflow-hidden flex-1">
+                <div class="flex items-center gap-2">
+                  <p data-type="text" class="font-semibold text-base-content truncate spacious-text">${user.name}</p>
+                  ${user.isAdmin ? adminBadge : statusBadge}
+                </div>
+                <p data-type="text" class="text-xs text-base-content/60 mt-1 spacious-text">ID: ${user.id}</p>
+                ${banInfoDisplay}
+              </div>
+            </div>
+          </div>
+          <div class="collapse-content px-4">
+            <div class="border-t border-base-300/50 pt-3">
+              <h4 data-type="text" class="font-medium text-sm text-base-content mb-3 spacious-text">用户操作</h4>
+              <div class="flex flex-wrap gap-2 mb-4">
+                ${user.isAdmin 
+                    ? &#39;<p class="text-base-content/60 text-sm spacious-text p-2">管理员账号无法封禁</p>&#39;
+                    : (user.status === &#39;active&#39;
+                        ? `<button class="btn btn-sm btn-error touch-target" onclick="showBanModal(&#39;${user.id}&#39;)"><span class="iconify" data-icon="heroicons:no-symbol" data-width="16"></span>封禁用户</button>`
+                        : `<button class="btn btn-sm btn-success touch-target" onclick="handleUnban(event, &#39;${user.id}&#39;)"><span class="iconify" data-icon="heroicons:check-circle" data-width="16"></span>解除封禁</button>`)
+                }
+                <button class="btn btn-sm btn-ghost" onclick="showToast(&#39;查看详情功能开发中&#39;)"><span class="iconify" data-icon="heroicons:information-circle" data-width="16"></span>详情</button>
+                <button class="btn btn-sm btn-ghost" onclick="showToast(&#39;发送通知功能开发中&#39;)"><span class="iconify" data-icon="heroicons:paper-airplane" data-width="16"></span>通知</button>
+              </div>
+              <h4 data-type="text" class="font-medium text-sm text-base-content mb-3 spacious-text">封禁历史</h4>
+              <div class="text-xs text-base-content/80 space-y-3">${banHistoryContent}</div>
+            </div>
+          </div>
+        </div>`;
+}
+
+function handleSearch() {
+    renderUserList();
+}
+
+function clearSearch() {
+    const searchInput = document.getElementById(&#39;searchInput&#39;);
+    searchInput.value = &#39;&#39;;
+    searchInput.dispatchEvent(new Event(&#39;input&#39;));
+    searchInput.focus();
+}
+
+function handleFilter(filterType) {
+    USER_DATA.currentFilter = filterType;
+    renderUserList();
+    const activeElement = document.activeElement;
+    if (activeElement &amp;&amp; activeElement.closest(&#39;.dropdown&#39;)) {
+        activeElement.closest(&#39;.dropdown&#39;).querySelector(&#39;button&#39;).focus();
+    }
+}
+
+function showBanModal(userId) {
+    const user = USER_DATA.users.find(u => u.id === userId);
+    if (!user) return;
+    
+    document.getElementById(&#39;banModalTitle&#39;).textContent = `封禁用户: ${user.name}`;
+    document.getElementById(&#39;confirmBanBtn&#39;).dataset.userid = userId;
+    document.getElementById(&#39;banReason&#39;).value = &#39;&#39;;
+    document.getElementById(&#39;banDuration&#39;).selectedIndex = 0;
+    
+    banUserModal.showModal();
+}
+
+function confirmBan() {
+    const userId = document.getElementById(&#39;confirmBanBtn&#39;).dataset.userid;
+    const reason = document.getElementById(&#39;banReason&#39;).value.trim();
+    const duration = document.getElementById(&#39;banDuration&#39;).value;
+    
+    if (!reason) {
+        showToast(&#39;请填写封禁原因&#39;, &#39;warning&#39;);
+        return;
+    }
+    
+    handleBan(userId, duration, reason);
+    banUserModal.close();
+}
+
+function handleBan(userId, duration, reason) {
+    const user = USER_DATA.users.find(u => u.id === userId);
+    if (user) {
+        user.status = &#39;banned&#39;;
+        user.banHistory.forEach(b => b.active = false);
+        const currentDate = new Date();
+        const endDate = duration === &#39;永久&#39; ? null : new Date(currentDate.getTime() + getDurationInMs(duration));
+        
+        user.banHistory.unshift({ 
+            reason: reason, 
+            duration, 
+            date: currentDate.toISOString().split(&#39;T&#39;)[0], 
+            active: true, 
+            endDate: endDate ? endDate.toISOString().split(&#39;T&#39;)[0] : null 
+        });
+        
+        updateUserStats();
+        renderUserList();
+        showToast(`用户 ${user.name} 已被封禁`, &#39;success&#39;);
+    }
+}
+
+function handleUnban(event, userId) {
+    event.stopPropagation();
+    const user = USER_DATA.users.find(u => u.id === userId);
+    if (user) {
+        user.status = &#39;active&#39;;
+        user.banHistory.forEach(ban => ban.active = false);
+        updateUserStats();
+        renderUserList();
+        showToast(`用户 ${user.name} 已解封`, &#39;info&#39;);
+    }
+}
+
+function getDurationInMs(duration) {
+    if (duration.includes(&#39;天&#39;)) {
+        return parseInt(duration) * 24 * 60 * 60 * 1000;
+    }
+    return 0; // for &#39;永久&#39;
+}
+
+</script>
+  
+
+<script>
+    setTimeout(() => {
+      Holder.run({
+        domain: "placehold.co"
+      })
+    }, 100)
+  </script></body></html>'></iframe>
+                    </div>
+                  </div>
+
+                </body>
+                </html>
+            

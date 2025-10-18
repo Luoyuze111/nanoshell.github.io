@@ -1,0 +1,620 @@
+
+                <!DOCTYPE html>
+                <html lang="zh">
+                <head>
+                  <meta charset="UTF-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  <title>商品详情页</title>
+                  <style>
+                    *,
+                    *::before,
+                    *::after {
+                      box-sizing: border-box;
+                      margin: 0;
+                    }
+                    .iframe-outer {
+                      position: fixed;
+                      top: 0;
+                      left: 0;
+                      bottom: 0;
+                      right: 0;
+                      display: flex;
+                      justify-content: center;
+                      background-color: #E0E0E0;
+                    }
+                    .iframe-wrapper {
+                      width: 100%;
+                      height: 100%;
+                      margin: 0 auto;
+                      transform-origin: center top;
+                      flex-shrink: 0;
+                    }
+                    #dynamicIframe {
+                      border: none;
+                      width: 100%;
+                      height: 100%;
+                    }
+                  </style>
+                  <script>
+                const width = 402
+                const height = 874
+                const resolutionRatio = width && height ? width / height : 1
+                const pageNameMap = {
+                  'login_selection_page': '登录选择页',
+    'admin_login_page': '管理员登录页',
+    'user_login_page': '用户登录页',
+    'product_detail_page': '商品详情页',
+    'payment_selection_page': '支付方式选择页',
+    'pending_order_page': '待处理订单页',
+    'shopping_cart_page': '购物车页',
+    'messages_page': '消息页',
+    'customer_service_chat_page': '客服聊天页',
+    'my_page': '我的页',
+    'user_info_page': '用户信息页',
+    'order_history_page': '订单记录页',
+    'settings_page': '设置页',
+    'admin_dashboard_page': '管理员仪表盘',
+    'admin_product_management_page': '商品管理页',
+    'admin_customer_service_page': '管理员客服页',
+    'page_857254': '封号页',
+    'page_860225': '订单管理页面',
+    'page_861458': '主页',
+    'page_863059': '微信支付',
+    'page_863244': '论坛交流'
+                }
+                function setIframeSize(w, h) {
+                  const currentContainerRadio = w / h
+                  let widthValue = w
+                  let heightValue = h
+                  let zoom = 1
+                  if (currentContainerRadio > resolutionRatio) {
+                    widthValue = h * resolutionRatio
+                    heightValue = h
+                  } else {
+                    widthValue = w
+                    heightValue = w / resolutionRatio
+                  }
+                  zoom = width ? widthValue / width : 1
+                  return {
+                    width: widthValue / zoom + 'px',
+                    height: heightValue / zoom + 'px',
+                    zoom,
+                  }
+                }
+                function adjustIframeSize() {
+                  const iframeWrapper = document.querySelector(".iframe-wrapper")
+                  const { width, height, zoom } = setIframeSize(window.innerWidth, window.innerHeight)
+                  iframeWrapper.style.height = height
+                  iframeWrapper.style.width = width
+                  iframeWrapper.style.transform = 'scale(' + zoom + ')'
+                }
+                function sanitizeFilename(name) {
+                  return name.replace(/[\/:*?"<>|]/g, '_')
+                }
+                function handlePostMessage(event) {
+                  if (!event.data) {
+                    return
+                  }
+                  const { type, targetPageId } = event.data
+                  const targetPageName = pageNameMap[targetPageId]
+                  if (type === "iframeNavigation" && targetPageId && targetPageName) {
+                    window.location.href = targetPageName + '.html'
+                  }
+                }
+                window.addEventListener('message', handlePostMessage)
+                window.onload = adjustIframeSize
+                window.onresize = adjustIframeSize
+                window.onunload = () => {
+                  window.removeEventListener('message', handlePostMessage)
+                }
+              </script>
+                </head>
+                <body>
+                  <div class="iframe-outer">
+                    <div class="iframe-wrapper">
+                      <iframe id="dynamicIframe" srcdoc='<html lang="zh" data-theme="business"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>商品详情页</title>
+    <link href="./assets/static/uxbot/daisyui@5.css" rel="stylesheet" type="text/css">
+    <script src="./assets/static/uxbot/tailwind-browser@4.js"></script>
+    <link href="./assets/static/uxbot/daisyui-themes.css" rel="stylesheet" type="text/css">
+    <script src="./assets/3/3.1.1/iconify.min.js"></script>
+    <style>
+/* CSS code for common usage*/
+/* daisyUI Theme Variables Customization
+* Based on the selected daisyUI theme and UI guidance requirements,
+* customize only the CSS variables that need to be different from the theme defaults.
+* Available theme variables for customization:
+*/
+
+/* Only modify if different from chosen theme defaults */
+:root {
+    /* Brand Colors based on UI guidance - deep navy blue corporate theme */
+    --color-primary: rgba(10, 28, 63, 1); /* #0A1C3F deep navy blue for CTAs */
+    --color-primary-content: rgba(248, 248, 248, 1); /* Off-white text on primary */
+    --color-secondary: rgba(44, 44, 44, 1); /* #2C2C2C charcoal for secondary elements */
+    --color-secondary-content: rgba(248, 248, 248, 1);
+    --color-accent: rgba(107, 114, 128, 1); /* #6B7280 medium grey for accents */
+    --color-accent-content: rgba(255, 255, 255, 1);
+
+    /* Base colors for dark corporate background */
+    --color-base-100: rgba(26, 26, 26, 1); /* #1A1A1A charcoal main background */
+    --color-base-200: rgba(44, 44, 44, 1); /* #2C2C2C graphite for cards */
+    --color-base-300: rgba(75, 85, 99, 1); /* #4B5563 for borders */
+    --color-base-content: rgba(248, 248, 248, 1); /* #F8F8F8 off-white text */
+
+    /* Semantic colors - muted and desaturated */
+    --color-success: rgba(34, 139, 34, 1); /* #228B22 muted dark green */
+    --color-success-content: rgba(255, 255, 255, 1);
+    --color-warning: rgba(184, 134, 11, 1); /* #B8860B subtle amber */
+    --color-warning-content: rgba(0, 0, 0, 1);
+    --color-error: rgba(139, 69, 19, 1); /* #8B4513 deep muted red */
+    --color-error-content: rgba(255, 255, 255, 1);
+    --color-info: rgba(70, 130, 180, 1); /* #4682B4 desaturated blue */
+    --color-info-content: rgba(255, 255, 255, 1);
+
+    /* Border radius for restrained rounded corners */
+    --radius-box: 0.375rem; /* 6px rounded corners */
+    --radius-field: 0.5rem; /* 8px for input fields */
+    --radius-selector: 0.25rem; /* 4px for smaller elements */
+
+    /* Border for subtle separations */
+    --border: 1px;
+}
+
+/* Mobile-specific optimizations */
+.mobile-container {
+    max-width: 402px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background-color: var(--color-base-100);
+}
+
+/* Touch-friendly buttons and interactive elements */
+.touch-target {
+    min-height: 48px;
+    min-width: 48px;
+}
+
+/* Secondary text color for metadata */
+.text-secondary-gray {
+    color: rgba(156, 163, 175, 1); /* #9CA3AF lighter grey for secondary text */
+}
+
+/* Safe area padding for mobile devices */
+.safe-area-top {
+    padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Material and craftsmanship feel with subtle micro-textures */
+.card-surface {
+    background: linear-gradient(135deg, var(--color-base-200) 0%, rgba(44, 44, 44, 0.95) 100%);
+    backdrop-filter: blur(10px);
+}
+
+/* Subtle shadow effects for depth */
+.elevated-surface {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+/* Typography adjustments for spacious line height */
+.spacious-text {
+    line-height: 1.6;
+}
+
+.comfortable-spacing {
+    margin-bottom: 1rem;
+}
+</style> <style>
+    /* Custom styles for Product Detail Page */
+
+    /* Ensure horizontal scrollbar is hidden but scrolling is possible */
+    .overflow-x-auto::-webkit-scrollbar {
+        display: none;
+    }
+    .overflow-x-auto {
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+    }
+
+    /* Animation for add to cart icon */
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0) scale(1);
+      }
+      50% {
+        transform: translateY(-5px) scale(1.1);
+      }
+    }
+
+    .bouncing {
+      animation: bounce 0.4s ease-in-out;
+    }
+
+    /* Custom carousel indicator styling */
+    #carouselIndicators .indicator {
+        width: 0.5rem; /* 8px */
+        height: 0.5rem; /* 8px */
+        border-radius: 9999px;
+        background-color: var(--color-base-content);
+        opacity: 0.5;
+        transition: all 0.3s ease;
+    }
+
+    #carouselIndicators .indicator.active {
+        width: 1.5rem; /* 24px */
+        opacity: 1;
+        background-color: var(--color-primary);
+    }
+    
+    /* Ensure carousel has a minimum height if images are slow to load */
+    .carousel {
+        min-height: 25rem; /* 400px, same as aspect-square on 402px width */
+    }
+</style>
+  <script src="https://assets.qingshuxuetang.com/static/uxbot/25_6/holder.js"></script></head>
+  <body class="mobile-container bg-base-100">
+    <div data-section-id="common_header" data-section-type="common_header" class="sticky top-0 z-40 bg-base-200 border-b border-base-300 safe-area-top elevated-surface">
+  <div class="navbar px-4 py-2 min-h-14">
+    <!-- Left side - Back button -->
+    <div class="navbar-start">
+      <button id="ikak" class="btn btn-ghost btn-sm btn-circle touch-target header-back-btn ikak spark-custom-ikak" onclick="navigateTo(&#39;page_861458&#39;)">
+        <span class="iconify text-base-content" data-icon="heroicons:arrow-left" data-width="20"></span>
+      </button>
+    </div>
+    <!-- Center - Title or Search -->
+    <div class="navbar-center flex-1 mx-4">
+      <!-- Default title display -->
+      <h1 id="ib2ya" class="text-lg font-semibold text-base-content header-title w-max spacious-text ib2ya spark-custom-ib2ya">
+        下单
+      </h1>
+      <!-- Search input (hidden by default) -->
+      <div class="form-control w-full max-w-xs header-search hidden">
+        <input type="text" placeholder="搜索商品..." class="input input-bordered input-sm w-full bg-base-100 text-base-content">
+      </div>
+    </div>
+    <!-- Right side - Action buttons -->
+    <div class="navbar-end">
+      <!-- Search toggle button --><button class="btn btn-ghost btn-sm btn-circle touch-target header-search-btn hidden">
+        <span class="iconify text-base-content" data-icon="heroicons:magnifying-glass" data-width="20"></span></button><!-- Cart button with badge -->
+      <div class="indicator header-cart-btn hidden">
+        <span class="indicator-item badge badge-primary cart-badge hidden">0</span><button class="btn btn-ghost btn-sm btn-circle touch-target" onclick="navigateTo(&#39;shopping_cart_page&#39;)">
+          <span class="iconify text-base-content" data-icon="heroicons:shopping-cart" data-width="20"></span>
+        </button>
+      </div>
+      <!-- More options menu -->
+      <div class="dropdown dropdown-end header-more-menu hidden">
+        <button tabindex="0" class="btn btn-ghost btn-sm btn-circle touch-target">
+          <span class="iconify text-base-content" data-icon="heroicons:ellipsis-vertical" data-width="20"></span>
+        </button>
+        <ul tabindex="0" class="dropdown-content z-50 menu p-2 shadow bg-base-200 rounded-box w-52 mt-2 elevated-surface">
+          <li>
+            <a class="text-base-content" onclick="showToast(&#39;分享功能开发中&#39;)">分享</a>
+          </li>
+          <li>
+            <a class="text-base-content" onclick="showToast(&#39;举报功能开发中&#39;)">举报</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <main class="pb-28">
+      <section id="ProductImageCarousel" class="relative">
+        <div id="productCarousel" class="carousel w-full aspect-square bg-base-200">
+          <div id="slide1" data-repeatable="true" class="carousel-item relative w-full">
+            <img src="https://spark-builder.s3.cn-north-1.amazonaws.com.cn/user-image/2025/10/18/b20610be-aad2-48f6-a59d-20cb49f6ba3c.jpg" class="w-full h-full object-cover ilr32 spark-custom-ilr32" alt="商品图片 1" id="ilr32">
+          </div>
+          <div id="slide2" data-repeatable="true" class="carousel-item relative w-full">
+            <img class="w-full h-full object-cover" alt="商品图片 2" data-src="placehold.co/402x402.png?text=Product+Image+2">
+          </div>
+          <div id="slide3" data-repeatable="true" class="carousel-item relative w-full">
+            <img class="w-full h-full object-cover" alt="商品图片 3" data-src="placehold.co/402x402.png?text=Product+Image+3">
+          </div>
+        </div>
+        <div id="carouselIndicators" class="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10"></div>
+      </section>
+      <section id="ProductInfoSection" class="p-4">
+        <div class="card card-surface rounded-box p-4 bg-base-200">
+          <h1 id="iaphj" class="text-2xl font-bold text-base-content iaphj spark-custom-iaphj">
+            &amp;nbsp; &amp;nbsp; 单击下方按钮选购商品
+          </h1>
+          <p id="ij2gk" class="text-2xl font-bold text-primary mt-2 ij2gk spark-custom-ij2gk">
+            <br>
+          </p>
+          <p id="i9abj" class="text-base-content/80 mt-4 spacious-text i9abj spark-custom-i9abj">
+            由于软件初步开发无法线上选购商品
+          </p>
+        </div>
+      </section>
+      <section id="ProductDescriptionSection" class="px-4">
+        <div class="collapse collapse-arrow bg-base-200 rounded-box">
+          <div class="collapse-content text-base-content/80 spacious-text">
+            <p class="mb-2">
+              我们的高性能无线蓝牙耳机采用行业领先的主动降噪技术，可以有效隔绝环境噪音，让您在任何地方都能享受纯净的音乐世界。
+            </p>
+            <p class="mb-2">
+              耳机单元经过专业调校，高音清澈，低音澎湃，带来录音室级别的听觉盛宴。支持高清音频解码，保留更多音乐细节。
+            </p>
+            <p>
+              采用人体工学设计，搭配多种尺寸的柔软硅胶耳塞，确保佩戴稳固舒适。耳机本体支持IPX5级防水，无惧汗水与雨水侵袭。
+            </p>
+          </div>
+        </div>
+      </section>
+      <section id="ProductRecommendationSection" class="mt-8">
+        <div class="flex overflow-x-auto space-x-4 pb-4 px-4">
+          <div data-repeatable="true" id="im9l4" class="card card-compact w-40 bg-base-200 card-surface shadow-md cursor-pointer flex-shrink-0 im9l4 spark-custom-im9l4" onclick="navigateTo(&#39;product_detail_page&#39;)">
+            <figure></figure>
+          </div>
+          <div data-repeatable="true" id="ihvce" class="card card-compact w-40 bg-base-200 card-surface shadow-md cursor-pointer flex-shrink-0 ihvce spark-custom-ihvce" onclick="navigateTo(&#39;product_detail_page&#39;)">
+            <figure></figure>
+          </div>
+          <div data-repeatable="true" class="card card-compact w-40 bg-base-200 card-surface shadow-md cursor-pointer flex-shrink-0" onclick="navigateTo(&#39;product_detail_page&#39;)">
+            <figure>
+              <img alt="电子阅读器" onclick="navigateTo(&#39;product_detail_page&#39;)" data-src="placehold.co/160x160.png?text=E-Reader">
+            </figure>
+            <div class="card-body p-3">
+              <h3 class="text-sm font-semibold truncate">护眼墨水屏阅读器</h3>
+              <p class="text-primary font-bold text-base">¥699.00</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <section id="CallToActionDock" class="fixed bottom-0 left-0 right-0 bg-base-200/95 backdrop-blur-sm border-t border-base-300 z-50 elevated-surface safe-area-bottom">
+      <div class="p-4 flex items-center gap-4">
+        <button id="addToCartBtn" class="btn btn-secondary flex-1 text-secondary-content addToCartBtn spark-custom-addToCartBtn addToCartBtn" onclick="navigateTo(&#39;home_page&#39;)">
+          <span id="cartIcon" class="iconify text-lg cartIcon spark-custom-cartIcon" data-icon="heroicons:home"></span>
+          返回主页</button><button id="in3qok" class="btn btn-primary flex-1 in3qok spark-custom-in3qok" onclick="navigateTo(&#39;payment_selection_page&#39;)">
+          开始挑选
+        </button>
+      </div>
+    </section>
+    <script>
+/* JavaScript code for common usage, should be wrapped in a closure */
+(function() {
+    // Navigation function for page transitions
+    window.navigateTo = function(targetPageId) {
+        // Trigger navigation to another page using the provided snippet
+        const isInIframe = window.self !== window.top;
+        const targetFileName = `${targetPageId}.html`;
+        if (isInIframe) {
+            window.parent.postMessage({
+                type: &#39;iframeNavigation&#39;,
+                targetPageId: targetPageId
+            }, &#39;*&#39;);
+        } else {
+            window.location.href = targetFileName;
+        }
+    };
+
+    // Utility function to handle back navigation
+    window.handleBackNavigation = function() {
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            navigateTo(&#39;home_page&#39;);
+        }
+    };
+
+    // Function to show toast notifications
+    window.showToast = function(message, type = &#39;info&#39;) {
+        const toast = document.createElement(&#39;div&#39;);
+        toast.className = `toast toast-bottom toast-center z-50`;
+        toast.innerHTML = `<div class="alert alert-${type}"><span>${message}</span></div>`;
+        document.body.appendChild(toast);
+        
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        }, 3000);
+    };
+
+    // Smooth scroll to top function
+    window.scrollToTop = function() {
+        window.scrollTo({
+            top: 0,
+            behavior: &#39;smooth&#39;
+        });
+    };
+
+    // Function to update bottom dock active state
+    window.updateBottomDockActive = function(activeTabId) {
+        const dockItems = document.querySelectorAll(&#39;[data-section-id="common_bottom_dock"] .dock-item&#39;);
+        dockItems.forEach(item => {
+            if (item.dataset.tabId === activeTabId) {
+                item.classList.add(&#39;dock-item-active&#39;);
+            } else {
+                item.classList.remove(&#39;dock-item-active&#39;);
+            }
+        });
+    };
+
+    // Initialize global app state
+    window.APP_GLOBALS = window.APP_GLOBALS || {};
+    
+    // Shopping cart management
+    window.APP_GLOBALS.cart = window.APP_GLOBALS.cart || [];
+    
+    window.addToCart = function(product) {
+        const existingItem = window.APP_GLOBALS.cart.find(item => item.id === product.id);
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            window.APP_GLOBALS.cart.push({...product, quantity: 1});
+        }
+        showToast(&#39;商品已添加到购物车&#39;, &#39;success&#39;);
+        updateCartBadge();
+    };
+
+    window.removeFromCart = function(productId) {
+        window.APP_GLOBALS.cart = window.APP_GLOBALS.cart.filter(item => item.id !== productId);
+        updateCartBadge();
+    };
+
+    window.updateCartQuantity = function(productId, quantity) {
+        const item = window.APP_GLOBALS.cart.find(item => item.id === productId);
+        if (item) {
+            if (quantity <= 0) {
+                removeFromCart(productId);
+            } else {
+                item.quantity = quantity;
+            }
+        }
+        updateCartBadge();
+    };
+
+    window.getCartTotal = function() {
+        return window.APP_GLOBALS.cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    };
+
+    window.getCartItemCount = function() {
+        return window.APP_GLOBALS.cart.reduce((total, item) => total + item.quantity, 0);
+    };
+
+    function updateCartBadge() {
+        const cartBadge = document.querySelector(&#39;[data-section-id="common_bottom_dock"] .cart-badge&#39;);
+        const count = getCartItemCount();
+        if (cartBadge) {
+            if (count > 0) {
+                cartBadge.textContent = count > 99 ? &#39;99+&#39; : count;
+                cartBadge.classList.remove(&#39;hidden&#39;);
+            } else {
+                cartBadge.classList.add(&#39;hidden&#39;);
+            }
+        }
+    }
+
+    // User session management
+    window.APP_GLOBALS.user = window.APP_GLOBALS.user || null;
+    window.APP_GLOBALS.isAdmin = window.APP_GLOBALS.isAdmin || false;
+
+    window.setUser = function(user, isAdmin = false) {
+        window.APP_GLOBALS.user = user;
+        window.APP_GLOBALS.isAdmin = isAdmin;
+    };
+
+    window.logout = function() {
+        window.APP_GLOBALS.user = null;
+        window.APP_GLOBALS.isAdmin = false;
+        window.APP_GLOBALS.cart = [];
+        navigateTo(&#39;login_selection_page&#39;);
+    };
+
+    // Form validation utilities
+    window.validateEmail = function(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    };
+
+    window.validatePhone = function(phone) {
+        const re = /^1[3-9]\d{9}$/;
+        return re.test(phone);
+    };
+
+    window.validatePassword = function(password) {
+        return password.length >= 6;
+    };
+
+})();
+</script><script>
+document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
+    // 1. Configure page header
+    if (window.configureHeader) {
+        window.configureHeader({
+            title: &#39;商品详情&#39;,
+            showBackButton: true
+        });
+    }
+
+    // 2. Initialize product image carousel
+    const carousel = document.getElementById(&#39;productCarousel&#39;);
+    const indicatorsContainer = document.getElementById(&#39;carouselIndicators&#39;);
+    const slides = Array.from(carousel.querySelectorAll(&#39;.carousel-item&#39;));
+
+    if (carousel &amp;&amp; indicatorsContainer &amp;&amp; slides.length > 0) {
+        // Create indicator dots
+        slides.forEach((slide, index) => {
+            const dot = document.createElement(&#39;div&#39;);
+            dot.classList.add(&#39;indicator&#39;);
+            if (index === 0) {
+                dot.classList.add(&#39;active&#39;);
+            }
+            indicatorsContainer.appendChild(dot);
+        });
+
+        const dots = Array.from(indicatorsContainer.querySelectorAll(&#39;.indicator&#39;));
+
+        // Use Intersection Observer to update active dot on swipe
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const slideId = entry.target.id;
+                    const index = slides.findIndex(s => s.id === slideId);
+
+                    if (index !== -1) {
+                        dots.forEach((dot, i) => {
+                            dot.classList.toggle(&#39;active&#39;, i === index);
+                        });
+                    }
+                }
+            });
+        }, {
+            root: carousel,
+            threshold: 0.5 // 50% of the item must be visible
+        });
+
+        slides.forEach(slide => observer.observe(slide));
+    }
+});
+
+// 3. Handle &#39;Add to Cart&#39; button click
+function handleAddToCart() {
+    // In a real app, you would get product details dynamically
+    const product = {
+        id: &#39;P001&#39;,
+        name: &#39;高性能无线蓝牙耳机&#39;,
+        price: 1299.00
+    };
+
+    if (window.addToCart) {
+        window.addToCart(product); // This function from common_script shows a toast
+    }
+
+    // Trigger bounce animation on cart icon
+    const cartIcon = document.getElementById(&#39;cartIcon&#39;);
+    if (cartIcon) {
+        // Prevent re-adding the class if animation is already running
+        if (!cartIcon.classList.contains(&#39;bouncing&#39;)) {
+            cartIcon.classList.add(&#39;bouncing&#39;);
+            cartIcon.addEventListener(&#39;animationend&#39;, () => {
+                cartIcon.classList.remove(&#39;bouncing&#39;);
+            }, { once: true });
+        }
+    }
+}
+</script>
+  
+
+<script>
+    setTimeout(() => {
+      Holder.run({
+        domain: "placehold.co"
+      })
+    }, 100)
+  </script></body></html>'></iframe>
+                    </div>
+                  </div>
+
+                </body>
+                </html>
+            

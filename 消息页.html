@@ -1,0 +1,995 @@
+
+                <!DOCTYPE html>
+                <html lang="zh">
+                <head>
+                  <meta charset="UTF-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  <title>消息页</title>
+                  <style>
+                    *,
+                    *::before,
+                    *::after {
+                      box-sizing: border-box;
+                      margin: 0;
+                    }
+                    .iframe-outer {
+                      position: fixed;
+                      top: 0;
+                      left: 0;
+                      bottom: 0;
+                      right: 0;
+                      display: flex;
+                      justify-content: center;
+                      background-color: #E0E0E0;
+                    }
+                    .iframe-wrapper {
+                      width: 100%;
+                      height: 100%;
+                      margin: 0 auto;
+                      transform-origin: center top;
+                      flex-shrink: 0;
+                    }
+                    #dynamicIframe {
+                      border: none;
+                      width: 100%;
+                      height: 100%;
+                    }
+                  </style>
+                  <script>
+                const width = 402
+                const height = 874
+                const resolutionRatio = width && height ? width / height : 1
+                const pageNameMap = {
+                  'login_selection_page': '登录选择页',
+    'admin_login_page': '管理员登录页',
+    'user_login_page': '用户登录页',
+    'product_detail_page': '商品详情页',
+    'payment_selection_page': '支付方式选择页',
+    'pending_order_page': '待处理订单页',
+    'shopping_cart_page': '购物车页',
+    'messages_page': '消息页',
+    'customer_service_chat_page': '客服聊天页',
+    'my_page': '我的页',
+    'user_info_page': '用户信息页',
+    'order_history_page': '订单记录页',
+    'settings_page': '设置页',
+    'admin_dashboard_page': '管理员仪表盘',
+    'admin_product_management_page': '商品管理页',
+    'admin_customer_service_page': '管理员客服页',
+    'page_857254': '封号页',
+    'page_860225': '订单管理页面',
+    'page_861458': '主页',
+    'page_863059': '微信支付',
+    'page_863244': '论坛交流'
+                }
+                function setIframeSize(w, h) {
+                  const currentContainerRadio = w / h
+                  let widthValue = w
+                  let heightValue = h
+                  let zoom = 1
+                  if (currentContainerRadio > resolutionRatio) {
+                    widthValue = h * resolutionRatio
+                    heightValue = h
+                  } else {
+                    widthValue = w
+                    heightValue = w / resolutionRatio
+                  }
+                  zoom = width ? widthValue / width : 1
+                  return {
+                    width: widthValue / zoom + 'px',
+                    height: heightValue / zoom + 'px',
+                    zoom,
+                  }
+                }
+                function adjustIframeSize() {
+                  const iframeWrapper = document.querySelector(".iframe-wrapper")
+                  const { width, height, zoom } = setIframeSize(window.innerWidth, window.innerHeight)
+                  iframeWrapper.style.height = height
+                  iframeWrapper.style.width = width
+                  iframeWrapper.style.transform = 'scale(' + zoom + ')'
+                }
+                function sanitizeFilename(name) {
+                  return name.replace(/[\/:*?"<>|]/g, '_')
+                }
+                function handlePostMessage(event) {
+                  if (!event.data) {
+                    return
+                  }
+                  const { type, targetPageId } = event.data
+                  const targetPageName = pageNameMap[targetPageId]
+                  if (type === "iframeNavigation" && targetPageId && targetPageName) {
+                    window.location.href = targetPageName + '.html'
+                  }
+                }
+                window.addEventListener('message', handlePostMessage)
+                window.onload = adjustIframeSize
+                window.onresize = adjustIframeSize
+                window.onunload = () => {
+                  window.removeEventListener('message', handlePostMessage)
+                }
+              </script>
+                </head>
+                <body>
+                  <div class="iframe-outer">
+                    <div class="iframe-wrapper">
+                      <iframe id="dynamicIframe" srcdoc='<html lang="简体中文" data-theme="business"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>消息页</title>
+    <link href="./assets/static/uxbot/daisyui@5.css" rel="stylesheet" type="text/css">
+    <script src="./assets/static/uxbot/tailwind-browser@4.js"></script>
+    <link href="./assets/static/uxbot/daisyui-themes.css" rel="stylesheet" type="text/css">
+    <script src="./assets/3/3.1.1/iconify.min.js"></script>
+    <style>
+/* CSS code for common usage*/
+/* daisyUI Theme Variables Customization
+* Based on the selected daisyUI theme and UI guidance requirements,
+* customize only the CSS variables that need to be different from the theme defaults.
+* Available theme variables for customization:
+*/
+
+/* Only modify if different from chosen theme defaults */
+:root {
+    /* Brand Colors based on UI guidance - deep navy blue corporate theme */
+    --color-primary: rgba(10, 28, 63, 1); /* #0A1C3F deep navy blue for CTAs */
+    --color-primary-content: rgba(248, 248, 248, 1); /* Off-white text on primary */
+    --color-secondary: rgba(44, 44, 44, 1); /* #2C2C2C charcoal for secondary elements */
+    --color-secondary-content: rgba(248, 248, 248, 1);
+    --color-accent: rgba(107, 114, 128, 1); /* #6B7280 medium grey for accents */
+    --color-accent-content: rgba(255, 255, 255, 1);
+
+    /* Base colors for dark corporate background */
+    --color-base-100: rgba(26, 26, 26, 1); /* #1A1A1A charcoal main background */
+    --color-base-200: rgba(44, 44, 44, 1); /* #2C2C2C graphite for cards */
+    --color-base-300: rgba(75, 85, 99, 1); /* #4B5563 for borders */
+    --color-base-content: rgba(248, 248, 248, 1); /* #F8F8F8 off-white text */
+
+    /* Semantic colors - muted and desaturated */
+    --color-success: rgba(34, 139, 34, 1); /* #228B22 muted dark green */
+    --color-success-content: rgba(255, 255, 255, 1);
+    --color-warning: rgba(184, 134, 11, 1); /* #B8860B subtle amber */
+    --color-warning-content: rgba(0, 0, 0, 1);
+    --color-error: rgba(139, 69, 19, 1); /* #8B4513 deep muted red */
+    --color-error-content: rgba(255, 255, 255, 1);
+    --color-info: rgba(70, 130, 180, 1); /* #4682B4 desaturated blue */
+    --color-info-content: rgba(255, 255, 255, 1);
+
+    /* Border radius for restrained rounded corners */
+    --radius-box: 0.375rem; /* 6px rounded corners */
+    --radius-field: 0.5rem; /* 8px for input fields */
+    --radius-selector: 0.25rem; /* 4px for smaller elements */
+
+    /* Border for subtle separations */
+    --border: 1px;
+}
+
+/* Mobile-specific optimizations */
+.mobile-container {
+    max-width: 402px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background-color: var(--color-base-100);
+}
+
+/* Touch-friendly buttons and interactive elements */
+.touch-target {
+    min-height: 48px;
+    min-width: 48px;
+}
+
+/* Secondary text color for metadata */
+.text-secondary-gray {
+    color: rgba(156, 163, 175, 1); /* #9CA3AF lighter grey for secondary text */
+}
+
+/* Safe area padding for mobile devices */
+.safe-area-top {
+    padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Material and craftsmanship feel with subtle micro-textures */
+.card-surface {
+    background: linear-gradient(135deg, var(--color-base-200) 0%, rgba(44, 44, 44, 0.95) 100%);
+    backdrop-filter: blur(10px);
+}
+
+/* Subtle shadow effects for depth */
+.elevated-surface {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+/* Typography adjustments for spacious line height */
+.spacious-text {
+    line-height: 1.6;
+}
+
+.comfortable-spacing {
+    margin-bottom: 1rem;
+}
+</style> <style>
+/* Styles for swipe-to-delete functionality */
+.message-item-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-box); /* Match card radius from theme */
+}
+
+.message-content-slider {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    transition: transform 0.3s ease;
+    will-change: transform;
+    background-color: var(--color-base-100); /* Ensure slider has solid background */
+}
+
+.message-delete-action {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+}
+
+.deleting {
+    animation: fadeOutAndCollapse 0.4s ease-out forwards;
+}
+
+@keyframes fadeOutAndCollapse {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+        max-height: 100px; /* Approximate height */
+        margin-bottom: 1rem; /* From gap-4 */
+    }
+    50% {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.95);
+        max-height: 0;
+        padding: 0;
+        margin: 0;
+        border: 0;
+}
+}
+
+/* Forum highlight styles */
+.forum-highlight-content {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+}
+
+.forum-highlight-content::before {
+    content: &#39;&#39;;
+    position: absolute;
+    inset: 0;
+    padding: 2px;
+    background: linear-gradient(135deg, #3b82f6, #9333ea, #06b6d4);
+    border-radius: inherit;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: xor;
+    -webkit-mask-composite: xor;
+    z-index: -1;
+}
+
+.forum-icon-container {
+    position: relative;
+    box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3);
+    animation: forumIconPulse 2s ease-in-out infinite;
+}
+
+.forum-icon-bg {
+    background: linear-gradient(135deg, #3b82f6 0%, #9333ea 50%, #06b6d4 100%);
+    background-size: 200% 200%;
+    animation: forumGradientShift 3s ease-in-out infinite;
+}
+
+.forum-icon {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    animation: forumIconFloat 2s ease-in-out infinite;
+}
+
+.forum-title {
+    background: linear-gradient(135deg, #3b82f6, #9333ea);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: forumTitleShimmer 2s ease-in-out infinite;
+}
+
+.forum-arrow {
+    transition: transform 0.3s ease;
+    animation: forumArrowBounce 1.5s ease-in-out infinite;
+}
+
+.forum-highlight-content:hover .forum-arrow {
+    transform: translateX(4px);
+}
+
+@keyframes forumIconPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 12px 40px rgba(59, 130, 246, 0.5);
+    }
+}
+
+@keyframes forumGradientShift {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+@keyframes forumIconFloat {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-2px);
+    }
+}
+
+@keyframes forumTitleShimmer {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+@keyframes forumArrowBounce {
+    0%, 100% {
+        transform: translateX(0px);
+    }
+    50% {
+        transform: translateX(2px);
+    }
+}
+
+/* Enhanced hover effect for the entire forum card */
+.message-item-wrapper:has([onclick*="page_863244"]) .card {
+    transition: all 0.3s ease;
+}
+
+.message-item-wrapper:has([onclick*="page_863244"]) .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2);
+}
+</style>
+  <script src="https://assets.qingshuxuetang.com/static/uxbot/25_6/holder.js"></script></head>
+  <body class="mobile-container bg-base-100 flex flex-col min-h-screen">
+    <div data-section-id="common_header" data-section-type="common_header" class="sticky top-0 z-40 bg-base-200 border-b border-base-300 safe-area-top elevated-surface">
+    <div class="navbar px-4 py-2 min-h-14">
+        <!-- Left side - Back button -->
+        <div class="navbar-start">
+            <button class="btn btn-ghost btn-sm btn-circle touch-target header-back-btn" onclick="handleBackNavigation()">
+                <span class="iconify text-base-content" data-icon="heroicons:arrow-left" data-width="20"></span>
+            </button>
+        </div>
+
+        <!-- Center - Title or Search -->
+        <div class="navbar-center flex-1 mx-4">
+            <!-- Default title display -->
+            <h1 class="text-lg font-semibold text-base-content header-title w-max spacious-text">页面标题</h1>
+            
+            <!-- Search input (hidden by default) -->
+            <div class="form-control w-full max-w-xs header-search hidden">
+                <input type="text" placeholder="搜索商品..." class="input input-bordered input-sm w-full bg-base-100 text-base-content">
+            </div>
+        </div>
+
+        <!-- Right side - Action buttons -->
+        <div class="navbar-end">
+            <!-- Search toggle button -->
+            <button class="btn btn-ghost btn-sm btn-circle touch-target header-search-btn hidden">
+                <span class="iconify text-base-content" data-icon="heroicons:magnifying-glass" data-width="20"></span>
+            </button>
+
+            <!-- Cart button with badge -->
+            <div class="indicator header-cart-btn hidden">
+                <span class="indicator-item badge badge-primary cart-badge hidden">0</span>
+                <button class="btn btn-ghost btn-sm btn-circle touch-target" onclick="navigateTo(&#39;shopping_cart_page&#39;)">
+                    <span class="iconify text-base-content" data-icon="heroicons:shopping-cart" data-width="20"></span>
+                </button>
+            </div>
+
+            <!-- More options menu -->
+            <div class="dropdown dropdown-end header-more-menu hidden">
+                <button tabindex="0" class="btn btn-ghost btn-sm btn-circle touch-target">
+                    <span class="iconify text-base-content" data-icon="heroicons:ellipsis-vertical" data-width="20"></span>
+                </button>
+                <ul tabindex="0" class="dropdown-content z-50 menu p-2 shadow bg-base-200 rounded-box w-52 mt-2 elevated-surface">
+                    <li><a onclick="showToast(&#39;分享功能开发中&#39;)" class="text-base-content">分享</a></li>
+                    <li><a onclick="showToast(&#39;举报功能开发中&#39;)" class="text-base-content">举报</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+[data-section-id="common_header"] .navbar {
+    height: 56px;
+}
+
+[data-section-id="common_header"] .header-back-btn:hover {
+    background-color: var(--color-base-300);
+    transition: background-color 0.2s ease;
+}
+
+[data-section-id="common_header"] .header-title {
+    text-align: center;
+    line-height: 1.2;
+}
+
+[data-section-id="common_header"] .header-search input:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+[data-section-id="common_header"] .btn-circle:hover {
+    transform: scale(1.05);
+    transition: transform 0.1s ease;
+}
+
+[data-section-id="common_header"] .cart-badge {
+    font-size: 10px;
+    min-height: 16px;
+    height: 16px;
+    padding: 0 4px;
+}
+</style>
+
+<script>
+(function() {
+    // Header configuration function
+    window.configureHeader = function(options = {}) {
+        const header = document.querySelector(&#39;[data-section-id="common_header"]&#39;);
+        if (!header) return;
+
+        const {
+            title = &#39;页面标题&#39;,
+            showBackButton = true,
+            showSearchButton = false,
+            showSearchInput = false,
+            showCartButton = false,
+            showMoreMenu = false,
+            onSearch = null,
+            onCart = null
+        } = options;
+
+        // Update title
+        const titleElement = header.querySelector(&#39;.header-title&#39;);
+        titleElement.textContent = title;
+
+        // Toggle back button
+        const backBtn = header.querySelector(&#39;.header-back-btn&#39;);
+        backBtn.style.display = showBackButton ? &#39;flex&#39; : &#39;none&#39;;
+
+        // Toggle search elements
+        const searchBtn = header.querySelector(&#39;.header-search-btn&#39;);
+        const searchInput = header.querySelector(&#39;.header-search&#39;);
+        searchBtn.classList.toggle(&#39;hidden&#39;, !showSearchButton);
+        searchInput.classList.toggle(&#39;hidden&#39;, !showSearchInput);
+        titleElement.classList.toggle(&#39;hidden&#39;, showSearchInput);
+
+        // Toggle cart button
+        const cartBtn = header.querySelector(&#39;.header-cart-btn&#39;);
+        cartBtn.classList.toggle(&#39;hidden&#39;, !showCartButton);
+
+        // Toggle more menu
+        const moreMenu = header.querySelector(&#39;.header-more-menu&#39;);
+        moreMenu.classList.toggle(&#39;hidden&#39;, !showMoreMenu);
+
+        // Handle search toggle
+        if (showSearchButton &amp;&amp; !showSearchInput) {
+            searchBtn.onclick = function() {
+                searchInput.classList.remove(&#39;hidden&#39;);
+                titleElement.classList.add(&#39;hidden&#39;);
+                searchBtn.classList.add(&#39;hidden&#39;);
+                const input = searchInput.querySelector(&#39;input&#39;);
+                input.focus();
+            };
+        }
+
+        // Handle search input
+        if (showSearchInput &amp;&amp; onSearch) {
+            const input = searchInput.querySelector(&#39;input&#39;);
+            input.addEventListener(&#39;input&#39;, function(e) {
+                onSearch(e.target.value);
+            });
+        }
+
+        // Update cart badge
+        if (showCartButton) {
+            updateCartBadge();
+        }
+    };
+
+    function updateCartBadge() {
+        const cartBadge = document.querySelector(&#39;[data-section-id="common_header"] .cart-badge&#39;);
+        const count = window.getCartItemCount ? window.getCartItemCount() : 0;
+        if (cartBadge) {
+            if (count > 0) {
+                cartBadge.textContent = count > 99 ? &#39;99+&#39; : count;
+                cartBadge.classList.remove(&#39;hidden&#39;);
+            } else {
+                cartBadge.classList.add(&#39;hidden&#39;);
+            }
+        }
+    }
+
+    // Default header configuration
+    document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
+        configureHeader();
+    });
+
+})();
+</script>
+    <main id="ijhtj" class="flex-1 overflow-y-auto pb-24 ijhtj spark-custom-ijhtj">
+      <!-- MessageList Section -->
+      <section id="MessageList" class="p-4 flex flex-col gap-4">
+        <!-- Message Item 1: System Notification (unread) -->
+        <div data-repeatable="true" class="message-item-wrapper">
+          <div class="message-content-slider">
+            <div class="card card-surface bg-base-200 shadow-md rounded-lg overflow-hidden cursor-pointer" onclick="navigateTo(&#39;messages_page&#39;)">
+              <div class="p-4 flex items-start gap-4">
+                <div class="mt-1">
+                  <div class="w-12 h-12 rounded-full bg-info/20 flex items-center justify-center">
+                    <span class="iconify text-info" data-icon="heroicons:information-circle" data-width="24"></span>
+                  </div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div id="iiyfr" class="flex justify-between items-center iiyfr spark-custom-iiyfr">
+                    <h3 class="font-semibold text-base-content spacious-text">
+                      系统提示
+                    </h3>
+                    <span class="text-xs text-secondary-gray flex-shrink-0 ml-2">1小时前</span>
+                  </div>
+                  <div class="flex justify-between items-start mt-1">
+                    <p id="itymx" class="text-sm text-base-content/70 spacious-text truncate itymx spark-custom-itymx">
+                      欢迎使用我们的购物平台！
+                    </p>
+                    <div aria-label="Unread message" class="badge badge-error badge-xs p-1.5 ml-2 flex-shrink-0"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="message-delete-action">
+            <button class="btn btn-error h-full w-24 rounded-none rounded-r-lg" onclick="deleteMessage(this)">
+              <span class="iconify" data-icon="heroicons:trash" data-width="24"></span>
+            </button>
+          </div>
+        </div>
+        <!-- Message Item 2: Official Customer Service (read) -->
+        <div data-repeatable="true" class="message-item-wrapper">
+          <div class="message-content-slider">
+            <div class="card card-surface bg-base-200 shadow-md rounded-lg overflow-hidden cursor-pointer" onclick="navigateTo(&#39;customer_service_chat_page&#39;)">
+              <div class="p-4 flex items-start gap-4">
+                <div class="mt-1">
+                  <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
+                    <span class="iconify text-primary" data-icon="heroicons:chat-bubble-left-ellipsis" data-width="24"></span>
+                  </div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex justify-between items-center">
+                    <h3 class="font-semibold text-base-content spacious-text">
+                      官方客服
+                    </h3>
+                    <span class="text-xs text-secondary-gray flex-shrink-0 ml-2">昨天</span>
+                  </div>
+                  <p class="text-sm text-base-content/70 spacious-text truncate mt-1">
+                    您好，请问有什么可以帮您？
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="message-delete-action">
+            <button class="btn btn-error h-full w-24 rounded-none rounded-r-lg" onclick="deleteMessage(this)">
+              <span class="iconify" data-icon="heroicons:trash" data-width="24"></span>
+            </button>
+          </div>
+        </div>
+        <!-- Forum Entry Button -->
+        <div class="message-item-wrapper">
+          <div class="message-content-slider">
+            <div class="card card-surface bg-base-200 shadow-md rounded-lg overflow-hidden cursor-pointer" onclick="navigateTo(&#39;page_863244&#39;)">
+              <div id="iz48j" class="p-6 flex items-start gap-4 iz48j spark-custom-iz48j forum-highlight-content">
+                <div class="mt-1">
+                  <div class="w-16 h-16 rounded-full forum-icon-container flex items-center justify-center relative overflow-hidden">
+                    <div class="forum-icon-bg absolute inset-0 rounded-full"></div>
+                    <span class="iconify text-white relative z-10 igo5u spark-custom-igo5u forum-icon" data-icon="heroicons:chat-bubble-left-right" data-width="28" id="igo5u"></span>
+                  </div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex justify-between items-center">
+                    <h3 class="font-bold text-lg text-base-content spacious-text forum-title">
+                      🎉 论坛交流
+                    </h3>
+                    <div class="flex items-center gap-1 text-primary">
+                      <span class="text-sm font-medium">进入</span><span class="iconify forum-arrow" data-icon="heroicons:arrow-right" data-width="18"></span>
+                    </div>
+                  </div>
+                  <p class="text-base text-base-content/80 spacious-text mt-2 font-medium">
+                    🔥 与其他用户交流购物心得和经验，发现更多精彩内容
+                  </p>
+                  <div class="flex items-center gap-2 mt-3">
+                    <div id="i1sz81" class="badge badge-primary badge-sm i1sz81 spark-custom-i1sz81">
+                      新
+                    </div>
+                    <div id="iv9ggg" class="badge badge-success badge-sm iv9ggg spark-custom-iv9ggg">
+                      即将开放
+                    </div>
+                    <span id="ijzh56" class="text-xs text-primary font-medium ijzh56 spark-custom-ijzh56">在线用户</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="message-delete-action">
+            <button class="btn btn-error h-full w-24 rounded-none rounded-r-lg" onclick="deleteMessage(this)">
+              <span class="iconify" data-icon="heroicons:trash" data-width="24"></span>
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+    <div data-section-id="common_bottom_dock" data-section-type="common_section" class="fixed bottom-0 left-0 right-0 z-40 bg-base-200 border-t border-base-300 safe-area-bottom elevated-surface">
+  <div class="dock bg-base-200 py-2 px-4 justify-center">
+    <!-- 主页 --><button data-tab-id="home_page" class="dock-item dock-item-active flex-col items-center justify-center touch-target" onclick="navigateTo(&#39;home_page&#39;)">
+      <span class="iconify text-xl mb-1" data-icon="heroicons:home" data-width="24"></span><span class="dock-item-label text-xs">主页</span></button><!-- 购物车 -->
+    <div class="indicator">
+      <span class="indicator-item badge badge-primary cart-badge hidden">0</span><button data-tab-id="shopping_cart_page" class="dock-item flex-col items-center justify-center touch-target" onclick="navigateTo(&#39;shopping_cart_page&#39;)">
+        <span class="iconify text-xl mb-1" data-icon="heroicons:shopping-cart" data-width="24"></span><span class="dock-item-label text-xs">购物车</span>
+      </button>
+    </div>
+    <!-- 消息 --><button data-tab-id="messages_page" class="dock-item flex-col items-center justify-center touch-target" onclick="navigateTo(&#39;messages_page&#39;)">
+      <span class="iconify text-xl mb-1" data-icon="heroicons:chat-bubble-left-right" data-width="24"></span><span class="dock-item-label text-xs">消息</span></button><!-- 我的 --><button data-tab-id="my_page" class="dock-item flex-col items-center justify-center touch-target i8tbcv spark-custom-i8tbcv" id="i8tbcv" onclick="navigateTo(&#39;my_page&#39;)">
+      <span class="iconify text-xl mb-1" data-icon="heroicons:user" data-width="24"></span><span class="dock-item-label text-xs">我的</span>
+    </button>
+  </div>
+</div>
+<script>
+/* JavaScript code for common usage, should be wrapped in a closure */
+(function() {
+    // Navigation function for page transitions
+    window.navigateTo = function(targetPageId) {
+        // Trigger navigation to another page using the provided snippet
+        const isInIframe = window.self !== window.top;
+        const targetFileName = `${targetPageId}.html`;
+        if (isInIframe) {
+            window.parent.postMessage({
+                type: &#39;iframeNavigation&#39;,
+                targetPageId: targetPageId
+            }, &#39;*&#39;);
+        } else {
+            window.location.href = targetFileName;
+        }
+    };
+
+    // Utility function to handle back navigation
+    window.handleBackNavigation = function() {
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            navigateTo(&#39;home_page&#39;);
+        }
+    };
+
+    // Function to show toast notifications
+    window.showToast = function(message, type = &#39;info&#39;) {
+        const toast = document.createElement(&#39;div&#39;);
+        toast.className = `toast toast-bottom toast-center z-50`;
+        toast.innerHTML = `<div class="alert alert-${type}"><span>${message}</span></div>`;
+        document.body.appendChild(toast);
+        
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        }, 3000);
+    };
+
+    // Smooth scroll to top function
+    window.scrollToTop = function() {
+        window.scrollTo({
+            top: 0,
+            behavior: &#39;smooth&#39;
+        });
+    };
+
+    // Function to update bottom dock active state
+    window.updateBottomDockActive = function(activeTabId) {
+        const dockItems = document.querySelectorAll(&#39;[data-section-id="common_bottom_dock"] .dock-item&#39;);
+        dockItems.forEach(item => {
+            if (item.dataset.tabId === activeTabId) {
+                item.classList.add(&#39;dock-item-active&#39;);
+            } else {
+                item.classList.remove(&#39;dock-item-active&#39;);
+            }
+        });
+    };
+
+    // Initialize global app state
+    window.APP_GLOBALS = window.APP_GLOBALS || {};
+    
+    // Shopping cart management
+    window.APP_GLOBALS.cart = window.APP_GLOBALS.cart || [];
+    
+    window.addToCart = function(product) {
+        const existingItem = window.APP_GLOBALS.cart.find(item => item.id === product.id);
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            window.APP_GLOBALS.cart.push({...product, quantity: 1});
+        }
+        showToast(&#39;商品已添加到购物车&#39;, &#39;success&#39;);
+        updateCartBadge();
+    };
+
+    window.removeFromCart = function(productId) {
+        window.APP_GLOBALS.cart = window.APP_GLOBALS.cart.filter(item => item.id !== productId);
+        updateCartBadge();
+    };
+
+    window.updateCartQuantity = function(productId, quantity) {
+        const item = window.APP_GLOBALS.cart.find(item => item.id === productId);
+        if (item) {
+            if (quantity <= 0) {
+                removeFromCart(productId);
+            } else {
+                item.quantity = quantity;
+            }
+        }
+        updateCartBadge();
+    };
+
+    window.getCartTotal = function() {
+        return window.APP_GLOBALS.cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    };
+
+    window.getCartItemCount = function() {
+        return window.APP_GLOBALS.cart.reduce((total, item) => total + item.quantity, 0);
+    };
+
+    function updateCartBadge() {
+        const cartBadge = document.querySelector(&#39;[data-section-id="common_bottom_dock"] .cart-badge&#39;);
+        const count = getCartItemCount();
+        if (cartBadge) {
+            if (count > 0) {
+                cartBadge.textContent = count > 99 ? &#39;99+&#39; : count;
+                cartBadge.classList.remove(&#39;hidden&#39;);
+            } else {
+                cartBadge.classList.add(&#39;hidden&#39;);
+            }
+        }
+    }
+
+    // User session management
+    window.APP_GLOBALS.user = window.APP_GLOBALS.user || null;
+    window.APP_GLOBALS.isAdmin = window.APP_GLOBALS.isAdmin || false;
+
+    window.setUser = function(user, isAdmin = false) {
+        window.APP_GLOBALS.user = user;
+        window.APP_GLOBALS.isAdmin = isAdmin;
+    };
+
+    window.logout = function() {
+        window.APP_GLOBALS.user = null;
+        window.APP_GLOBALS.isAdmin = false;
+        window.APP_GLOBALS.cart = [];
+        navigateTo(&#39;login_selection_page&#39;);
+    };
+
+    // Form validation utilities
+    window.validateEmail = function(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    };
+
+    window.validatePhone = function(phone) {
+        const re = /^1[3-9]\d{9}$/;
+        return re.test(phone);
+    };
+
+    window.validatePassword = function(password) {
+        return password.length >= 6;
+    };
+
+})();
+</script><script>
+document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
+    configureHeader({
+        title: &#39;消息&#39;,
+        showBackButton: true,
+        showSearchButton: false,
+        showCartButton: false,
+        showMoreMenu: false
+    });
+    updateBottomDockActive(&#39;messages_page&#39;);
+    
+    // Check if user has any orders and update system message accordingly
+    updateSystemMessage();
+    
+    // Initialize swipe functionality for all message items
+const messageItems = document.querySelectorAll(&#39;.message-item-wrapper&#39;);
+    messageItems.forEach(item => {
+        initializeSwipe(item);
+    });
+    
+    // Add special handling for forum entry - disable swipe delete
+    const forumEntry = document.querySelector(&#39;[onclick*="page_863244"]&#39;).closest(&#39;.message-item-wrapper&#39;);
+    if (forumEntry) {
+        const deleteAction = forumEntry.querySelector(&#39;.message-delete-action&#39;);
+        if (deleteAction) {
+            deleteAction.style.display = &#39;none&#39;;
+        }
+    }
+});
+
+// Function to update system message based on user&#39;s order history
+function updateSystemMessage() {
+    const systemMessageElement = document.getElementById(&#39;itymx&#39;);
+    if (!systemMessageElement) return;
+    
+    // Check if user has any orders (this would typically come from a backend API)
+    // For demo purposes, we&#39;ll check if there are any items in cart history or simulate order check
+    const hasOrders = window.APP_GLOBALS &amp;&amp; window.APP_GLOBALS.user &amp;&amp; window.APP_GLOBALS.user.hasOrders;
+    
+    if (hasOrders) {
+        // Show order-related message only if user has actual orders
+        systemMessageElement.textContent = &#39;您的订单 #897563 已成功下单。&#39;;
+    } else {
+        // Show welcome message for new users
+        systemMessageElement.textContent = &#39;欢迎使用我们的购物平台！&#39;;
+    }
+}
+
+// Function to handle message deletion
+function deleteMessage(button) {
+    const itemWrapper = button.closest(&#39;.message-item-wrapper&#39;);
+    if (itemWrapper) {
+        itemWrapper.classList.add(&#39;deleting&#39;);
+        
+        itemWrapper.addEventListener(&#39;animationend&#39;, () => {
+            itemWrapper.remove();
+            showToast(&#39;消息已删除&#39;, &#39;info&#39;);
+        });
+    }
+}
+
+// Minimal swipe-to-delete implementation
+function initializeSwipe(item) {
+    const slider = item.querySelector(&#39;.message-content-slider&#39;);
+    const deleteAction = item.querySelector(&#39;.message-delete-action&#39;);
+    if (!slider || !deleteAction) return;
+    
+    const deleteWidth = deleteAction.offsetWidth;
+
+    let startX = 0;
+    let currentX = 0;
+    let isSwiping = false;
+    let isOpen = false;
+
+    const resetPosition = () => {
+        slider.style.transition = &#39;transform 0.3s ease&#39;;
+        slider.style.transform = &#39;translateX(0)&#39;;
+        item.dataset.isOpen = &#39;false&#39;;
+        isOpen = false;
+    };
+    
+    const openPosition = () => {
+        slider.style.transition = &#39;transform 0.3s ease&#39;;
+        slider.style.transform = `translateX(-${deleteWidth}px)`;
+        item.dataset.isOpen = &#39;true&#39;;
+        isOpen = true;
+    }
+    
+    const closeOthers = () => {
+        document.querySelectorAll(&#39;.message-item-wrapper[data-is-open="true"]&#39;).forEach(otherItem => {
+            if (otherItem !== item) {
+                const otherSlider = otherItem.querySelector(&#39;.message-content-slider&#39;);
+                if (otherSlider) {
+                    otherSlider.style.transition = &#39;transform 0.3s ease&#39;;
+                    otherSlider.style.transform = &#39;translateX(0)&#39;;
+                    otherItem.dataset.isOpen = &#39;false&#39;;
+                }
+            }
+        });
+    };
+
+    slider.addEventListener(&#39;touchstart&#39;, (e) => {
+        if (e.touches.length > 1) return;
+        closeOthers();
+        
+        startX = e.touches[0].clientX;
+        isSwiping = true;
+        slider.style.transition = &#39;none&#39;;
+        isOpen = item.dataset.isOpen === &#39;true&#39;;
+        currentX = startX; // Initialize currentX
+    }, { passive: true });
+
+    slider.addEventListener(&#39;touchmove&#39;, (e) => {
+        if (!isSwiping || e.touches.length > 1) return;
+
+        currentX = e.touches[0].clientX;
+        let diffX = currentX - startX;
+        
+        if (isOpen) {
+            diffX -= deleteWidth;
+        }
+
+        // Prevent swiping too far right, or too far left
+        if (diffX > 5) diffX = 5;
+        if (diffX < -deleteWidth - 32) diffX = -deleteWidth - 32;
+
+        e.preventDefault(); // Prevent page scroll while swiping horizontally
+        slider.style.transform = `translateX(${diffX}px)`;
+    }, { passive: false });
+
+    slider.addEventListener(&#39;touchend&#39;, () => {
+        if (!isSwiping) return;
+        isSwiping = false;
+        
+        const threshold = deleteWidth * 0.4;
+        const diffX = currentX - startX;
+
+        if (isOpen) {
+            if (diffX > threshold) { // Swipe right to close
+                resetPosition();
+            } else { // Snap back to open
+                openPosition();
+            }
+        } else {
+            if (diffX < -threshold) { // Swipe left to open
+                openPosition();
+            } else { // Snap back to closed
+                resetPosition();
+            }
+        }
+    });
+
+    document.body.addEventListener(&#39;click&#39;, (e) => {
+        if (item.dataset.isOpen === &#39;true&#39; &amp;&amp; !item.contains(e.target)) {
+            resetPosition();
+        }
+    }, true);
+}
+</script>
+  
+
+<script>
+    setTimeout(() => {
+      Holder.run({
+        domain: "placehold.co"
+      })
+    }, 100)
+  </script></body></html>'></iframe>
+                    </div>
+                  </div>
+
+                </body>
+                </html>
+            

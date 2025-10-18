@@ -1,0 +1,1537 @@
+
+                <!DOCTYPE html>
+                <html lang="zh">
+                <head>
+                  <meta charset="UTF-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  <title>主页</title>
+                  <style>
+                    *,
+                    *::before,
+                    *::after {
+                      box-sizing: border-box;
+                      margin: 0;
+                    }
+                    .iframe-outer {
+                      position: fixed;
+                      top: 0;
+                      left: 0;
+                      bottom: 0;
+                      right: 0;
+                      display: flex;
+                      justify-content: center;
+                      background-color: #E0E0E0;
+                    }
+                    .iframe-wrapper {
+                      width: 100%;
+                      height: 100%;
+                      margin: 0 auto;
+                      transform-origin: center top;
+                      flex-shrink: 0;
+                    }
+                    #dynamicIframe {
+                      border: none;
+                      width: 100%;
+                      height: 100%;
+                    }
+                  </style>
+                  <script>
+                const width = 402
+                const height = 874
+                const resolutionRatio = width && height ? width / height : 1
+                const pageNameMap = {
+                  'login_selection_page': '登录选择页',
+    'admin_login_page': '管理员登录页',
+    'user_login_page': '用户登录页',
+    'product_detail_page': '商品详情页',
+    'payment_selection_page': '支付方式选择页',
+    'pending_order_page': '待处理订单页',
+    'shopping_cart_page': '购物车页',
+    'messages_page': '消息页',
+    'customer_service_chat_page': '客服聊天页',
+    'my_page': '我的页',
+    'user_info_page': '用户信息页',
+    'order_history_page': '订单记录页',
+    'settings_page': '设置页',
+    'admin_dashboard_page': '管理员仪表盘',
+    'admin_product_management_page': '商品管理页',
+    'admin_customer_service_page': '管理员客服页',
+    'page_857254': '封号页',
+    'page_860225': '订单管理页面',
+    'page_861458': '主页',
+    'page_863059': '微信支付',
+    'page_863244': '论坛交流'
+                }
+                function setIframeSize(w, h) {
+                  const currentContainerRadio = w / h
+                  let widthValue = w
+                  let heightValue = h
+                  let zoom = 1
+                  if (currentContainerRadio > resolutionRatio) {
+                    widthValue = h * resolutionRatio
+                    heightValue = h
+                  } else {
+                    widthValue = w
+                    heightValue = w / resolutionRatio
+                  }
+                  zoom = width ? widthValue / width : 1
+                  return {
+                    width: widthValue / zoom + 'px',
+                    height: heightValue / zoom + 'px',
+                    zoom,
+                  }
+                }
+                function adjustIframeSize() {
+                  const iframeWrapper = document.querySelector(".iframe-wrapper")
+                  const { width, height, zoom } = setIframeSize(window.innerWidth, window.innerHeight)
+                  iframeWrapper.style.height = height
+                  iframeWrapper.style.width = width
+                  iframeWrapper.style.transform = 'scale(' + zoom + ')'
+                }
+                function sanitizeFilename(name) {
+                  return name.replace(/[\/:*?"<>|]/g, '_')
+                }
+                function handlePostMessage(event) {
+                  if (!event.data) {
+                    return
+                  }
+                  const { type, targetPageId } = event.data
+                  const targetPageName = pageNameMap[targetPageId]
+                  if (type === "iframeNavigation" && targetPageId && targetPageName) {
+                    window.location.href = targetPageName + '.html'
+                  }
+                }
+                window.addEventListener('message', handlePostMessage)
+                window.onload = adjustIframeSize
+                window.onresize = adjustIframeSize
+                window.onunload = () => {
+                  window.removeEventListener('message', handlePostMessage)
+                }
+              </script>
+                </head>
+                <body>
+                  <div class="iframe-outer">
+                    <div class="iframe-wrapper">
+                      <iframe id="dynamicIframe" srcdoc='<html lang="zh" data-theme="business"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>主页</title>
+    <link href="./assets/static/uxbot/daisyui@5.css" rel="stylesheet" type="text/css">
+    <script src="./assets/static/uxbot/tailwind-browser@4.js"></script>
+    <link href="./assets/static/uxbot/daisyui-themes.css" rel="stylesheet" type="text/css">
+    <script src="./assets/3/3.1.1/iconify.min.js"></script>
+    <style>
+/* CSS code for common usage*/
+/* daisyUI Theme Variables Customization
+* Based on the selected daisyUI theme and UI guidance requirements,
+* customize only the CSS variables that need to be different from the theme defaults.
+* Available theme variables for customization:
+*/
+
+/* Only modify if different from chosen theme defaults */
+:root {
+    /* Brand Colors based on UI guidance - deep navy blue corporate theme */
+    --color-primary: rgba(10, 28, 63, 1); /* #0A1C3F deep navy blue for CTAs */
+    --color-primary-content: rgba(248, 248, 248, 1); /* Off-white text on primary */
+    --color-secondary: rgba(44, 44, 44, 1); /* #2C2C2C charcoal for secondary elements */
+    --color-secondary-content: rgba(248, 248, 248, 1);
+    --color-accent: rgba(107, 114, 128, 1); /* #6B7280 medium grey for accents */
+    --color-accent-content: rgba(255, 255, 255, 1);
+
+    /* Base colors for dark corporate background */
+    --color-base-100: rgba(26, 26, 26, 1); /* #1A1A1A charcoal main background */
+    --color-base-200: rgba(44, 44, 44, 1); /* #2C2C2C graphite for cards */
+    --color-base-300: rgba(75, 85, 99, 1); /* #4B5563 for borders */
+    --color-base-content: rgba(248, 248, 248, 1); /* #F8F8F8 off-white text */
+
+    /* Semantic colors - muted and desaturated */
+    --color-success: rgba(34, 139, 34, 1); /* #228B22 muted dark green */
+    --color-success-content: rgba(255, 255, 255, 1);
+    --color-warning: rgba(184, 134, 11, 1); /* #B8860B subtle amber */
+    --color-warning-content: rgba(0, 0, 0, 1);
+    --color-error: rgba(139, 69, 19, 1); /* #8B4513 deep muted red */
+    --color-error-content: rgba(255, 255, 255, 1);
+    --color-info: rgba(70, 130, 180, 1); /* #4682B4 desaturated blue */
+    --color-info-content: rgba(255, 255, 255, 1);
+
+    /* Border radius for restrained rounded corners */
+    --radius-box: 0.375rem; /* 6px rounded corners */
+    --radius-field: 0.5rem; /* 8px for input fields */
+    --radius-selector: 0.25rem; /* 4px for smaller elements */
+
+    /* Border for subtle separations */
+    --border: 1px;
+}
+
+/* Mobile-specific optimizations */
+.mobile-container {
+    max-width: 402px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background-color: var(--color-base-100);
+}
+
+/* Touch-friendly buttons and interactive elements */
+.touch-target {
+    min-height: 48px;
+    min-width: 48px;
+}
+
+/* Secondary text color for metadata */
+.text-secondary-gray {
+    color: rgba(156, 163, 175, 1); /* #9CA3AF lighter grey for secondary text */
+}
+
+/* Safe area padding for mobile devices */
+.safe-area-top {
+    padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Material and craftsmanship feel with subtle micro-textures */
+.card-surface {
+    background: linear-gradient(135deg, var(--color-base-200) 0%, rgba(44, 44, 44, 0.95) 100%);
+    backdrop-filter: blur(10px);
+}
+
+/* Subtle shadow effects for depth */
+.elevated-surface {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+/* Typography adjustments for spacious line height */
+.spacious-text {
+    line-height: 1.6;
+}
+
+.comfortable-spacing {
+    margin-bottom: 1rem;
+}
+</style> <style>
+/* 商品卡片样式 */
+.product-card {
+    background: var(--color-base-200);
+    border-radius: var(--radius-box);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
+.product-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.product-card:active {
+    transform: scale(0.98);
+}
+
+/* 商品图片容器 */
+.product-image-container {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-base-300);
+    height: 200px;
+}
+
+.product-image-container img {
+    transition: transform 0.3s ease;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.product-card:hover .product-image-container img {
+    transform: scale(1.05);
+}
+
+/* 商品价格样式 */
+.product-price {
+    color: var(--color-primary);
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+.product-original-price {
+    color: var(--color-base-content);
+    opacity: 0.6;
+    text-decoration: line-through;
+    font-size: 0.875rem;
+}
+
+/* 商品标签 */
+.product-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: var(--color-error);
+    color: var(--color-error-content);
+    padding: 4px 8px;
+    border-radius: var(--radius-selector);
+    font-size: 0.75rem;
+    font-weight: 600;
+    z-index: 10;
+}
+
+/* 加入购物车按钮 */
+.add-to-cart-btn {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: var(--color-primary);
+    color: var(--color-primary-content);
+    border: none;
+    border-radius: var(--radius-box);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.product-card:hover .add-to-cart-btn {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.add-to-cart-btn:hover {
+    background: var(--color-primary);
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.add-to-cart-btn:active {
+    transform: scale(0.95);
+}
+
+/* 排序菜单样式 */
+.sort-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--color-base-200);
+    border: 1px solid var(--color-base-300);
+    border-radius: var(--radius-box);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 20;
+    min-width: 140px;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+    pointer-events: none;
+}
+
+.sort-menu.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.sort-menu button {
+    width: 100%;
+    text-align: left;
+    padding: 12px 16px;
+    background: transparent;
+    border: none;
+    color: var(--color-base-content);
+    font-size: 0.875rem;
+    transition: background-color 0.2s ease;
+    border-radius: var(--radius-selector);
+    margin: 2px;
+}
+
+.sort-menu button:hover {
+    background: var(--color-base-300);
+}
+
+.sort-menu button.active {
+    background: var(--color-primary);
+    color: var(--color-primary-content);
+}
+
+/* 编辑模式样式 */
+#editModeToggle.edit-active {
+    background: var(--color-primary);
+    color: var(--color-primary-content);
+}
+
+#editModeToggle.edit-active:hover {
+    background: var(--color-primary);
+    opacity: 0.9;
+}
+
+/* 可编辑元素样式 */
+.editable-text {
+    transition: all 0.2s ease;
+    border-radius: var(--radius-selector);
+    padding: 2px 4px;
+    margin: -2px -4px;
+    position: relative;
+}
+
+.editable-text:hover {
+    background-color: rgba(10, 28, 63, 0.1);
+    cursor: text;
+    box-shadow: 0 0 0 1px rgba(10, 28, 63, 0.2);
+}
+
+.editable-text:focus {
+    outline: 2px solid var(--color-primary) !important;
+    background-color: rgba(10, 28, 63, 0.1) !important;
+}
+
+/* 编辑提示标签 */
+.editable-text::after {
+    content: &#39;点击编辑&#39;;
+    position: absolute;
+    top: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-primary);
+    color: var(--color-primary-content);
+    padding: 4px 8px;
+    border-radius: var(--radius-selector);
+    font-size: 0.625rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 20;
+}
+
+.editable-text:hover::after {
+    opacity: 1;
+}
+
+.editable-text:focus::after {
+    display: none;
+}
+
+/* 图片编辑覆盖层 */
+.image-edit-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    cursor: pointer;
+    z-index: 5;
+}
+
+.product-image-container:hover .image-edit-overlay {
+    opacity: 1;
+}
+
+.edit-icon {
+    background: var(--color-primary);
+    color: var(--color-primary-content);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.edit-icon:hover {
+    transform: scale(1.1);
+}
+
+/* 编辑状态指示 */
+.editing-indicator {
+    position: fixed;
+    top: 80px;
+    right: 16px;
+    background: var(--color-info);
+    color: var(--color-info-content);
+    padding: 8px 16px;
+    border-radius: var(--radius-box);
+    font-size: 0.875rem;
+    z-index: 100;
+    animation: slideInRight 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* 骨架屏样式 */
+.skeleton-card {
+    background: var(--color-base-200);
+    border-radius: var(--radius-box);
+    overflow: hidden;
+    animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.skeleton-image {
+    background: linear-gradient(90deg, var(--color-base-300) 25%, var(--color-base-200) 50%, var(--color-base-300) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s infinite;
+}
+
+.skeleton-text {
+    background: linear-gradient(90deg, var(--color-base-300) 25%, var(--color-base-200) 50%, var(--color-base-300) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s infinite;
+    border-radius: var(--radius-selector);
+}
+
+@keyframes skeleton-shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+/* 响应式优化 */
+@media (max-width: 480px) {
+    .product-card {
+        min-height: 280px;
+    }
+    
+    .product-image-container {
+        height: 160px;
+    }
+    
+    .product-price {
+        font-size: 1.125rem;
+    }
+    
+    .product-original-price {
+        font-size: 0.75rem;
+    }
+}
+
+/* 微动效增强 */
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+/* 模态对话框样式增强 */
+.modal-backdrop {
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+}
+
+/* 价格编辑特殊样式 */
+.product-price.editable-text:hover::before {
+    content: &#39;点击编辑价格&#39;;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-base-300);
+    color: var(--color-base-content);
+    padding: 4px 8px;
+    border-radius: var(--radius-selector);
+    font-size: 0.75rem;
+    white-space: nowrap;
+z-index: 10;
+    opacity: 0.9;
+}
+
+/* 功能提示区域交互样式 */
+#izhar {
+    transition: all 0.3s ease;
+}
+
+#izhar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+#izhar:active {
+    transform: scale(0.98);
+}
+</style>
+  <script src="https://assets.qingshuxuetang.com/static/uxbot/25_6/holder.js"></script></head>
+  <body class="mobile-container bg-base-100">
+    <div data-section-id="common_header" data-section-type="common_header" class="sticky top-0 z-40 bg-base-200 border-b border-base-300 safe-area-top elevated-surface">
+    <div class="navbar px-4 py-2 min-h-14">
+        <!-- Left side - Back button -->
+        <div class="navbar-start">
+            <button class="btn btn-ghost btn-sm btn-circle touch-target header-back-btn" onclick="handleBackNavigation()">
+                <span class="iconify text-base-content" data-icon="heroicons:arrow-left" data-width="20"></span>
+            </button>
+        </div>
+
+        <!-- Center - Title or Search -->
+        <div class="navbar-center flex-1 mx-4">
+            <!-- Default title display -->
+            <h1 class="text-lg font-semibold text-base-content header-title w-max spacious-text">页面标题</h1>
+            
+            <!-- Search input (hidden by default) -->
+            <div class="form-control w-full max-w-xs header-search hidden">
+                <input type="text" placeholder="搜索商品..." class="input input-bordered input-sm w-full bg-base-100 text-base-content">
+            </div>
+        </div>
+
+        <!-- Right side - Action buttons -->
+        <div class="navbar-end">
+            <!-- Search toggle button -->
+            <button class="btn btn-ghost btn-sm btn-circle touch-target header-search-btn hidden">
+                <span class="iconify text-base-content" data-icon="heroicons:magnifying-glass" data-width="20"></span>
+            </button>
+
+            <!-- Cart button with badge -->
+            <div class="indicator header-cart-btn hidden">
+                <span class="indicator-item badge badge-primary cart-badge hidden">0</span>
+                <button class="btn btn-ghost btn-sm btn-circle touch-target" onclick="navigateTo(&#39;shopping_cart_page&#39;)">
+                    <span class="iconify text-base-content" data-icon="heroicons:shopping-cart" data-width="20"></span>
+                </button>
+            </div>
+
+            <!-- More options menu -->
+            <div class="dropdown dropdown-end header-more-menu hidden">
+                <button tabindex="0" class="btn btn-ghost btn-sm btn-circle touch-target">
+                    <span class="iconify text-base-content" data-icon="heroicons:ellipsis-vertical" data-width="20"></span>
+                </button>
+                <ul tabindex="0" class="dropdown-content z-50 menu p-2 shadow bg-base-200 rounded-box w-52 mt-2 elevated-surface">
+                    <li><a onclick="showToast(&#39;分享功能开发中&#39;)" class="text-base-content">分享</a></li>
+                    <li><a onclick="showToast(&#39;举报功能开发中&#39;)" class="text-base-content">举报</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+[data-section-id="common_header"] .navbar {
+    height: 56px;
+}
+
+[data-section-id="common_header"] .header-back-btn:hover {
+    background-color: var(--color-base-300);
+    transition: background-color 0.2s ease;
+}
+
+[data-section-id="common_header"] .header-title {
+    text-align: center;
+    line-height: 1.2;
+}
+
+[data-section-id="common_header"] .header-search input:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+[data-section-id="common_header"] .btn-circle:hover {
+    transform: scale(1.05);
+    transition: transform 0.1s ease;
+}
+
+[data-section-id="common_header"] .cart-badge {
+    font-size: 10px;
+    min-height: 16px;
+    height: 16px;
+    padding: 0 4px;
+}
+</style>
+
+<script>
+(function() {
+    // Header configuration function
+    window.configureHeader = function(options = {}) {
+        const header = document.querySelector(&#39;[data-section-id="common_header"]&#39;);
+        if (!header) return;
+
+        const {
+            title = &#39;页面标题&#39;,
+            showBackButton = true,
+            showSearchButton = false,
+            showSearchInput = false,
+            showCartButton = false,
+            showMoreMenu = false,
+            onSearch = null,
+            onCart = null
+        } = options;
+
+        // Update title
+        const titleElement = header.querySelector(&#39;.header-title&#39;);
+        titleElement.textContent = title;
+
+        // Toggle back button
+        const backBtn = header.querySelector(&#39;.header-back-btn&#39;);
+        backBtn.style.display = showBackButton ? &#39;flex&#39; : &#39;none&#39;;
+
+        // Toggle search elements
+        const searchBtn = header.querySelector(&#39;.header-search-btn&#39;);
+        const searchInput = header.querySelector(&#39;.header-search&#39;);
+        searchBtn.classList.toggle(&#39;hidden&#39;, !showSearchButton);
+        searchInput.classList.toggle(&#39;hidden&#39;, !showSearchInput);
+        titleElement.classList.toggle(&#39;hidden&#39;, showSearchInput);
+
+        // Toggle cart button
+        const cartBtn = header.querySelector(&#39;.header-cart-btn&#39;);
+        cartBtn.classList.toggle(&#39;hidden&#39;, !showCartButton);
+
+        // Toggle more menu
+        const moreMenu = header.querySelector(&#39;.header-more-menu&#39;);
+        moreMenu.classList.toggle(&#39;hidden&#39;, !showMoreMenu);
+
+        // Handle search toggle
+        if (showSearchButton &amp;&amp; !showSearchInput) {
+            searchBtn.onclick = function() {
+                searchInput.classList.remove(&#39;hidden&#39;);
+                titleElement.classList.add(&#39;hidden&#39;);
+                searchBtn.classList.add(&#39;hidden&#39;);
+                const input = searchInput.querySelector(&#39;input&#39;);
+                input.focus();
+            };
+        }
+
+        // Handle search input
+        if (showSearchInput &amp;&amp; onSearch) {
+            const input = searchInput.querySelector(&#39;input&#39;);
+            input.addEventListener(&#39;input&#39;, function(e) {
+                onSearch(e.target.value);
+            });
+        }
+
+        // Update cart badge
+        if (showCartButton) {
+            updateCartBadge();
+        }
+    };
+
+    function updateCartBadge() {
+        const cartBadge = document.querySelector(&#39;[data-section-id="common_header"] .cart-badge&#39;);
+        const count = window.getCartItemCount ? window.getCartItemCount() : 0;
+        if (cartBadge) {
+            if (count > 0) {
+                cartBadge.textContent = count > 99 ? &#39;99+&#39; : count;
+                cartBadge.classList.remove(&#39;hidden&#39;);
+            } else {
+                cartBadge.classList.add(&#39;hidden&#39;);
+            }
+        }
+    }
+
+    // Default header configuration
+    document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
+        configureHeader();
+    });
+
+})();
+</script>
+    <main class="pb-24">
+      <!-- 固定促销图片区域 -->
+      <section class="mb-6">
+        <div id="i2ury" class="relative w-full h-48 overflow-hidden elevated-surface" style="border-radius: var(--radius-box);">
+          <img alt="高端电子产品促销活动" class="w-full h-full object-cover" onclick="navigateTo(&#39;product_detail_page&#39;)" data-src="placehold.co/402x192.png?text=Premium+Electronics+Sale">
+          <div id="invpc" class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-6 invpc spark-custom-invpc">
+            <h2 id="ixenl" class="text-white text-xl font-bold mb-2 spacious-text ixenl spark-custom-ixenl">
+              广告位招租
+            </h2>
+            <p id="idqde" class="text-white/90 text-sm spacious-text idqde spark-custom-idqde">
+              发现优质商品，享受购物乐趣
+            </p>
+          </div>
+        </div>
+      </section>
+      <!-- 类别信息提示 -->
+      <section class="px-4 mb-6">
+        <div id="izhar" class="card-surface p-6 elevated-surface izhar spark-custom-izhar cursor-pointer izhar" style="border-radius: var(--radius-box);" onclick="navigateTo(&#39;product_detail_page&#39;)">
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 bg-warning/20 rounded-lg flex items-center justify-center shrink-0">
+              <span class="iconify text-warning" data-icon="heroicons:information-circle" data-width="24"></span>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-lg font-semibold text-base-content mb-3 spacious-text">
+                功能提示
+              </h3>
+              <p class="text-base-content/80 text-sm spacious-text comfortable-spacing">
+                该软件未上线在线查看类别功能，请点击该选项卡下单跳转页面后选购。
+              </p>
+              <p id="ip9zs" class="text-base-content/60 text-xs spacious-text ip9zs spark-custom-ip9zs">
+                请单击我下单
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- 商品列表区 -->
+      <section class="px-4">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-xl font-bold text-base-content spacious-text">
+            热门商品
+          </h2>
+          <div class="flex items-center gap-2">
+            <button id="editModeToggle" class="btn btn-ghost btn-sm touch-target editModeToggle spark-custom-editModeToggle" style="border-radius: var(--radius-field);" onclick="toggleEditMode()">
+              <span class="iconify" data-icon="heroicons:pencil" data-width="16"></span><span id="editModeText">编辑</span></button><button id="ib0og" class="btn btn-ghost btn-sm touch-target" style="border-radius: var(--radius-field);" onclick="toggleSortMenu()">
+              <span class="iconify" data-icon="heroicons:bars-3-bottom-left" data-width="16"></span>
+              排序
+            </button>
+          </div>
+        </div>
+        <!-- 商品网格 -->
+        <div id="productGrid" class="space-y-6">
+          <!-- 商品卡片将通过JavaScript动态生成 -->
+        </div>
+        <!-- 加载更多指示器 -->
+        <div id="loadMoreIndicator" class="flex justify-center mt-8">
+          <div class="loading loading-spinner loading-md text-primary"></div>
+        </div>
+        <!-- 加载完成提示 -->
+        <div id="loadCompleteMessage" class="text-center mt-8 hidden">
+          <p class="text-base-content/60 text-sm spacious-text">
+            已显示全部商品
+          </p>
+        </div>
+      </section>
+    </main>
+    <div data-section-id="common_bottom_dock" data-section-type="common_section" class="fixed bottom-0 left-0 right-0 z-40 bg-base-200 border-t border-base-300 safe-area-bottom elevated-surface">
+  <div class="dock bg-base-200 py-2 px-4 justify-center">
+    <!-- 主页 --><button data-tab-id="home_page" class="dock-item dock-item-active flex-col items-center justify-center touch-target" onclick="navigateTo(&#39;home_page&#39;)">
+      <span class="iconify text-xl mb-1" data-icon="heroicons:home" data-width="24"></span><span class="dock-item-label text-xs">主页</span></button><!-- 购物车 -->
+    <div class="indicator">
+      <span class="indicator-item badge badge-primary cart-badge hidden">0</span><button data-tab-id="shopping_cart_page" class="dock-item flex-col items-center justify-center touch-target" onclick="navigateTo(&#39;shopping_cart_page&#39;)">
+        <span class="iconify text-xl mb-1" data-icon="heroicons:shopping-cart" data-width="24"></span><span class="dock-item-label text-xs">购物车</span>
+      </button>
+    </div>
+    <!-- 消息 --><button data-tab-id="messages_page" class="dock-item flex-col items-center justify-center touch-target" onclick="navigateTo(&#39;messages_page&#39;)">
+      <span class="iconify text-xl mb-1" data-icon="heroicons:chat-bubble-left-right" data-width="24"></span><span class="dock-item-label text-xs">消息</span></button><!-- 我的 --><button data-tab-id="my_page" class="dock-item flex-col items-center justify-center touch-target" onclick="navigateTo(&#39;my_page&#39;)">
+      <span class="iconify text-xl mb-1 i2qvzx spark-custom-i2qvzx" data-icon="heroicons:user" data-width="24" id="i2qvzx"></span><span class="dock-item-label text-xs">我的</span>
+    </button>
+  </div>
+</div>
+<script>
+/* JavaScript code for common usage, should be wrapped in a closure */
+(function() {
+    // Navigation function for page transitions
+    window.navigateTo = function(targetPageId) {
+        // Trigger navigation to another page using the provided snippet
+        const isInIframe = window.self !== window.top;
+        const targetFileName = `${targetPageId}.html`;
+        if (isInIframe) {
+            window.parent.postMessage({
+                type: &#39;iframeNavigation&#39;,
+                targetPageId: targetPageId
+            }, &#39;*&#39;);
+        } else {
+            window.location.href = targetFileName;
+        }
+    };
+
+    // Utility function to handle back navigation
+    window.handleBackNavigation = function() {
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            navigateTo(&#39;home_page&#39;);
+        }
+    };
+
+    // Function to show toast notifications
+    window.showToast = function(message, type = &#39;info&#39;) {
+        const toast = document.createElement(&#39;div&#39;);
+        toast.className = `toast toast-bottom toast-center z-50`;
+        toast.innerHTML = `<div class="alert alert-${type}"><span>${message}</span></div>`;
+        document.body.appendChild(toast);
+        
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        }, 3000);
+    };
+
+    // Smooth scroll to top function
+    window.scrollToTop = function() {
+        window.scrollTo({
+            top: 0,
+            behavior: &#39;smooth&#39;
+        });
+    };
+
+    // Function to update bottom dock active state
+    window.updateBottomDockActive = function(activeTabId) {
+        const dockItems = document.querySelectorAll(&#39;[data-section-id="common_bottom_dock"] .dock-item&#39;);
+        dockItems.forEach(item => {
+            if (item.dataset.tabId === activeTabId) {
+                item.classList.add(&#39;dock-item-active&#39;);
+            } else {
+                item.classList.remove(&#39;dock-item-active&#39;);
+            }
+        });
+    };
+
+    // Initialize global app state
+    window.APP_GLOBALS = window.APP_GLOBALS || {};
+    
+    // Shopping cart management
+    window.APP_GLOBALS.cart = window.APP_GLOBALS.cart || [];
+    
+    window.addToCart = function(product) {
+        const existingItem = window.APP_GLOBALS.cart.find(item => item.id === product.id);
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            window.APP_GLOBALS.cart.push({...product, quantity: 1});
+        }
+        showToast(&#39;商品已添加到购物车&#39;, &#39;success&#39;);
+        updateCartBadge();
+    };
+
+    window.removeFromCart = function(productId) {
+        window.APP_GLOBALS.cart = window.APP_GLOBALS.cart.filter(item => item.id !== productId);
+        updateCartBadge();
+    };
+
+    window.updateCartQuantity = function(productId, quantity) {
+        const item = window.APP_GLOBALS.cart.find(item => item.id === productId);
+        if (item) {
+            if (quantity <= 0) {
+                removeFromCart(productId);
+            } else {
+                item.quantity = quantity;
+            }
+        }
+        updateCartBadge();
+    };
+
+    window.getCartTotal = function() {
+        return window.APP_GLOBALS.cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    };
+
+    window.getCartItemCount = function() {
+        return window.APP_GLOBALS.cart.reduce((total, item) => total + item.quantity, 0);
+    };
+
+    function updateCartBadge() {
+        const cartBadge = document.querySelector(&#39;[data-section-id="common_bottom_dock"] .cart-badge&#39;);
+        const count = getCartItemCount();
+        if (cartBadge) {
+            if (count > 0) {
+                cartBadge.textContent = count > 99 ? &#39;99+&#39; : count;
+                cartBadge.classList.remove(&#39;hidden&#39;);
+            } else {
+                cartBadge.classList.add(&#39;hidden&#39;);
+            }
+        }
+    }
+
+    // User session management
+    window.APP_GLOBALS.user = window.APP_GLOBALS.user || null;
+    window.APP_GLOBALS.isAdmin = window.APP_GLOBALS.isAdmin || false;
+
+    window.setUser = function(user, isAdmin = false) {
+        window.APP_GLOBALS.user = user;
+        window.APP_GLOBALS.isAdmin = isAdmin;
+    };
+
+    window.logout = function() {
+        window.APP_GLOBALS.user = null;
+        window.APP_GLOBALS.isAdmin = false;
+        window.APP_GLOBALS.cart = [];
+        navigateTo(&#39;login_selection_page&#39;);
+    };
+
+    // Form validation utilities
+    window.validateEmail = function(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    };
+
+    window.validatePhone = function(phone) {
+        const re = /^1[3-9]\d{9}$/;
+        return re.test(phone);
+    };
+
+    window.validatePassword = function(password) {
+        return password.length >= 6;
+    };
+
+})();
+</script><script>
+document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
+    // 配置页面头部
+    configureHeader({
+        title: &#39;主页&#39;,
+        showBackButton: false,
+        showSearchButton: true,
+        showCartButton: true
+    });
+
+    // 设置底部导航栏活跃项
+    updateBottomDockActive(&#39;home_page&#39;);
+
+    // 初始化商品列表
+    initProductGrid();
+
+    // 初始化无限滚动
+    initInfiniteScroll();
+
+    // 初始化编辑模式
+    initEditMode();
+});
+
+// 编辑模式管理
+let isEditModeActive = false;
+
+function initEditMode() {
+    // 检查是否已经是管理员模式
+    if (window.APP_GLOBALS &amp;&amp; window.APP_GLOBALS.isAdmin) {
+        isEditModeActive = true;
+        updateEditModeUI();
+    }
+}
+
+function toggleEditMode() {
+    isEditModeActive = !isEditModeActive;
+    
+    // 更新全局管理员状态
+    if (!window.APP_GLOBALS) window.APP_GLOBALS = {};
+    window.APP_GLOBALS.isAdmin = isEditModeActive;
+    
+    // 更新UI
+    updateEditModeUI();
+    
+    // 重新渲染商品列表以应用编辑功能
+    refreshProductDisplay();
+    
+    // 显示提示
+    if (isEditModeActive) {
+        showToast(&#39;编辑模式已开启，点击商品信息进行编辑&#39;, &#39;info&#39;);
+        showEditingIndicator();
+    } else {
+        showToast(&#39;编辑模式已关闭&#39;, &#39;info&#39;);
+        hideEditingIndicator();
+    }
+}
+
+function updateEditModeUI() {
+    const toggleButton = document.getElementById(&#39;editModeToggle&#39;);
+    const toggleText = document.getElementById(&#39;editModeText&#39;);
+    
+    if (isEditModeActive) {
+        toggleButton.classList.add(&#39;edit-active&#39;);
+        toggleText.textContent = &#39;退出编辑&#39;;
+    } else {
+        toggleButton.classList.remove(&#39;edit-active&#39;);
+        toggleText.textContent = &#39;编辑&#39;;
+    }
+}
+
+function showEditingIndicator() {
+    const existingIndicator = document.querySelector(&#39;.editing-indicator&#39;);
+    if (existingIndicator) {
+        existingIndicator.remove();
+    }
+    
+    const indicator = document.createElement(&#39;div&#39;);
+    indicator.className = &#39;editing-indicator&#39;;
+    indicator.innerHTML = `
+        <span class="iconify" data-icon="heroicons:pencil" data-width="16"></span>
+        <span>编辑模式</span>
+    `;
+    document.body.appendChild(indicator);
+}
+
+function hideEditingIndicator() {
+    const indicator = document.querySelector(&#39;.editing-indicator&#39;);
+    if (indicator) {
+        indicator.remove();
+    }
+}
+
+// 商品数据管理
+function getGlobalProducts() {
+    if (!window.APP_GLOBALS) window.APP_GLOBALS = {};
+    if (!window.APP_GLOBALS.products) {
+        window.APP_GLOBALS.products = [
+            { 
+                id: 1, 
+                name: &#39;请单击此选项卡后点击下单按钮下单&#39;, 
+                price: 0, 
+                originalPrice: null, 
+                image: &#39;https://placehold.co/360x200.png?text=Demo+Product&#39;, 
+                badge: &#39;演示&#39;, 
+                category: &#39;demo&#39;, 
+                stock: 1, 
+                description: &#39;该软件未完善，无法完成在线查看商品操作&#39; 
+            }
+        ];
+    }
+    return window.APP_GLOBALS.products;
+}
+
+// 获取当前商品列表
+let currentProducts = [];
+let currentFilter = &#39;all&#39;;
+let currentSort = &#39;default&#39;;
+let currentPage = 0;
+const itemsPerPage = 1;
+let isLoading = false;
+let hasMoreItems = false;
+
+// 初始化商品网格
+function initProductGrid() {
+    window.addEventListener(&#39;productsUpdated&#39;, handleProductsUpdate);
+    refreshProductList();
+    loadMoreProducts();
+}
+
+// 处理商品数据更新事件
+function handleProductsUpdate(event) {
+    const { action, product, productId } = event.detail;
+    
+    switch(action) {
+        case &#39;add&#39;:
+            currentProducts.unshift(product);
+            refreshProductDisplay();
+            showToast(&#39;新商品已添加到主页&#39;, &#39;success&#39;);
+            break;
+        case &#39;update&#39;:
+            const index = currentProducts.findIndex(p => p.id === productId);
+            if (index !== -1) {
+                currentProducts[index] = { ...currentProducts[index], ...product };
+                refreshProductDisplay();
+                showToast(&#39;商品信息已更新&#39;, &#39;success&#39;);
+            }
+            break;
+        case &#39;delete&#39;:
+            currentProducts = currentProducts.filter(p => p.id !== productId);
+            refreshProductDisplay();
+            showToast(&#39;商品已从主页移除&#39;, &#39;info&#39;);
+            break;
+        case &#39;refresh&#39;:
+            refreshProductList();
+            refreshProductDisplay();
+            break;
+    }
+}
+
+// 刷新商品列表数据
+function refreshProductList() {
+    const allProducts = getGlobalProducts();
+    
+    let filteredProducts = allProducts;
+    if (currentFilter !== &#39;all&#39;) {
+        filteredProducts = allProducts.filter(product => product.category === currentFilter);
+    }
+    
+    switch(currentSort) {
+        case &#39;price-asc&#39;:
+            filteredProducts.sort((a, b) => a.price - b.price);
+            break;
+        case &#39;price-desc&#39;:
+            filteredProducts.sort((a, b) => b.price - a.price);
+            break;
+        case &#39;name&#39;:
+            filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
+            break;
+        case &#39;newest&#39;:
+            filteredProducts.sort((a, b) => b.id - a.id);
+            break;
+        default:
+            break;
+    }
+    
+    currentProducts = filteredProducts;
+}
+
+// 刷新商品显示
+function refreshProductDisplay() {
+    const productGrid = document.getElementById(&#39;productGrid&#39;);
+    productGrid.innerHTML = &#39;&#39;;
+    
+    currentPage = 0;
+    hasMoreItems = true;
+    
+    loadMoreProducts();
+}
+
+// 加载更多商品
+function loadMoreProducts() {
+    if (isLoading || !hasMoreItems) return;
+    
+    isLoading = true;
+    const loadIndicator = document.getElementById(&#39;loadMoreIndicator&#39;);
+    loadIndicator.classList.remove(&#39;hidden&#39;);
+    
+    setTimeout(() => {
+        const startIndex = currentPage * itemsPerPage;
+        const endIndex = Math.min(startIndex + itemsPerPage, currentProducts.length);
+        const productsToLoad = currentProducts.slice(startIndex, endIndex);
+        
+        if (productsToLoad.length === 0) {
+            hasMoreItems = false;
+            loadIndicator.classList.add(&#39;hidden&#39;);
+            document.getElementById(&#39;loadCompleteMessage&#39;).classList.remove(&#39;hidden&#39;);
+            return;
+        }
+        
+        renderProducts(productsToLoad);
+        currentPage++;
+        
+        if (endIndex >= currentProducts.length) {
+            hasMoreItems = false;
+            document.getElementById(&#39;loadCompleteMessage&#39;).classList.remove(&#39;hidden&#39;);
+        }
+        
+        loadIndicator.classList.add(&#39;hidden&#39;);
+        isLoading = false;
+    }, 800);
+}
+
+// 渲染商品
+function renderProducts(products) {
+    const productGrid = document.getElementById(&#39;productGrid&#39;);
+    
+    products.forEach(product => {
+        const productCard = createProductCard(product);
+        productGrid.appendChild(productCard);
+    });
+}
+
+// 创建商品卡片
+function createProductCard(product) {
+    const card = document.createElement(&#39;div&#39;);
+    card.className = &#39;product-card cursor-pointer&#39;;
+    card.setAttribute(&#39;data-repeatable&#39;, &#39;true&#39;);
+    card.onclick = () => navigateTo(&#39;product_detail_page&#39;);
+    
+    const isAdmin = window.APP_GLOBALS &amp;&amp; window.APP_GLOBALS.isAdmin;
+    
+    card.innerHTML = `
+        <div class="product-image-container relative">
+            ${product.badge ? `<div class="product-badge ${isAdmin ? &#39;editable-text&#39; : &#39;&#39;}" ${isAdmin ? &#39;contenteditable="true"&#39; : &#39;&#39;} data-product-id="${product.id}" data-field="badge">${product.badge}</div>` : &#39;&#39;}
+            <img src="${product.image}" alt="${product.name}" class="${isAdmin ? &#39;editable-image&#39; : &#39;&#39;}" loading="lazy" data-product-id="${product.id}" data-field="image" />
+            ${isAdmin ? `<div class="image-edit-overlay"><div class="edit-icon"><span class="iconify" data-icon="heroicons:pencil" data-width="20"></span></div></div>` : &#39;&#39;}
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCartFromHome(${product.id})">
+                <span class="iconify" data-icon="heroicons:plus" data-width="20"></span>
+            </button>
+        </div>
+        <div class="p-6">
+            <div class="flex items-start justify-between mb-4">
+                <div class="flex-1">
+                    <h3 class="text-lg font-semibold text-base-content mb-2 spacious-text ${isAdmin ? &#39;editable-text&#39; : &#39;&#39;}" ${isAdmin ? &#39;contenteditable="true"&#39; : &#39;&#39;} data-product-id="${product.id}" data-field="name">${product.name}</h3>
+                    <p class="text-base-content/70 text-sm mb-4 spacious-text">${product.description || &#39;暂无描述&#39;}</p>
+                </div>
+            </div>
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    ${product.price > 0 ? `<span class="product-price ${isAdmin ? &#39;editable-text&#39; : &#39;&#39;}" ${isAdmin ? &#39;contenteditable="true"&#39; : &#39;&#39;} data-product-id="${product.id}" data-field="price">¥${product.price}</span>` : &#39;&#39;}
+                    ${product.originalPrice ? `<span class="product-original-price ${isAdmin ? &#39;editable-text&#39; : &#39;&#39;}" ${isAdmin ? &#39;contenteditable="true"&#39; : &#39;&#39;} data-product-id="${product.id}" data-field="originalPrice">¥${product.originalPrice}</span>` : &#39;&#39;}
+                </div>
+                <div class="flex items-center gap-2 text-sm text-base-content/60">
+                    <span class="iconify" data-icon="heroicons:cube" data-width="16"></span>
+                    <span>库存: ${product.stock || 0}</span>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    if (isAdmin) {
+        setTimeout(() => {
+            addEditableListeners(card, product.id);
+        }, 0);
+    }
+    
+    return card;
+}
+
+// 从主页添加到购物车
+function addToCartFromHome(productId) {
+    const product = getGlobalProducts().find(p => p.id === productId);
+    if (product) {
+        addToCart(product);
+    }
+}
+
+// 初始化无限滚动
+function initInfiniteScroll() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting &amp;&amp; hasMoreItems &amp;&amp; !isLoading) {
+                loadMoreProducts();
+            }
+        });
+    }, {
+        rootMargin: &#39;100px&#39;
+    });
+    
+    const loadIndicator = document.getElementById(&#39;loadMoreIndicator&#39;);
+    observer.observe(loadIndicator);
+}
+
+// 排序功能
+let sortMenuVisible = false;
+
+function toggleSortMenu() {
+    const sortMenu = document.getElementById(&#39;sortMenu&#39;);
+    if (!sortMenu) {
+        createSortMenu();
+    } else {
+        sortMenuVisible = !sortMenuVisible;
+        sortMenu.classList.toggle(&#39;active&#39;, sortMenuVisible);
+    }
+}
+
+function createSortMenu() {
+    const sortButton = document.querySelector(&#39;[onclick="toggleSortMenu()"]&#39;);
+    const container = sortButton.parentElement;
+    container.style.position = &#39;relative&#39;;
+    
+    const menu = document.createElement(&#39;div&#39;);
+    menu.id = &#39;sortMenu&#39;;
+    menu.className = &#39;sort-menu active&#39;;
+    menu.innerHTML = `
+        <button onclick="sortProducts(&#39;default&#39;)" class="active">默认排序</button>
+        <button onclick="sortProducts(&#39;price-asc&#39;)">价格从低到高</button>
+        <button onclick="sortProducts(&#39;price-desc&#39;)">价格从高到低</button>
+        <button onclick="sortProducts(&#39;name&#39;)">按名称排序</button>
+    `;
+    
+    container.appendChild(menu);
+    sortMenuVisible = true;
+    
+    document.addEventListener(&#39;click&#39;, (e) => {
+        if (!container.contains(e.target)) {
+            menu.classList.remove(&#39;active&#39;);
+            sortMenuVisible = false;
+        }
+    });
+}
+
+function sortProducts(type) {
+    const menu = document.getElementById(&#39;sortMenu&#39;);
+    menu.querySelectorAll(&#39;button&#39;).forEach(btn => btn.classList.remove(&#39;active&#39;));
+    event.target.classList.add(&#39;active&#39;);
+    
+    currentSort = type;
+    refreshProductList();
+    refreshProductDisplay();
+    
+    menu.classList.remove(&#39;active&#39;);
+    sortMenuVisible = false;
+}
+
+// 添加可编辑元素的事件监听器
+function addEditableListeners(card, productId) {
+    const editableTexts = card.querySelectorAll(&#39;.editable-text&#39;);
+    editableTexts.forEach(element => {
+        element.addEventListener(&#39;click&#39;, (e) => {
+            e.stopPropagation();
+            element.focus();
+        });
+        
+        element.addEventListener(&#39;blur&#39;, (e) => {
+            const field = e.target.dataset.field;
+            const newValue = e.target.textContent.trim();
+            updateProductData(productId, field, newValue);
+        });
+        
+        element.addEventListener(&#39;keydown&#39;, (e) => {
+            if (e.key === &#39;Enter&#39;) {
+                e.preventDefault();
+                e.target.blur();
+            }
+        });
+    });
+    
+    const editOverlay = card.querySelector(&#39;.image-edit-overlay&#39;);
+    if (editOverlay) {
+        editOverlay.addEventListener(&#39;click&#39;, (e) => {
+            e.stopPropagation();
+            const imageElement = card.querySelector(&#39;.editable-image&#39;);
+            showImageEditDialog(productId, imageElement);
+        });
+    }
+}
+
+// 更新商品数据
+function updateProductData(productId, field, newValue) {
+    const globalProducts = getGlobalProducts();
+    const product = globalProducts.find(p => p.id === productId);
+    if (!product) return;
+    
+    switch(field) {
+        case &#39;name&#39;:
+            product.name = newValue;
+            break;
+        case &#39;price&#39;:
+            const priceMatch = newValue.match(/\d+/);
+            if (priceMatch) {
+                product.price = parseInt(priceMatch[0]);
+            }
+            break;
+        case &#39;originalPrice&#39;:
+            const originalPriceMatch = newValue.match(/\d+/);
+            if (originalPriceMatch) {
+                product.originalPrice = parseInt(originalPriceMatch[0]);
+            }
+            break;
+        case &#39;badge&#39;:
+            product.badge = newValue;
+            break;
+    }
+    
+    window.dispatchEvent(new CustomEvent(&#39;productsUpdated&#39;, {
+        detail: {
+            action: &#39;update&#39;,
+            productId: productId,
+            product: { [field]: field === &#39;price&#39; || field === &#39;originalPrice&#39; ? parseInt(newValue.match(/\d+/)?.[0] || 0) : newValue }
+        }
+    }));
+    
+    showToast(&#39;商品信息已更新&#39;, &#39;success&#39;);
+}
+
+// 显示图片编辑对话框
+function showImageEditDialog(productId, imageElement) {
+    const product = getGlobalProducts().find(p => p.id === productId);
+    if (!product) return;
+    
+    const modal = document.createElement(&#39;div&#39;);
+    modal.className = &#39;modal modal-open&#39;;
+    modal.innerHTML = `
+        <div class="modal-box">
+            <h3 class="font-bold text-lg mb-4">编辑商品图片</h3>
+            <div class="form-control mb-4">
+                <label class="label">
+                    <span class="label-text">图片URL</span>
+                </label>
+                <input type="text" class="input input-bordered w-full" id="imageUrlInput" value="${product.image}" placeholder="请输入图片URL">
+            </div>
+            <div class="form-control mb-4">
+                <label class="label">
+                    <span class="label-text">图片描述</span>
+                </label>
+                <input type="text" class="input input-bordered w-full" id="imageDescInput" value="${imageElement.alt}" placeholder="请输入图片描述">
+            </div>
+            <div class="mb-4">
+                <label class="label">
+                    <span class="label-text">预览</span>
+                </label>
+                <div class="border rounded-lg p-2 bg-base-200">
+                    <img id="imagePreview" src="${product.image}" alt="预览" class="w-full h-32 object-cover rounded">
+                </div>
+            </div>
+            <div class="modal-action">
+                <button class="btn btn-ghost" onclick="closeImageEditDialog()">取消</button>
+                <button class="btn btn-primary" onclick="saveImageChanges(${productId})">保存</button>
+            </div>
+        </div>
+        <div class="modal-backdrop" onclick="closeImageEditDialog()"></div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    const urlInput = modal.querySelector(&#39;#imageUrlInput&#39;);
+    const preview = modal.querySelector(&#39;#imagePreview&#39;);
+    urlInput.addEventListener(&#39;input&#39;, (e) => {
+        if (e.target.value.trim()) {
+            preview.src = e.target.value.trim();
+        }
+    });
+}
+
+// 关闭图片编辑对话框
+function closeImageEditDialog() {
+    const modal = document.querySelector(&#39;.modal-open&#39;);
+    if (modal) {
+        modal.remove();
+    }
+}
+
+// 保存图片更改
+function saveImageChanges(productId) {
+    const modal = document.querySelector(&#39;.modal-open&#39;);
+    const urlInput = modal.querySelector(&#39;#imageUrlInput&#39;);
+    const descInput = modal.querySelector(&#39;#imageDescInput&#39;);
+    
+    const newUrl = urlInput.value.trim();
+    const newDesc = descInput.value.trim();
+    
+    if (!newUrl) {
+        showToast(&#39;请输入有效的图片URL&#39;, &#39;error&#39;);
+        return;
+    }
+    
+    const globalProducts = getGlobalProducts();
+    const product = globalProducts.find(p => p.id === productId);
+    if (product) {
+        product.image = newUrl;
+        
+        window.dispatchEvent(new CustomEvent(&#39;productsUpdated&#39;, {
+            detail: {
+                action: &#39;update&#39;,
+                productId: productId,
+                product: { image: newUrl }
+            }
+        }));
+    }
+    
+    const imageElement = document.querySelector(`[data-product-id="${productId}"][data-field="image"]`);
+    if (imageElement) {
+        imageElement.src = newUrl;
+        imageElement.alt = newDesc;
+    }
+    
+    closeImageEditDialog();
+    showToast(&#39;图片已更新&#39;, &#39;success&#39;);
+}
+</script>
+  
+
+<script>
+    setTimeout(() => {
+      Holder.run({
+        domain: "placehold.co"
+      })
+    }, 100)
+  </script></body></html>'></iframe>
+                    </div>
+                  </div>
+
+                </body>
+                </html>
+            

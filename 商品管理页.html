@@ -1,0 +1,1017 @@
+
+                <!DOCTYPE html>
+                <html lang="zh">
+                <head>
+                  <meta charset="UTF-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  <title>商品管理页</title>
+                  <style>
+                    *,
+                    *::before,
+                    *::after {
+                      box-sizing: border-box;
+                      margin: 0;
+                    }
+                    .iframe-outer {
+                      position: fixed;
+                      top: 0;
+                      left: 0;
+                      bottom: 0;
+                      right: 0;
+                      display: flex;
+                      justify-content: center;
+                      background-color: #E0E0E0;
+                    }
+                    .iframe-wrapper {
+                      width: 100%;
+                      height: 100%;
+                      margin: 0 auto;
+                      transform-origin: center top;
+                      flex-shrink: 0;
+                    }
+                    #dynamicIframe {
+                      border: none;
+                      width: 100%;
+                      height: 100%;
+                    }
+                  </style>
+                  <script>
+                const width = 402
+                const height = 874
+                const resolutionRatio = width && height ? width / height : 1
+                const pageNameMap = {
+                  'login_selection_page': '登录选择页',
+    'admin_login_page': '管理员登录页',
+    'user_login_page': '用户登录页',
+    'product_detail_page': '商品详情页',
+    'payment_selection_page': '支付方式选择页',
+    'pending_order_page': '待处理订单页',
+    'shopping_cart_page': '购物车页',
+    'messages_page': '消息页',
+    'customer_service_chat_page': '客服聊天页',
+    'my_page': '我的页',
+    'user_info_page': '用户信息页',
+    'order_history_page': '订单记录页',
+    'settings_page': '设置页',
+    'admin_dashboard_page': '管理员仪表盘',
+    'admin_product_management_page': '商品管理页',
+    'admin_customer_service_page': '管理员客服页',
+    'page_857254': '封号页',
+    'page_860225': '订单管理页面',
+    'page_861458': '主页',
+    'page_863059': '微信支付',
+    'page_863244': '论坛交流'
+                }
+                function setIframeSize(w, h) {
+                  const currentContainerRadio = w / h
+                  let widthValue = w
+                  let heightValue = h
+                  let zoom = 1
+                  if (currentContainerRadio > resolutionRatio) {
+                    widthValue = h * resolutionRatio
+                    heightValue = h
+                  } else {
+                    widthValue = w
+                    heightValue = w / resolutionRatio
+                  }
+                  zoom = width ? widthValue / width : 1
+                  return {
+                    width: widthValue / zoom + 'px',
+                    height: heightValue / zoom + 'px',
+                    zoom,
+                  }
+                }
+                function adjustIframeSize() {
+                  const iframeWrapper = document.querySelector(".iframe-wrapper")
+                  const { width, height, zoom } = setIframeSize(window.innerWidth, window.innerHeight)
+                  iframeWrapper.style.height = height
+                  iframeWrapper.style.width = width
+                  iframeWrapper.style.transform = 'scale(' + zoom + ')'
+                }
+                function sanitizeFilename(name) {
+                  return name.replace(/[\/:*?"<>|]/g, '_')
+                }
+                function handlePostMessage(event) {
+                  if (!event.data) {
+                    return
+                  }
+                  const { type, targetPageId } = event.data
+                  const targetPageName = pageNameMap[targetPageId]
+                  if (type === "iframeNavigation" && targetPageId && targetPageName) {
+                    window.location.href = targetPageName + '.html'
+                  }
+                }
+                window.addEventListener('message', handlePostMessage)
+                window.onload = adjustIframeSize
+                window.onresize = adjustIframeSize
+                window.onunload = () => {
+                  window.removeEventListener('message', handlePostMessage)
+                }
+              </script>
+                </head>
+                <body>
+                  <div class="iframe-outer">
+                    <div class="iframe-wrapper">
+                      <iframe id="dynamicIframe" srcdoc='<html lang="zh" data-theme="business"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>商品管理</title>
+    <link href="./assets/static/uxbot/daisyui@5.css" rel="stylesheet" type="text/css">
+    <script src="./assets/static/uxbot/tailwind-browser@4.js"></script>
+    <link href="./assets/static/uxbot/daisyui-themes.css" rel="stylesheet" type="text/css">
+    <script src="./assets/3/3.1.1/iconify.min.js"></script>
+    <style>
+/* CSS code for common usage*/
+/* daisyUI Theme Variables Customization
+* Based on the selected daisyUI theme and UI guidance requirements,
+* customize only the CSS variables that need to be different from the theme defaults.
+* Available theme variables for customization:
+*/
+
+/* Only modify if different from chosen theme defaults */
+:root {
+    /* Brand Colors based on UI guidance - deep navy blue corporate theme */
+    --color-primary: rgba(10, 28, 63, 1); /* #0A1C3F deep navy blue for CTAs */
+    --color-primary-content: rgba(248, 248, 248, 1); /* Off-white text on primary */
+    --color-secondary: rgba(44, 44, 44, 1); /* #2C2C2C charcoal for secondary elements */
+    --color-secondary-content: rgba(248, 248, 248, 1);
+    --color-accent: rgba(107, 114, 128, 1); /* #6B7280 medium grey for accents */
+    --color-accent-content: rgba(255, 255, 255, 1);
+
+    /* Base colors for dark corporate background */
+    --color-base-100: rgba(26, 26, 26, 1); /* #1A1A1A charcoal main background */
+    --color-base-200: rgba(44, 44, 44, 1); /* #2C2C2C graphite for cards */
+    --color-base-300: rgba(75, 85, 99, 1); /* #4B5563 for borders */
+    --color-base-content: rgba(248, 248, 248, 1); /* #F8F8F8 off-white text */
+
+    /* Semantic colors - muted and desaturated */
+    --color-success: rgba(34, 139, 34, 1); /* #228B22 muted dark green */
+    --color-success-content: rgba(255, 255, 255, 1);
+    --color-warning: rgba(184, 134, 11, 1); /* #B8860B subtle amber */
+    --color-warning-content: rgba(0, 0, 0, 1);
+    --color-error: rgba(139, 69, 19, 1); /* #8B4513 deep muted red */
+    --color-error-content: rgba(255, 255, 255, 1);
+    --color-info: rgba(70, 130, 180, 1); /* #4682B4 desaturated blue */
+    --color-info-content: rgba(255, 255, 255, 1);
+
+    /* Border radius for restrained rounded corners */
+    --radius-box: 0.375rem; /* 6px rounded corners */
+    --radius-field: 0.5rem; /* 8px for input fields */
+    --radius-selector: 0.25rem; /* 4px for smaller elements */
+
+    /* Border for subtle separations */
+    --border: 1px;
+}
+
+/* Mobile-specific optimizations */
+.mobile-container {
+    max-width: 402px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background-color: var(--color-base-100);
+}
+
+/* Touch-friendly buttons and interactive elements */
+.touch-target {
+    min-height: 48px;
+    min-width: 48px;
+}
+
+/* Secondary text color for metadata */
+.text-secondary-gray {
+    color: rgba(156, 163, 175, 1); /* #9CA3AF lighter grey for secondary text */
+}
+
+/* Safe area padding for mobile devices */
+.safe-area-top {
+    padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Material and craftsmanship feel with subtle micro-textures */
+.card-surface {
+    background: linear-gradient(135deg, var(--color-base-200) 0%, rgba(44, 44, 44, 0.95) 100%);
+    backdrop-filter: blur(10px);
+}
+
+/* Subtle shadow effects for depth */
+.elevated-surface {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+/* Typography adjustments for spacious line height */
+.spacious-text {
+    line-height: 1.6;
+}
+
+.comfortable-spacing {
+    margin-bottom: 1rem;
+}
+</style> <style>
+/* Custom styles for Admin Product Management Page */
+
+/* Collapse content styling */
+.collapse-content {
+    background-color: var(--color-base-100);
+}
+
+.collapse-arrow .collapse-title:after {
+    color: var(--color-base-content);
+}
+
+/* Custom scrollbar for image gallery */
+.custom-scrollbar::-webkit-scrollbar {
+    height: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--color-base-300);
+    border-radius: 2px;
+}
+.custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-base-300) transparent;
+}
+
+/* Indicator positioning */
+.indicator-item {
+    z-index: 1;
+}
+
+/* Button loading states */
+.btn .loading {
+    display: none;
+}
+.btn.saving .loading {
+    display: inline-block;
+}
+.btn.saving .save-text {
+    display: none;
+}
+
+.btn.syncing .loading {
+    display: inline-block;
+}
+.btn.syncing .bulk-sync-text {
+    display: none;
+}
+
+/* Product checkbox styling */
+.product-checkbox {
+    transform: scale(1.1);
+}
+
+/* Bulk action section styling */
+#ProductBulkActionSection {
+    background: linear-gradient(135deg, var(--color-base-200) 0%, rgba(44, 44, 44, 0.3) 100%);
+}
+
+/* Enhanced material feel for cards */
+.card-surface {
+    background: linear-gradient(135deg, var(--color-base-200) 0%, rgba(44, 44, 44, 0.95) 100%);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(75, 85, 99, 0.2);
+}
+
+/* Micro-texture for form controls */
+.form-control .input,
+.form-control .label {
+    background: linear-gradient(135deg, transparent 0%, rgba(248, 248, 248, 0.02) 100%);
+}
+
+/* Enhanced button states */
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Smooth transitions for interactive elements */
+.btn,
+.checkbox,
+.collapse-title {
+    transition: all 0.2s ease;
+}
+
+/* Image upload area hover effect */
+.w-24.h-24.rounded-lg.border-2.border-dashed:hover {
+    border-color: var(--color-primary);
+    background-color: rgba(10, 28, 63, 0.05);
+}
+</style>
+  <script src="https://assets.qingshuxuetang.com/static/uxbot/25_6/holder.js"></script></head>
+  <body class="bg-base-100">
+    <div class="mobile-container flex flex-col min-h-screen">
+      <div data-section-id="common_header" data-section-type="common_header" class="sticky top-0 z-40 bg-base-200 border-b border-base-300 safe-area-top elevated-surface">
+    <div class="navbar px-4 py-2 min-h-14">
+        <!-- Left side - Back button -->
+        <div class="navbar-start">
+            <button class="btn btn-ghost btn-sm btn-circle touch-target header-back-btn" onclick="handleBackNavigation()">
+                <span class="iconify text-base-content" data-icon="heroicons:arrow-left" data-width="20"></span>
+            </button>
+        </div>
+
+        <!-- Center - Title or Search -->
+        <div class="navbar-center flex-1 mx-4">
+            <!-- Default title display -->
+            <h1 class="text-lg font-semibold text-base-content header-title w-max spacious-text">页面标题</h1>
+            
+            <!-- Search input (hidden by default) -->
+            <div class="form-control w-full max-w-xs header-search hidden">
+                <input type="text" placeholder="搜索商品..." class="input input-bordered input-sm w-full bg-base-100 text-base-content">
+            </div>
+        </div>
+
+        <!-- Right side - Action buttons -->
+        <div class="navbar-end">
+            <!-- Search toggle button -->
+            <button class="btn btn-ghost btn-sm btn-circle touch-target header-search-btn hidden">
+                <span class="iconify text-base-content" data-icon="heroicons:magnifying-glass" data-width="20"></span>
+            </button>
+
+            <!-- Cart button with badge -->
+            <div class="indicator header-cart-btn hidden">
+                <span class="indicator-item badge badge-primary cart-badge hidden">0</span>
+                <button class="btn btn-ghost btn-sm btn-circle touch-target" onclick="navigateTo(&#39;shopping_cart_page&#39;)">
+                    <span class="iconify text-base-content" data-icon="heroicons:shopping-cart" data-width="20"></span>
+                </button>
+            </div>
+
+            <!-- More options menu -->
+            <div class="dropdown dropdown-end header-more-menu hidden">
+                <button tabindex="0" class="btn btn-ghost btn-sm btn-circle touch-target">
+                    <span class="iconify text-base-content" data-icon="heroicons:ellipsis-vertical" data-width="20"></span>
+                </button>
+                <ul tabindex="0" class="dropdown-content z-50 menu p-2 shadow bg-base-200 rounded-box w-52 mt-2 elevated-surface">
+                    <li><a onclick="showToast(&#39;分享功能开发中&#39;)" class="text-base-content">分享</a></li>
+                    <li><a onclick="showToast(&#39;举报功能开发中&#39;)" class="text-base-content">举报</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+[data-section-id="common_header"] .navbar {
+    height: 56px;
+}
+
+[data-section-id="common_header"] .header-back-btn:hover {
+    background-color: var(--color-base-300);
+    transition: background-color 0.2s ease;
+}
+
+[data-section-id="common_header"] .header-title {
+    text-align: center;
+    line-height: 1.2;
+}
+
+[data-section-id="common_header"] .header-search input:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+[data-section-id="common_header"] .btn-circle:hover {
+    transform: scale(1.05);
+    transition: transform 0.1s ease;
+}
+
+[data-section-id="common_header"] .cart-badge {
+    font-size: 10px;
+    min-height: 16px;
+    height: 16px;
+    padding: 0 4px;
+}
+</style>
+
+<script>
+(function() {
+    // Header configuration function
+    window.configureHeader = function(options = {}) {
+        const header = document.querySelector(&#39;[data-section-id="common_header"]&#39;);
+        if (!header) return;
+
+        const {
+            title = &#39;页面标题&#39;,
+            showBackButton = true,
+            showSearchButton = false,
+            showSearchInput = false,
+            showCartButton = false,
+            showMoreMenu = false,
+            onSearch = null,
+            onCart = null
+        } = options;
+
+        // Update title
+        const titleElement = header.querySelector(&#39;.header-title&#39;);
+        titleElement.textContent = title;
+
+        // Toggle back button
+        const backBtn = header.querySelector(&#39;.header-back-btn&#39;);
+        backBtn.style.display = showBackButton ? &#39;flex&#39; : &#39;none&#39;;
+
+        // Toggle search elements
+        const searchBtn = header.querySelector(&#39;.header-search-btn&#39;);
+        const searchInput = header.querySelector(&#39;.header-search&#39;);
+        searchBtn.classList.toggle(&#39;hidden&#39;, !showSearchButton);
+        searchInput.classList.toggle(&#39;hidden&#39;, !showSearchInput);
+        titleElement.classList.toggle(&#39;hidden&#39;, showSearchInput);
+
+        // Toggle cart button
+        const cartBtn = header.querySelector(&#39;.header-cart-btn&#39;);
+        cartBtn.classList.toggle(&#39;hidden&#39;, !showCartButton);
+
+        // Toggle more menu
+        const moreMenu = header.querySelector(&#39;.header-more-menu&#39;);
+        moreMenu.classList.toggle(&#39;hidden&#39;, !showMoreMenu);
+
+        // Handle search toggle
+        if (showSearchButton &amp;&amp; !showSearchInput) {
+            searchBtn.onclick = function() {
+                searchInput.classList.remove(&#39;hidden&#39;);
+                titleElement.classList.add(&#39;hidden&#39;);
+                searchBtn.classList.add(&#39;hidden&#39;);
+                const input = searchInput.querySelector(&#39;input&#39;);
+                input.focus();
+            };
+        }
+
+        // Handle search input
+        if (showSearchInput &amp;&amp; onSearch) {
+            const input = searchInput.querySelector(&#39;input&#39;);
+            input.addEventListener(&#39;input&#39;, function(e) {
+                onSearch(e.target.value);
+            });
+        }
+
+        // Update cart badge
+        if (showCartButton) {
+            updateCartBadge();
+        }
+    };
+
+    function updateCartBadge() {
+        const cartBadge = document.querySelector(&#39;[data-section-id="common_header"] .cart-badge&#39;);
+        const count = window.getCartItemCount ? window.getCartItemCount() : 0;
+        if (cartBadge) {
+            if (count > 0) {
+                cartBadge.textContent = count > 99 ? &#39;99+&#39; : count;
+                cartBadge.classList.remove(&#39;hidden&#39;);
+            } else {
+                cartBadge.classList.add(&#39;hidden&#39;);
+            }
+        }
+    }
+
+    // Default header configuration
+    document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
+        configureHeader();
+    });
+
+})();
+</script>
+      <main class="flex-1 pb-28">
+        <!-- Search and Filter Section -->
+        <section id="SearchAndFilterProductSection" class="p-4 bg-base-100 sticky top-14 z-30 border-b border-base-300">
+          <div class="join w-full">
+            <label class="input input-bordered join-item flex items-center gap-2 flex-grow !rounded-r-none"><span class="iconify text-base-content/50" data-icon="heroicons:magnifying-glass" data-width="20"></span><input type="text" placeholder="搜索商品..." class="grow bg-transparent"></label><button class="btn btn-secondary join-item !rounded-l-none">
+              <span class="iconify" data-icon="heroicons:funnel" data-width="20"></span>
+              筛选
+            </button>
+          </div>
+        </section>
+        <!-- Bulk Action Section -->
+        <section id="ProductBulkActionSection" class="p-4 bg-base-200/50 border-b border-base-300">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <label class="cursor-pointer"><input type="checkbox" id="selectAllCheckbox" class="checkbox checkbox-primary" onchange="handleSelectAll(this)"></label><span id="selectedCount" class="text-sm text-base-content">已选中 0 个商品</span>
+            </div>
+            <div class="flex gap-2">
+              <button id="bulkDeleteBtn" disabled="" class="btn btn-error btn-sm" onclick="handleBulkDelete()">
+                <span class="iconify" data-icon="heroicons:trash" data-width="16"></span>
+                批量删除</button><button id="bulkSyncBtn" disabled="" class="btn btn-primary btn-sm" onclick="handleBulkSync()">
+                <span class="bulk-sync-text flex items-center gap-1"><span class="iconify" data-icon="heroicons:arrow-path" data-width="16"></span>
+                  批量同步 </span><span class="loading loading-spinner loading-xs hidden"></span>
+              </button>
+            </div>
+          </div>
+        </section>
+        <!-- Product List Section -->
+        <section id="AdminProductList" class="p-4 space-y-4">
+          <!-- Product Item 1 -->
+          <div id="product-1" data-repeatable="true" class="collapse collapse-arrow bg-base-200 rounded-lg elevated-surface card-surface">
+            <input type="radio" name="product-accordion" class="inl61 spark-custom-inl61" id="inl61">
+            <div class="collapse-title p-4 text-lg font-medium">
+              <div class="flex items-center gap-4">
+                <label class="cursor-pointer"><input type="checkbox" data-product-id="product-1" class="checkbox checkbox-primary product-checkbox" onchange="updateBulkActions()"></label><img alt="降噪无线蓝牙耳机" class="w-20 h-20 rounded-md object-cover shrink-0 border border-base-300" data-src="placehold.co/80x80.png?text=Wireless+Earbuds">
+                <div class="flex-1 min-w-0">
+                  <h3 class="font-semibold text-base-content truncate spacious-text">
+                    降噪无线蓝牙耳机
+                  </h3>
+                  <p class="text-primary text-lg font-bold mt-1">¥599.00</p>
+                </div>
+              </div>
+            </div>
+            <div class="collapse-content p-4 bg-base-100/50">
+              <div class="space-y-6">
+                <!-- Product Images -->
+                <div class="form-control">
+                  <label class="label pb-2"><span class="label-text text-base-content/80">商品图片</span></label>
+                  <div class="flex items-center gap-3 overflow-x-auto pb-2 custom-scrollbar">
+                    <div data-repeatable="true" class="indicator">
+                      <button class="indicator-item badge badge-error p-1 cursor-pointer" onclick="this.parentElement.remove()">
+                        <span class="iconify text-error-content" data-icon="heroicons:x-mark" data-width="12"></span></button><img alt="Earbuds View 1" class="w-24 h-24 rounded-lg object-cover border border-base-300" data-src="placehold.co/96x96.png?text=Earbuds+View+1">
+                    </div>
+                    <div data-repeatable="true" class="indicator">
+                      <button class="indicator-item badge badge-error p-1 cursor-pointer" onclick="this.parentElement.remove()">
+                        <span class="iconify text-error-content" data-icon="heroicons:x-mark" data-width="12"></span></button><img alt="Earbuds View 2" class="w-24 h-24 rounded-lg object-cover border border-base-300" data-src="placehold.co/96x96.png?text=Earbuds+View+2">
+                    </div>
+                    <div class="w-24 h-24 rounded-lg border-2 border-dashed border-base-300 flex items-center justify-center shrink-0 cursor-pointer hover:bg-base-200/50 transition-colors">
+                      <span class="iconify text-base-content/50" data-icon="heroicons:plus" data-width="24"></span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Product Name -->
+                <div class="form-control">
+                  <label class="label pb-1"><span class="label-text text-base-content/80">商品名称</span></label><input type="text" value="降噪无线蓝牙耳机" placeholder="输入商品名称" class="input input-bordered w-full">
+                </div>
+                <!-- Product Price -->
+                <div class="form-control">
+                  <label class="label pb-1"><span class="label-text text-base-content/80">价格</span></label><label class="input input-bordered flex items-center gap-2"><span>¥</span><input type="number" value="599.00" placeholder="0.00" class="grow bg-transparent"></label>
+                </div>
+                <!-- Action Buttons -->
+                <div class="flex justify-end gap-4 pt-2">
+                  <button class="btn btn-ghost btn-sm text-error" onclick="showDeleteModal(&#39;product-1&#39;)">
+                    <span class="iconify" data-icon="heroicons:trash" data-width="16"></span>
+                    删除</button><button class="btn btn-primary btn-sm" onclick="handleSave(this)">
+                    <span class="save-text flex items-center gap-1"><span class="iconify" data-icon="heroicons:check-circle" data-width="16"></span>
+                      保存 </span><span class="loading loading-spinner loading-xs hidden"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Product Item 2 -->
+          <div id="product-2" data-repeatable="true" class="collapse collapse-arrow bg-base-200 rounded-lg elevated-surface card-surface">
+            <input type="radio" name="product-accordion">
+            <div class="collapse-title p-4 text-lg font-medium">
+              <div class="flex items-center gap-4">
+                <label class="cursor-pointer"><input type="checkbox" data-product-id="product-2" class="checkbox checkbox-primary product-checkbox" onchange="updateBulkActions()"></label><img alt="多功能运动智能手表" class="w-20 h-20 rounded-md object-cover shrink-0 border border-base-300" data-src="placehold.co/80x80.png?text=Smart+Watch">
+                <div class="flex-1 min-w-0">
+                  <h3 class="font-semibold text-base-content truncate spacious-text">
+                    多功能运动智能手表
+                  </h3>
+                  <p class="text-primary text-lg font-bold mt-1">¥1299.00</p>
+                </div>
+              </div>
+            </div>
+            <div class="collapse-content p-4 bg-base-100/50">
+              <div class="space-y-6">
+                <!-- Product Images -->
+                <div class="form-control">
+                  <label class="label pb-2"><span class="label-text text-base-content/80">商品图片</span></label>
+                  <div class="flex items-center gap-3 overflow-x-auto pb-2 custom-scrollbar">
+                    <div data-repeatable="true" class="indicator">
+                      <button class="indicator-item badge badge-error p-1 cursor-pointer" onclick="this.parentElement.remove()">
+                        <span class="iconify text-error-content" data-icon="heroicons:x-mark" data-width="12"></span></button><img alt="Watch Face" class="w-24 h-24 rounded-lg object-cover border border-base-300" data-src="placehold.co/96x96.png?text=Watch+Face">
+                    </div>
+                    <div class="w-24 h-24 rounded-lg border-2 border-dashed border-base-300 flex items-center justify-center shrink-0 cursor-pointer hover:bg-base-200/50 transition-colors">
+                      <span class="iconify text-base-content/50" data-icon="heroicons:plus" data-width="24"></span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Product Name -->
+                <div class="form-control">
+                  <label class="label pb-1"><span class="label-text text-base-content/80">商品名称</span></label><input type="text" value="多功能运动智能手表" placeholder="输入商品名称" class="input input-bordered w-full">
+                </div>
+                <!-- Product Price -->
+                <div class="form-control">
+                  <label class="label pb-1"><span class="label-text text-base-content/80">价格</span></label><label class="input input-bordered flex items-center gap-2"><span>¥</span><input type="number" value="1299.00" placeholder="0.00" class="grow bg-transparent"></label>
+                </div>
+                <!-- Action Buttons -->
+                <div class="flex justify-end gap-4 pt-2">
+                  <button class="btn btn-ghost btn-sm text-error" onclick="showDeleteModal(&#39;product-2&#39;)">
+                    <span class="iconify" data-icon="heroicons:trash" data-width="16"></span>
+                    删除</button><button class="btn btn-primary btn-sm" onclick="handleSave(this)">
+                    <span class="save-text flex items-center gap-1"><span class="iconify" data-icon="heroicons:check-circle" data-width="16"></span>
+                      保存 </span><span class="loading loading-spinner loading-xs hidden"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Product Item 3 -->
+          <div id="product-3" data-repeatable="true" class="collapse collapse-arrow bg-base-200 rounded-lg elevated-surface card-surface product-3 spark-custom-product-3">
+            <input type="radio" name="product-accordion" class="i92dxz spark-custom-i92dxz" id="i92dxz">
+            <div class="collapse-title p-4 text-lg font-medium">
+              <div class="flex items-center gap-4">
+                <label class="cursor-pointer"><input type="checkbox" data-product-id="product-3" class="checkbox checkbox-primary product-checkbox" onchange="updateBulkActions()"></label><img alt="笔记本电脑支架" class="w-20 h-20 rounded-md object-cover shrink-0 border border-base-300" data-src="placehold.co/80x80.png?text=Laptop+Stand">
+                <div class="flex-1 min-w-0">
+                  <h3 class="font-semibold text-base-content truncate spacious-text">
+                    铝合金笔记本电脑支架
+                  </h3>
+                  <p class="text-primary text-lg font-bold mt-1">¥299.00</p>
+                </div>
+              </div>
+            </div>
+            <div class="collapse-content p-4 bg-base-100/50">
+              <div class="space-y-6">
+                <!-- Product Images -->
+                <div class="form-control">
+                  <label class="label pb-2"><span class="label-text text-base-content/80">商品图片</span></label>
+                  <div class="flex items-center gap-3 overflow-x-auto pb-2 custom-scrollbar">
+                    <div data-repeatable="true" class="indicator">
+                      <button class="indicator-item badge badge-error p-1 cursor-pointer" onclick="this.parentElement.remove()">
+                        <span class="iconify text-error-content" data-icon="heroicons:x-mark" data-width="12"></span></button><img alt="Laptop Stand Side" class="w-24 h-24 rounded-lg object-cover border border-base-300" data-src="placehold.co/96x96.png?text=Laptop+Stand+Side">
+                    </div>
+                    <div class="w-24 h-24 rounded-lg border-2 border-dashed border-base-300 flex items-center justify-center shrink-0 cursor-pointer hover:bg-base-200/50 transition-colors">
+                      <span class="iconify text-base-content/50" data-icon="heroicons:plus" data-width="24"></span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Product Name -->
+                <div class="form-control">
+                  <label class="label pb-1"><span class="label-text text-base-content/80">商品名称</span></label><input type="text" value="铝合金笔记本电脑支架" placeholder="输入商品名称" class="input input-bordered w-full">
+                </div>
+                <!-- Product Price -->
+                <div class="form-control">
+                  <label class="label pb-1"><span class="label-text text-base-content/80">价格</span></label><label class="input input-bordered flex items-center gap-2"><span>¥</span><input type="number" value="299.00" placeholder="0.00" class="grow bg-transparent"></label>
+                </div>
+                <!-- Action Buttons -->
+                <div class="flex justify-end gap-4 pt-2">
+                  <button class="btn btn-ghost btn-sm text-error" onclick="showDeleteModal(&#39;product-3&#39;)">
+                    <span class="iconify" data-icon="heroicons:trash" data-width="16"></span>
+                    删除</button><button class="btn btn-primary btn-sm" onclick="handleSave(this)">
+                    <span class="save-text flex items-center gap-1"><span class="iconify" data-icon="heroicons:check-circle" data-width="16"></span>
+                      保存 </span><span class="loading loading-spinner loading-xs hidden"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- Add Product Button -->
+        <section id="AddProductButton">
+          <div class="fixed bottom-20 right-4 z-30 safe-area-bottom">
+            <button aria-label="添加商品" class="btn btn-primary btn-circle btn-lg elevated-surface" onclick="navigateTo(&#39;admin_product_addition_page&#39;)">
+              <span class="iconify" data-icon="heroicons:plus" data-width="28"></span>
+            </button>
+          </div>
+        </section>
+        <!-- Delete Confirmation Modal -->
+        <section id="DeleteConfirmationModal">
+          <dialog id="delete_confirm_modal" class="modal">
+            <div class="modal-box">
+              <h3 class="font-bold text-lg">确认删除</h3>
+              <p class="py-4">您确定要删除此商品吗？此操作无法撤销。</p>
+              <div class="modal-action">
+                <form method="dialog" class="flex gap-2">
+                  <button class="btn flex-1">取消</button><button id="confirm_delete_btn" class="btn btn-error flex-1">
+                    确认删除
+                  </button>
+                </form>
+              </div>
+            </div>
+            <form method="dialog" class="modal-backdrop">
+              <button>close</button>
+            </form>
+          </dialog>
+        </section>
+      </main>
+    </div>
+    <script>
+/* JavaScript code for common usage, should be wrapped in a closure */
+(function() {
+    // Navigation function for page transitions
+    window.navigateTo = function(targetPageId) {
+        // Trigger navigation to another page using the provided snippet
+        const isInIframe = window.self !== window.top;
+        const targetFileName = `${targetPageId}.html`;
+        if (isInIframe) {
+            window.parent.postMessage({
+                type: &#39;iframeNavigation&#39;,
+                targetPageId: targetPageId
+            }, &#39;*&#39;);
+        } else {
+            window.location.href = targetFileName;
+        }
+    };
+
+    // Utility function to handle back navigation
+    window.handleBackNavigation = function() {
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            navigateTo(&#39;home_page&#39;);
+        }
+    };
+
+    // Function to show toast notifications
+    window.showToast = function(message, type = &#39;info&#39;) {
+        const toast = document.createElement(&#39;div&#39;);
+        toast.className = `toast toast-bottom toast-center z-50`;
+        toast.innerHTML = `<div class="alert alert-${type}"><span>${message}</span></div>`;
+        document.body.appendChild(toast);
+        
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        }, 3000);
+    };
+
+    // Smooth scroll to top function
+    window.scrollToTop = function() {
+        window.scrollTo({
+            top: 0,
+            behavior: &#39;smooth&#39;
+        });
+    };
+
+    // Function to update bottom dock active state
+    window.updateBottomDockActive = function(activeTabId) {
+        const dockItems = document.querySelectorAll(&#39;[data-section-id="common_bottom_dock"] .dock-item&#39;);
+        dockItems.forEach(item => {
+            if (item.dataset.tabId === activeTabId) {
+                item.classList.add(&#39;dock-item-active&#39;);
+            } else {
+                item.classList.remove(&#39;dock-item-active&#39;);
+            }
+        });
+    };
+
+    // Initialize global app state
+    window.APP_GLOBALS = window.APP_GLOBALS || {};
+    
+    // Shopping cart management
+    window.APP_GLOBALS.cart = window.APP_GLOBALS.cart || [];
+    
+    window.addToCart = function(product) {
+        const existingItem = window.APP_GLOBALS.cart.find(item => item.id === product.id);
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            window.APP_GLOBALS.cart.push({...product, quantity: 1});
+        }
+        showToast(&#39;商品已添加到购物车&#39;, &#39;success&#39;);
+        updateCartBadge();
+    };
+
+    window.removeFromCart = function(productId) {
+        window.APP_GLOBALS.cart = window.APP_GLOBALS.cart.filter(item => item.id !== productId);
+        updateCartBadge();
+    };
+
+    window.updateCartQuantity = function(productId, quantity) {
+        const item = window.APP_GLOBALS.cart.find(item => item.id === productId);
+        if (item) {
+            if (quantity <= 0) {
+                removeFromCart(productId);
+            } else {
+                item.quantity = quantity;
+            }
+        }
+        updateCartBadge();
+    };
+
+    window.getCartTotal = function() {
+        return window.APP_GLOBALS.cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    };
+
+    window.getCartItemCount = function() {
+        return window.APP_GLOBALS.cart.reduce((total, item) => total + item.quantity, 0);
+    };
+
+    function updateCartBadge() {
+        const cartBadge = document.querySelector(&#39;[data-section-id="common_bottom_dock"] .cart-badge&#39;);
+        const count = getCartItemCount();
+        if (cartBadge) {
+            if (count > 0) {
+                cartBadge.textContent = count > 99 ? &#39;99+&#39; : count;
+                cartBadge.classList.remove(&#39;hidden&#39;);
+            } else {
+                cartBadge.classList.add(&#39;hidden&#39;);
+            }
+        }
+    }
+
+    // User session management
+    window.APP_GLOBALS.user = window.APP_GLOBALS.user || null;
+    window.APP_GLOBALS.isAdmin = window.APP_GLOBALS.isAdmin || false;
+
+    window.setUser = function(user, isAdmin = false) {
+        window.APP_GLOBALS.user = user;
+        window.APP_GLOBALS.isAdmin = isAdmin;
+    };
+
+    window.logout = function() {
+        window.APP_GLOBALS.user = null;
+        window.APP_GLOBALS.isAdmin = false;
+        window.APP_GLOBALS.cart = [];
+        navigateTo(&#39;login_selection_page&#39;);
+    };
+
+    // Form validation utilities
+    window.validateEmail = function(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    };
+
+    window.validatePhone = function(phone) {
+        const re = /^1[3-9]\d{9}$/;
+        return re.test(phone);
+    };
+
+    window.validatePassword = function(password) {
+        return password.length >= 6;
+    };
+
+})();
+</script><script>
+document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
+    // Configure header
+    if (window.configureHeader) {
+        window.configureHeader({
+            title: &#39;商品管理&#39;,
+            showBackButton: true,
+        });
+    }
+
+    // Set back button navigation
+    const backButton = document.querySelector(&#39;[data-section-id="common_header"] .header-back-btn&#39;);
+    if (backButton) {
+        backButton.onclick = () => navigateTo(&#39;admin_dashboard_page&#39;);
+    }
+
+    // Update bottom dock active state
+    if (window.updateBottomDockActive) {
+        window.updateBottomDockActive(&#39;admin_product_management_page&#39;);
+    }
+
+    // Initialize bulk actions state
+    updateBulkActions();
+});
+
+// Handle save button with loading state
+function handleSave(button) {
+    button.classList.add(&#39;saving&#39;);
+    button.disabled = true;
+
+    setTimeout(() => {
+        button.classList.remove(&#39;saving&#39;);
+        button.disabled = false;
+        if (window.showToast) {
+            window.showToast(&#39;商品信息已保存&#39;, &#39;success&#39;);
+        }
+    }, 1500);
+}
+
+// Delete modal functionality
+let productToDeleteId = null;
+
+function showDeleteModal(productId) {
+    productToDeleteId = productId;
+    const modal = document.getElementById(&#39;delete_confirm_modal&#39;);
+    if (modal) {
+        modal.showModal();
+    }
+}
+
+document.getElementById(&#39;confirm_delete_btn&#39;).addEventListener(&#39;click&#39;, function() {
+    if (productToDeleteId) {
+        const productElement = document.getElementById(productToDeleteId);
+        if (productElement) {
+            productElement.remove();
+            updateBulkActions();
+        }
+        if (window.showToast) {
+            window.showToast(&#39;商品已删除&#39;, &#39;success&#39;);
+        }
+        productToDeleteId = null;
+    }
+});
+
+// Bulk actions functionality
+function handleSelectAll(checkbox) {
+    const productCheckboxes = document.querySelectorAll(&#39;.product-checkbox&#39;);
+    productCheckboxes.forEach(cb => {
+        cb.checked = checkbox.checked;
+    });
+    updateBulkActions();
+}
+
+function updateBulkActions() {
+    const productCheckboxes = document.querySelectorAll(&#39;.product-checkbox&#39;);
+    const checkedBoxes = document.querySelectorAll(&#39;.product-checkbox:checked&#39;);
+    const selectAllCheckbox = document.getElementById(&#39;selectAllCheckbox&#39;);
+    const selectedCount = document.getElementById(&#39;selectedCount&#39;);
+    const bulkDeleteBtn = document.getElementById(&#39;bulkDeleteBtn&#39;);
+    const bulkSyncBtn = document.getElementById(&#39;bulkSyncBtn&#39;);
+
+    // Update select all checkbox state
+    if (checkedBoxes.length === 0) {
+        selectAllCheckbox.indeterminate = false;
+        selectAllCheckbox.checked = false;
+    } else if (checkedBoxes.length === productCheckboxes.length) {
+        selectAllCheckbox.indeterminate = false;
+        selectAllCheckbox.checked = true;
+    } else {
+        selectAllCheckbox.indeterminate = true;
+        selectAllCheckbox.checked = false;
+    }
+
+    // Update selected count
+    selectedCount.textContent = `已选中 ${checkedBoxes.length} 个商品`;
+
+    // Update button states
+    const hasSelection = checkedBoxes.length > 0;
+    bulkDeleteBtn.disabled = !hasSelection;
+    bulkSyncBtn.disabled = !hasSelection;
+}
+
+function handleBulkDelete() {
+    const checkedBoxes = document.querySelectorAll(&#39;.product-checkbox:checked&#39;);
+    if (checkedBoxes.length === 0) return;
+
+    if (confirm(`确定要删除选中的 ${checkedBoxes.length} 个商品吗？此操作无法撤销。`)) {
+        checkedBoxes.forEach(checkbox => {
+            const productId = checkbox.getAttribute(&#39;data-product-id&#39;);
+            const productElement = document.getElementById(productId);
+            if (productElement) {
+                productElement.remove();
+            }
+        });
+        
+        updateBulkActions();
+        if (window.showToast) {
+            window.showToast(`已删除 ${checkedBoxes.length} 个商品`, &#39;success&#39;);
+        }
+    }
+}
+
+function handleBulkSync() {
+    const checkedBoxes = document.querySelectorAll(&#39;.product-checkbox:checked&#39;);
+    if (checkedBoxes.length === 0) {
+        if (window.showToast) {
+            window.showToast(&#39;请选择要同步的商品&#39;, &#39;warning&#39;);
+        }
+        return;
+    }
+
+    const bulkSyncBtn = document.getElementById(&#39;bulkSyncBtn&#39;);
+    bulkSyncBtn.classList.add(&#39;syncing&#39;);
+    bulkSyncBtn.disabled = true;
+
+    // Simulate sync process
+    setTimeout(() => {
+        bulkSyncBtn.classList.remove(&#39;syncing&#39;);
+        bulkSyncBtn.disabled = false;
+
+        // Uncheck all selected items
+        checkedBoxes.forEach(checkbox => {
+            checkbox.checked = false;
+        });
+
+        updateBulkActions();
+
+        if (window.showToast) {
+            window.showToast(`已成功同步 ${checkedBoxes.length} 个商品到主页`, &#39;success&#39;);
+        }
+    }, 2000);
+}
+
+// Keyboard shortcuts
+document.addEventListener(&#39;keydown&#39;, function(e) {
+    // Ctrl+A to select all
+    if (e.ctrlKey &amp;&amp; e.key === &#39;a&#39;) {
+        e.preventDefault();
+        const selectAllCheckbox = document.getElementById(&#39;selectAllCheckbox&#39;);
+        selectAllCheckbox.checked = !selectAllCheckbox.checked;
+        handleSelectAll(selectAllCheckbox);
+    }
+});
+</script>
+  
+
+<script>
+    setTimeout(() => {
+      Holder.run({
+        domain: "placehold.co"
+      })
+    }, 100)
+  </script></body></html>'></iframe>
+                    </div>
+                  </div>
+
+                </body>
+                </html>
+            

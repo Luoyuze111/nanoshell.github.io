@@ -1,0 +1,736 @@
+
+                <!DOCTYPE html>
+                <html lang="zh">
+                <head>
+                  <meta charset="UTF-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  <title>客服聊天页</title>
+                  <style>
+                    *,
+                    *::before,
+                    *::after {
+                      box-sizing: border-box;
+                      margin: 0;
+                    }
+                    .iframe-outer {
+                      position: fixed;
+                      top: 0;
+                      left: 0;
+                      bottom: 0;
+                      right: 0;
+                      display: flex;
+                      justify-content: center;
+                      background-color: #E0E0E0;
+                    }
+                    .iframe-wrapper {
+                      width: 100%;
+                      height: 100%;
+                      margin: 0 auto;
+                      transform-origin: center top;
+                      flex-shrink: 0;
+                    }
+                    #dynamicIframe {
+                      border: none;
+                      width: 100%;
+                      height: 100%;
+                    }
+                  </style>
+                  <script>
+                const width = 402
+                const height = 874
+                const resolutionRatio = width && height ? width / height : 1
+                const pageNameMap = {
+                  'login_selection_page': '登录选择页',
+    'admin_login_page': '管理员登录页',
+    'user_login_page': '用户登录页',
+    'product_detail_page': '商品详情页',
+    'payment_selection_page': '支付方式选择页',
+    'pending_order_page': '待处理订单页',
+    'shopping_cart_page': '购物车页',
+    'messages_page': '消息页',
+    'customer_service_chat_page': '客服聊天页',
+    'my_page': '我的页',
+    'user_info_page': '用户信息页',
+    'order_history_page': '订单记录页',
+    'settings_page': '设置页',
+    'admin_dashboard_page': '管理员仪表盘',
+    'admin_product_management_page': '商品管理页',
+    'admin_customer_service_page': '管理员客服页',
+    'page_857254': '封号页',
+    'page_860225': '订单管理页面',
+    'page_861458': '主页',
+    'page_863059': '微信支付',
+    'page_863244': '论坛交流'
+                }
+                function setIframeSize(w, h) {
+                  const currentContainerRadio = w / h
+                  let widthValue = w
+                  let heightValue = h
+                  let zoom = 1
+                  if (currentContainerRadio > resolutionRatio) {
+                    widthValue = h * resolutionRatio
+                    heightValue = h
+                  } else {
+                    widthValue = w
+                    heightValue = w / resolutionRatio
+                  }
+                  zoom = width ? widthValue / width : 1
+                  return {
+                    width: widthValue / zoom + 'px',
+                    height: heightValue / zoom + 'px',
+                    zoom,
+                  }
+                }
+                function adjustIframeSize() {
+                  const iframeWrapper = document.querySelector(".iframe-wrapper")
+                  const { width, height, zoom } = setIframeSize(window.innerWidth, window.innerHeight)
+                  iframeWrapper.style.height = height
+                  iframeWrapper.style.width = width
+                  iframeWrapper.style.transform = 'scale(' + zoom + ')'
+                }
+                function sanitizeFilename(name) {
+                  return name.replace(/[\/:*?"<>|]/g, '_')
+                }
+                function handlePostMessage(event) {
+                  if (!event.data) {
+                    return
+                  }
+                  const { type, targetPageId } = event.data
+                  const targetPageName = pageNameMap[targetPageId]
+                  if (type === "iframeNavigation" && targetPageId && targetPageName) {
+                    window.location.href = targetPageName + '.html'
+                  }
+                }
+                window.addEventListener('message', handlePostMessage)
+                window.onload = adjustIframeSize
+                window.onresize = adjustIframeSize
+                window.onunload = () => {
+                  window.removeEventListener('message', handlePostMessage)
+                }
+              </script>
+                </head>
+                <body>
+                  <div class="iframe-outer">
+                    <div class="iframe-wrapper">
+                      <iframe id="dynamicIframe" srcdoc='<html lang="zh-CN" data-theme="business"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>客服聊天页</title>
+    <link href="./assets/static/uxbot/daisyui@5.css" rel="stylesheet" type="text/css">
+    <script src="./assets/static/uxbot/tailwind-browser@4.js"></script>
+    <link href="./assets/static/uxbot/daisyui-themes.css" rel="stylesheet" type="text/css">
+    <script src="./assets/3/3.1.1/iconify.min.js"></script>
+    <style>
+/* CSS code for common usage*/
+/* daisyUI Theme Variables Customization
+* Based on the selected daisyUI theme and UI guidance requirements,
+* customize only the CSS variables that need to be different from the theme defaults.
+* Available theme variables for customization:
+*/
+
+/* Only modify if different from chosen theme defaults */
+:root {
+    /* Brand Colors based on UI guidance - deep navy blue corporate theme */
+    --color-primary: rgba(10, 28, 63, 1); /* #0A1C3F deep navy blue for CTAs */
+    --color-primary-content: rgba(248, 248, 248, 1); /* Off-white text on primary */
+    --color-secondary: rgba(44, 44, 44, 1); /* #2C2C2C charcoal for secondary elements */
+    --color-secondary-content: rgba(248, 248, 248, 1);
+    --color-accent: rgba(107, 114, 128, 1); /* #6B7280 medium grey for accents */
+    --color-accent-content: rgba(255, 255, 255, 1);
+
+    /* Base colors for dark corporate background */
+    --color-base-100: rgba(26, 26, 26, 1); /* #1A1A1A charcoal main background */
+    --color-base-200: rgba(44, 44, 44, 1); /* #2C2C2C graphite for cards */
+    --color-base-300: rgba(75, 85, 99, 1); /* #4B5563 for borders */
+    --color-base-content: rgba(248, 248, 248, 1); /* #F8F8F8 off-white text */
+
+    /* Semantic colors - muted and desaturated */
+    --color-success: rgba(34, 139, 34, 1); /* #228B22 muted dark green */
+    --color-success-content: rgba(255, 255, 255, 1);
+    --color-warning: rgba(184, 134, 11, 1); /* #B8860B subtle amber */
+    --color-warning-content: rgba(0, 0, 0, 1);
+    --color-error: rgba(139, 69, 19, 1); /* #8B4513 deep muted red */
+    --color-error-content: rgba(255, 255, 255, 1);
+    --color-info: rgba(70, 130, 180, 1); /* #4682B4 desaturated blue */
+    --color-info-content: rgba(255, 255, 255, 1);
+
+    /* Border radius for restrained rounded corners */
+    --radius-box: 0.375rem; /* 6px rounded corners */
+    --radius-field: 0.5rem; /* 8px for input fields */
+    --radius-selector: 0.25rem; /* 4px for smaller elements */
+
+    /* Border for subtle separations */
+    --border: 1px;
+}
+
+/* Mobile-specific optimizations */
+.mobile-container {
+    max-width: 402px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background-color: var(--color-base-100);
+}
+
+/* Touch-friendly buttons and interactive elements */
+.touch-target {
+    min-height: 48px;
+    min-width: 48px;
+}
+
+/* Secondary text color for metadata */
+.text-secondary-gray {
+    color: rgba(156, 163, 175, 1); /* #9CA3AF lighter grey for secondary text */
+}
+
+/* Safe area padding for mobile devices */
+.safe-area-top {
+    padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Material and craftsmanship feel with subtle micro-textures */
+.card-surface {
+    background: linear-gradient(135deg, var(--color-base-200) 0%, rgba(44, 44, 44, 0.95) 100%);
+    backdrop-filter: blur(10px);
+}
+
+/* Subtle shadow effects for depth */
+.elevated-surface {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+/* Typography adjustments for spacious line height */
+.spacious-text {
+    line-height: 1.6;
+}
+
+.comfortable-spacing {
+    margin-bottom: 1rem;
+}
+</style> <style>
+/* Chat-specific styles for clean, professional appearance */
+main::-webkit-scrollbar {
+    display: none;
+}
+main {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Textarea auto-resize constraints */
+#chat-input {
+    max-height: 120px;
+    transition: height 0.2s ease;
+    line-height: 1.5;
+}
+
+/* Chat bubble enhancements for material feel */
+.chat-bubble {
+    border-radius: var(--radius-box);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chat-bubble-primary {
+    background-color: var(--color-primary);
+    color: var(--color-primary-content);
+}
+
+/* FAQ button hover effects */
+.btn-outline:hover {
+    transform: translateY(-1px);
+    transition: transform 0.2s ease;
+}
+
+/* Transfer status animation */
+.alert {
+    border-radius: var(--radius-box);
+}
+
+/* Avatar styling for consistent appearance */
+.avatar .rounded-full {
+    border: 2px solid var(--color-base-300);
+}
+
+/* Smooth transitions for interactive elements */
+.btn {
+    transition: all 0.2s ease;
+}
+
+.btn:active {
+    transform: scale(0.95);
+}
+
+/* Enhanced shadow for elevated surfaces */
+.elevated-surface {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Typing indicator animation */
+@keyframes typing-dots {
+    0%, 20% { opacity: 0.4; }
+    50% { opacity: 1; }
+    80%, 100% { opacity: 0.4; }
+}
+
+.typing-indicator .dot {
+    animation: typing-dots 1.4s infinite;
+}
+
+.typing-indicator .dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-indicator .dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+</style>
+  <script src="https://assets.qingshuxuetang.com/static/uxbot/25_6/holder.js"></script></head>
+  <body class="bg-base-100">
+    <div class="mobile-container flex flex-col h-screen">
+      <!-- Customer Service Header -->
+      <header id="CustomerServiceHeader" class="navbar bg-base-200 shadow-sm flex-shrink-0 sticky top-0 z-10 safe-area-top">
+        <div class="navbar-start">
+          <button class="btn btn-ghost btn-circle touch-target" onclick="navigateTo(&#39;messages_page&#39;)">
+            <span class="iconify" data-icon="heroicons:arrow-left" data-width="24"></span>
+          </button>
+        </div>
+        <div class="navbar-center">
+          <span class="text-lg font-medium">客服</span>
+        </div>
+        <div class="navbar-end w-12">
+          <!-- Placeholder for potential actions -->
+        </div>
+      </header>
+      <!-- Main Content: Chat Messages Display -->
+      <main id="ChatMessagesDisplay" class="flex-1 overflow-y-auto p-4">
+        <!-- Welcome Message from AI Customer Service -->
+        <div class="text-center text-xs text-secondary-gray my-4">
+          今天 10:30
+        </div>
+        <div class="chat chat-start">
+          <div class="chat-image avatar">
+            <div class="w-10 h-10 rounded-full bg-primary text-primary-content flex items-center justify-center text-sm font-medium">
+              AI
+            </div>
+          </div>
+          <div class="chat-bubble bg-base-200 text-base-content spacious-text elevated-surface">
+            您好！我是智能客服助手，很高兴为您服务。请问有什么可以帮助您的吗？
+          </div>
+          <div class="chat-footer opacity-50 text-xs mt-1">
+            <span>10:30</span>
+          </div>
+        </div>
+        <!-- FAQ Quick Actions -->
+        <div class="my-6 space-y-2">
+          <div class="text-xs text-secondary-gray text-center mb-3">
+            常见问题
+          </div>
+          <button class="btn btn-outline btn-sm w-full justify-start text-left font-normal" onclick="sendQuestion(&#39;如何查询订单状态？&#39;)">
+            <span class="iconify mr-2" data-icon="heroicons:clipboard-document-list" data-width="16"></span>
+            如何查询订单状态？</button><button class="btn btn-outline btn-sm w-full justify-start text-left font-normal" onclick="sendQuestion(&#39;产品退换货政策？&#39;)">
+            <span class="iconify mr-2" data-icon="heroicons:arrow-path" data-width="16"></span>
+            产品退换货政策？</button><button class="btn btn-outline btn-sm w-full justify-start text-left font-normal" onclick="sendQuestion(&#39;转人工&#39;)">
+            <span class="iconify mr-2" data-icon="heroicons:user" data-width="16"></span>
+            转人工客服
+          </button>
+        </div>
+        <!-- Transfer Status Display (Hidden by default) -->
+        <div id="transfer-status" class="hidden my-4">
+          <div class="alert alert-info">
+            <span class="iconify" data-icon="heroicons:clock" data-width="20"></span><span id="transfer-message">正在转接中，请稍等...</span>
+          </div>
+        </div>
+        <!-- Chat anchor for scrolling -->
+        <div id="chat-anchor"></div>
+      </main>
+      <!-- Chat Input Area -->
+      <footer id="ChatInputArea" class="p-4 bg-base-200 border-t border-base-300 flex-shrink-0 sticky bottom-0 safe-area-bottom">
+        <div class="flex items-end gap-3">
+          <button class="btn btn-ghost btn-circle touch-target flex-shrink-0">
+            <span class="iconify" data-icon="heroicons:face-smile" data-width="24"></span>
+          </button>
+          <div class="flex-1">
+            <textarea id="chat-input" placeholder="输入消息..." rows="1" class="textarea textarea-bordered w-full resize-none"></textarea>
+          </div>
+          <button class="btn btn-ghost btn-circle touch-target flex-shrink-0">
+            <span class="iconify" data-icon="heroicons:paper-clip" data-width="24"></span></button><button id="send-btn" class="btn btn-primary btn-circle touch-target flex-shrink-0">
+            <span class="iconify" data-icon="heroicons:paper-airplane" data-width="20"></span>
+          </button>
+        </div>
+      </footer>
+    </div>
+    <script>
+/* JavaScript code for common usage, should be wrapped in a closure */
+(function() {
+    // Navigation function for page transitions
+    window.navigateTo = function(targetPageId) {
+        // Trigger navigation to another page using the provided snippet
+        const isInIframe = window.self !== window.top;
+        const targetFileName = `${targetPageId}.html`;
+        if (isInIframe) {
+            window.parent.postMessage({
+                type: &#39;iframeNavigation&#39;,
+                targetPageId: targetPageId
+            }, &#39;*&#39;);
+        } else {
+            window.location.href = targetFileName;
+        }
+    };
+
+    // Utility function to handle back navigation
+    window.handleBackNavigation = function() {
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            navigateTo(&#39;home_page&#39;);
+        }
+    };
+
+    // Function to show toast notifications
+    window.showToast = function(message, type = &#39;info&#39;) {
+        const toast = document.createElement(&#39;div&#39;);
+        toast.className = `toast toast-bottom toast-center z-50`;
+        toast.innerHTML = `<div class="alert alert-${type}"><span>${message}</span></div>`;
+        document.body.appendChild(toast);
+        
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        }, 3000);
+    };
+
+    // Smooth scroll to top function
+    window.scrollToTop = function() {
+        window.scrollTo({
+            top: 0,
+            behavior: &#39;smooth&#39;
+        });
+    };
+
+    // Function to update bottom dock active state
+    window.updateBottomDockActive = function(activeTabId) {
+        const dockItems = document.querySelectorAll(&#39;[data-section-id="common_bottom_dock"] .dock-item&#39;);
+        dockItems.forEach(item => {
+            if (item.dataset.tabId === activeTabId) {
+                item.classList.add(&#39;dock-item-active&#39;);
+            } else {
+                item.classList.remove(&#39;dock-item-active&#39;);
+            }
+        });
+    };
+
+    // Initialize global app state
+    window.APP_GLOBALS = window.APP_GLOBALS || {};
+    
+    // Shopping cart management
+    window.APP_GLOBALS.cart = window.APP_GLOBALS.cart || [];
+    
+    window.addToCart = function(product) {
+        const existingItem = window.APP_GLOBALS.cart.find(item => item.id === product.id);
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            window.APP_GLOBALS.cart.push({...product, quantity: 1});
+        }
+        showToast(&#39;商品已添加到购物车&#39;, &#39;success&#39;);
+        updateCartBadge();
+    };
+
+    window.removeFromCart = function(productId) {
+        window.APP_GLOBALS.cart = window.APP_GLOBALS.cart.filter(item => item.id !== productId);
+        updateCartBadge();
+    };
+
+    window.updateCartQuantity = function(productId, quantity) {
+        const item = window.APP_GLOBALS.cart.find(item => item.id === productId);
+        if (item) {
+            if (quantity <= 0) {
+                removeFromCart(productId);
+            } else {
+                item.quantity = quantity;
+            }
+        }
+        updateCartBadge();
+    };
+
+    window.getCartTotal = function() {
+        return window.APP_GLOBALS.cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    };
+
+    window.getCartItemCount = function() {
+        return window.APP_GLOBALS.cart.reduce((total, item) => total + item.quantity, 0);
+    };
+
+    function updateCartBadge() {
+        const cartBadge = document.querySelector(&#39;[data-section-id="common_bottom_dock"] .cart-badge&#39;);
+        const count = getCartItemCount();
+        if (cartBadge) {
+            if (count > 0) {
+                cartBadge.textContent = count > 99 ? &#39;99+&#39; : count;
+                cartBadge.classList.remove(&#39;hidden&#39;);
+            } else {
+                cartBadge.classList.add(&#39;hidden&#39;);
+            }
+        }
+    }
+
+    // User session management
+    window.APP_GLOBALS.user = window.APP_GLOBALS.user || null;
+    window.APP_GLOBALS.isAdmin = window.APP_GLOBALS.isAdmin || false;
+
+    window.setUser = function(user, isAdmin = false) {
+        window.APP_GLOBALS.user = user;
+        window.APP_GLOBALS.isAdmin = isAdmin;
+    };
+
+    window.logout = function() {
+        window.APP_GLOBALS.user = null;
+        window.APP_GLOBALS.isAdmin = false;
+        window.APP_GLOBALS.cart = [];
+        navigateTo(&#39;login_selection_page&#39;);
+    };
+
+    // Form validation utilities
+    window.validateEmail = function(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    };
+
+    window.validatePhone = function(phone) {
+        const re = /^1[3-9]\d{9}$/;
+        return re.test(phone);
+    };
+
+    window.validatePassword = function(password) {
+        return password.length >= 6;
+    };
+
+})();
+</script><script>
+document.addEventListener(&#39;DOMContentLoaded&#39;, () => {
+    const chatInput = document.getElementById(&#39;chat-input&#39;);
+    const sendBtn = document.getElementById(&#39;send-btn&#39;);
+    const chatDisplay = document.getElementById(&#39;ChatMessagesDisplay&#39;);
+    const chatAnchor = document.getElementById(&#39;chat-anchor&#39;);
+    const transferStatus = document.getElementById(&#39;transfer-status&#39;);
+    const transferMessage = document.getElementById(&#39;transfer-message&#39;);
+    
+    let isHumanAgent = false;
+    let isTransferring = false;
+
+    // Function to scroll to the bottom of the chat
+    function scrollToBottom() {
+        chatAnchor.scrollIntoView({ behavior: &#39;smooth&#39;, block: &#39;end&#39; });
+    }
+
+    // Auto-resize textarea
+    chatInput.addEventListener(&#39;input&#39;, () => {
+        chatInput.style.height = &#39;auto&#39;;
+        chatInput.style.height = `${chatInput.scrollHeight}px`;
+    });
+
+    // Function to add a message to the chat
+    function addMessage(content, sender, showTime = true) {
+        const messageWrapper = document.createElement(&#39;div&#39;);
+        const now = new Date();
+        const timeString = `${now.getHours().toString().padStart(2, &#39;0&#39;)}:${now.getMinutes().toString().padStart(2, &#39;0&#39;)}`;
+        
+        let messageHTML = &#39;&#39;;
+        if (sender === &#39;user&#39;) {
+            messageHTML = `
+                <div class="chat chat-end mb-4">
+                    <div class="chat-image avatar">
+                        <div class="w-10 h-10 rounded-full bg-accent text-accent-content flex items-center justify-center text-sm font-medium">
+                            我
+                        </div>
+                    </div>
+                    <div class="chat-bubble chat-bubble-primary spacious-text elevated-surface">${content}</div>
+                    ${showTime ? `<div class="chat-footer opacity-50 text-xs mt-1">
+                        <span>${timeString}</span>
+                        <span class="iconify text-success ml-1" data-icon="heroicons:check-badge" data-width="12"></span>
+                    </div>` : &#39;&#39;}
+                </div>
+            `;
+        } else {
+            const avatarContent = isHumanAgent ? &#39;客服&#39; : &#39;AI&#39;;
+            messageHTML = `
+                <div class="chat chat-start mb-4">
+                    <div class="chat-image avatar">
+                        <div class="w-10 h-10 rounded-full bg-primary text-primary-content flex items-center justify-center text-sm font-medium">
+                            ${avatarContent}
+                        </div>
+                    </div>
+                    <div class="chat-bubble bg-base-200 text-base-content spacious-text elevated-surface">${content}</div>
+                    ${showTime ? `<div class="chat-footer opacity-50 text-xs mt-1">
+                        <span>${timeString}</span>
+                    </div>` : &#39;&#39;}
+                </div>
+            `;
+        }
+        
+        messageWrapper.innerHTML = messageHTML;
+        chatDisplay.insertBefore(messageWrapper, chatAnchor);
+        scrollToBottom();
+    }
+
+    // Function to show typing indicator
+    function showTypingIndicator() {
+        const typingWrapper = document.createElement(&#39;div&#39;);
+        typingWrapper.id = &#39;typing-indicator&#39;;
+        typingWrapper.innerHTML = `
+            <div class="chat chat-start mb-4">
+                <div class="chat-image avatar">
+                    <div class="w-10 h-10 rounded-full bg-primary text-primary-content flex items-center justify-center text-sm font-medium">
+                        ${isHumanAgent ? &#39;客服&#39; : &#39;AI&#39;}
+                    </div>
+                </div>
+                <div class="chat-bubble bg-base-200 text-base-content">
+                    <div class="typing-indicator flex items-center gap-1">
+                        <span class="dot w-2 h-2 bg-current rounded-full"></span>
+                        <span class="dot w-2 h-2 bg-current rounded-full"></span>
+                        <span class="dot w-2 h-2 bg-current rounded-full"></span>
+                    </div>
+                </div>
+            </div>
+        `;
+        chatDisplay.insertBefore(typingWrapper, chatAnchor);
+        scrollToBottom();
+    }
+
+    // Function to hide typing indicator
+    function hideTypingIndicator() {
+        const indicator = document.getElementById(&#39;typing-indicator&#39;);
+        if (indicator) {
+            indicator.remove();
+        }
+    }
+
+    // Function to handle human agent transfer
+    function handleHumanTransfer() {
+        if (isTransferring) return;
+        
+        isTransferring = true;
+        transferStatus.classList.remove(&#39;hidden&#39;);
+        transferMessage.textContent = &#39;正在转接中，请稍等...&#39;;
+        
+        // Simulate transfer process
+        setTimeout(() => {
+            transferMessage.textContent = &#39;转接成功，人工客服为您服务&#39;;
+            transferStatus.querySelector(&#39;.alert&#39;).classList.remove(&#39;alert-info&#39;);
+            transferStatus.querySelector(&#39;.alert&#39;).classList.add(&#39;alert-success&#39;);
+            transferStatus.querySelector(&#39;.iconify&#39;).setAttribute(&#39;data-icon&#39;, &#39;heroicons:check-circle&#39;);
+            
+            isHumanAgent = true;
+            isTransferring = false;
+            
+            // Hide transfer status after 3 seconds
+            setTimeout(() => {
+                transferStatus.classList.add(&#39;hidden&#39;);
+            }, 3000);
+            
+            // Add human agent greeting
+            setTimeout(() => {
+                addMessage(&#39;您好，我是人工客服，很高兴为您服务。请问有什么可以帮助您的？&#39;, &#39;cs&#39;);
+            }, 1000);
+        }, 3000);
+    }
+
+    // Send message function
+    window.sendMessage = function() {
+        const messageText = chatInput.value.trim();
+        if (messageText) {
+            addMessage(messageText, &#39;user&#39;);
+            chatInput.value = &#39;&#39;;
+            chatInput.style.height = &#39;auto&#39;;
+            
+            // Check if user wants human transfer
+            if (messageText.includes(&#39;转人工&#39;) &amp;&amp; !isHumanAgent) {
+                handleHumanTransfer();
+                return;
+            }
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            // Simulate response delay
+            setTimeout(() => {
+                hideTypingIndicator();
+                
+                let reply = &#39;&#39;;
+                if (isHumanAgent) {
+                    reply = &#39;我已收到您的消息，正在为您处理，请稍候...&#39;;
+                } else {
+                    if (messageText.includes(&#39;订单&#39;)) {
+                        reply = &#39;您可以在"我的"->"订单历史"页面查看订单状态，或提供订单号让我为您查询。&#39;;
+                    } else if (messageText.includes(&#39;退货&#39;) || messageText.includes(&#39;退换&#39;)) {
+                        reply = &#39;我们支持7天无理由退换货，请在订单详情页面发起申请，或输入"转人工"联系人工客服。&#39;;
+                    } else {
+                        reply = &#39;感谢您的咨询，我正在为您查询相关信息。如需更详细的帮助，可以输入"转人工"联系人工客服。&#39;;
+                    }
+                }
+                
+                addMessage(reply, &#39;cs&#39;);
+            }, 1500);
+        }
+    };
+
+    // Send predefined question
+    window.sendQuestion = function(question) {
+        addMessage(question, &#39;user&#39;);
+        
+        if (question.includes(&#39;转人工&#39;)) {
+            handleHumanTransfer();
+            return;
+        }
+        
+        // Show typing indicator
+        showTypingIndicator();
+        
+        setTimeout(() => {
+            hideTypingIndicator();
+            
+            let reply = &#39;&#39;;
+            if (question.includes(&#39;订单状态&#39;)) {
+                reply = &#39;您可以通过以下方式查询订单状态：\n1. 在"我的"->"订单历史"页面查看\n2. 提供订单号，我为您查询\n3. 联系人工客服获得详细帮助&#39;;
+            } else if (question.includes(&#39;退换货&#39;)) {
+                reply = &#39;退换货政策说明：\n• 支持7天无理由退换货\n• 商品需保持原包装完好\n• 在订单详情页面发起申请\n• 特殊商品请咨询人工客服&#39;;
+            }
+            
+            addMessage(reply, &#39;cs&#39;);
+        }, 1200);
+    };
+
+    // Event listeners
+    sendBtn.addEventListener(&#39;click&#39;, sendMessage);
+    
+    chatInput.addEventListener(&#39;keydown&#39;, (event) => {
+        if (event.key === &#39;Enter&#39; &amp;&amp; !event.shiftKey) {
+            event.preventDefault();
+            sendMessage();
+        }
+    });
+
+    // Initial scroll to bottom
+    scrollToBottom();
+});
+</script>
+  
+
+<script>
+    setTimeout(() => {
+      Holder.run({
+        domain: "placehold.co"
+      })
+    }, 100)
+  </script></body></html>'></iframe>
+                    </div>
+                  </div>
+
+                </body>
+                </html>
+            

@@ -1,0 +1,761 @@
+
+                <!DOCTYPE html>
+                <html lang="zh">
+                <head>
+                  <meta charset="UTF-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  <title>订单管理页面</title>
+                  <style>
+                    *,
+                    *::before,
+                    *::after {
+                      box-sizing: border-box;
+                      margin: 0;
+                    }
+                    .iframe-outer {
+                      position: fixed;
+                      top: 0;
+                      left: 0;
+                      bottom: 0;
+                      right: 0;
+                      display: flex;
+                      justify-content: center;
+                      background-color: #E0E0E0;
+                    }
+                    .iframe-wrapper {
+                      width: 100%;
+                      height: 100%;
+                      margin: 0 auto;
+                      transform-origin: center top;
+                      flex-shrink: 0;
+                    }
+                    #dynamicIframe {
+                      border: none;
+                      width: 100%;
+                      height: 100%;
+                    }
+                  </style>
+                  <script>
+                const width = 402
+                const height = 874
+                const resolutionRatio = width && height ? width / height : 1
+                const pageNameMap = {
+                  'login_selection_page': '登录选择页',
+    'admin_login_page': '管理员登录页',
+    'user_login_page': '用户登录页',
+    'product_detail_page': '商品详情页',
+    'payment_selection_page': '支付方式选择页',
+    'pending_order_page': '待处理订单页',
+    'shopping_cart_page': '购物车页',
+    'messages_page': '消息页',
+    'customer_service_chat_page': '客服聊天页',
+    'my_page': '我的页',
+    'user_info_page': '用户信息页',
+    'order_history_page': '订单记录页',
+    'settings_page': '设置页',
+    'admin_dashboard_page': '管理员仪表盘',
+    'admin_product_management_page': '商品管理页',
+    'admin_customer_service_page': '管理员客服页',
+    'page_857254': '封号页',
+    'page_860225': '订单管理页面',
+    'page_861458': '主页',
+    'page_863059': '微信支付',
+    'page_863244': '论坛交流'
+                }
+                function setIframeSize(w, h) {
+                  const currentContainerRadio = w / h
+                  let widthValue = w
+                  let heightValue = h
+                  let zoom = 1
+                  if (currentContainerRadio > resolutionRatio) {
+                    widthValue = h * resolutionRatio
+                    heightValue = h
+                  } else {
+                    widthValue = w
+                    heightValue = w / resolutionRatio
+                  }
+                  zoom = width ? widthValue / width : 1
+                  return {
+                    width: widthValue / zoom + 'px',
+                    height: heightValue / zoom + 'px',
+                    zoom,
+                  }
+                }
+                function adjustIframeSize() {
+                  const iframeWrapper = document.querySelector(".iframe-wrapper")
+                  const { width, height, zoom } = setIframeSize(window.innerWidth, window.innerHeight)
+                  iframeWrapper.style.height = height
+                  iframeWrapper.style.width = width
+                  iframeWrapper.style.transform = 'scale(' + zoom + ')'
+                }
+                function sanitizeFilename(name) {
+                  return name.replace(/[\/:*?"<>|]/g, '_')
+                }
+                function handlePostMessage(event) {
+                  if (!event.data) {
+                    return
+                  }
+                  const { type, targetPageId } = event.data
+                  const targetPageName = pageNameMap[targetPageId]
+                  if (type === "iframeNavigation" && targetPageId && targetPageName) {
+                    window.location.href = targetPageName + '.html'
+                  }
+                }
+                window.addEventListener('message', handlePostMessage)
+                window.onload = adjustIframeSize
+                window.onresize = adjustIframeSize
+                window.onunload = () => {
+                  window.removeEventListener('message', handlePostMessage)
+                }
+              </script>
+                </head>
+                <body>
+                  <div class="iframe-outer">
+                    <div class="iframe-wrapper">
+                      <iframe id="dynamicIframe" srcdoc='<html lang="简体中文" data-theme="business"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>订单管理页面</title>
+    <link href="./assets/static/uxbot/daisyui@5.css" rel="stylesheet" type="text/css">
+    <script src="./assets/static/uxbot/tailwind-browser@4.js"></script>
+    <link href="./assets/static/uxbot/daisyui-themes.css" rel="stylesheet" type="text/css">
+    <script src="./assets/3/3.1.1/iconify.min.js"></script>
+    <style>
+/* CSS code for common usage*/
+/* daisyUI Theme Variables Customization
+* Based on the selected daisyUI theme and UI guidance requirements,
+* customize only the CSS variables that need to be different from the theme defaults.
+* Available theme variables for customization:
+*/
+
+/* Only modify if different from chosen theme defaults */
+:root {
+    /* Brand Colors based on UI guidance - deep navy blue corporate theme */
+    --color-primary: rgba(10, 28, 63, 1); /* #0A1C3F deep navy blue for CTAs */
+    --color-primary-content: rgba(248, 248, 248, 1); /* Off-white text on primary */
+    --color-secondary: rgba(44, 44, 44, 1); /* #2C2C2C charcoal for secondary elements */
+    --color-secondary-content: rgba(248, 248, 248, 1);
+    --color-accent: rgba(107, 114, 128, 1); /* #6B7280 medium grey for accents */
+    --color-accent-content: rgba(255, 255, 255, 1);
+
+    /* Base colors for dark corporate background */
+    --color-base-100: rgba(26, 26, 26, 1); /* #1A1A1A charcoal main background */
+    --color-base-200: rgba(44, 44, 44, 1); /* #2C2C2C graphite for cards */
+    --color-base-300: rgba(75, 85, 99, 1); /* #4B5563 for borders */
+    --color-base-content: rgba(248, 248, 248, 1); /* #F8F8F8 off-white text */
+
+    /* Semantic colors - muted and desaturated */
+    --color-success: rgba(34, 139, 34, 1); /* #228B22 muted dark green */
+    --color-success-content: rgba(255, 255, 255, 1);
+    --color-warning: rgba(184, 134, 11, 1); /* #B8860B subtle amber */
+    --color-warning-content: rgba(0, 0, 0, 1);
+    --color-error: rgba(139, 69, 19, 1); /* #8B4513 deep muted red */
+    --color-error-content: rgba(255, 255, 255, 1);
+    --color-info: rgba(70, 130, 180, 1); /* #4682B4 desaturated blue */
+    --color-info-content: rgba(255, 255, 255, 1);
+
+    /* Border radius for restrained rounded corners */
+    --radius-box: 0.375rem; /* 6px rounded corners */
+    --radius-field: 0.5rem; /* 8px for input fields */
+    --radius-selector: 0.25rem; /* 4px for smaller elements */
+
+    /* Border for subtle separations */
+    --border: 1px;
+}
+
+/* Mobile-specific optimizations */
+.mobile-container {
+    max-width: 402px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background-color: var(--color-base-100);
+}
+
+/* Touch-friendly buttons and interactive elements */
+.touch-target {
+    min-height: 48px;
+    min-width: 48px;
+}
+
+/* Secondary text color for metadata */
+.text-secondary-gray {
+    color: rgba(156, 163, 175, 1); /* #9CA3AF lighter grey for secondary text */
+}
+
+/* Safe area padding for mobile devices */
+.safe-area-top {
+    padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Material and craftsmanship feel with subtle micro-textures */
+.card-surface {
+    background: linear-gradient(135deg, var(--color-base-200) 0%, rgba(44, 44, 44, 0.95) 100%);
+    backdrop-filter: blur(10px);
+}
+
+/* Subtle shadow effects for depth */
+.elevated-surface {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+/* Typography adjustments for spacious line height */
+.spacious-text {
+    line-height: 1.6;
+}
+
+.comfortable-spacing {
+    margin-bottom: 1rem;
+}
+</style> <style>
+/* Custom styles for the order management page */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+.filter-tab {
+    flex-shrink: 0;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+    border-radius: var(--radius-selector);
+}
+
+.active-filter {
+    background-color: var(--color-primary);
+    color: var(--color-primary-content);
+}
+
+.order-card {
+    border-radius: var(--radius-box);
+    background-color: var(--color-base-200);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid var(--color-base-300);
+}
+
+.order-card-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.order-card-details.expanded {
+    max-height: 500px; /* Adjust as needed */
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.status-badge {
+    transition: background-color 0.3s ease, color 0.3s ease;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Specific badge colors to match the theme */
+.badge-pending { background-color: var(--color-warning); color: var(--color-warning-content); }
+.badge-completed { background-color: var(--color-success); color: var(--color-success-content); }
+.badge-cancelled { background-color: var(--color-error); color: var(--color-error-content); }
+
+.main-content {
+    /* Padding to prevent content from being hidden by the fixed footer */
+    padding-bottom: 96px; 
+}
+
+#BatchActionFooter.hidden {
+    display: none;
+}
+
+/* Adjust sticky top position for header and filter */
+.navbar {
+    padding-top: env(safe-area-inset-top);
+}
+#OrderStatusFilter {
+    top: calc(3rem + env(safe-area-inset-top)); /* 3rem is navbar height */
+}
+
+.product-image {
+    border-radius: var(--radius-selector);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+/* Empty state styling */
+#empty-state {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+#empty-state .btn {
+    transition: all 0.2s ease;
+}
+
+#empty-state .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+  <script src="https://assets.qingshuxuetang.com/static/uxbot/25_6/holder.js"></script></head>
+  <body class="mobile-container bg-base-100 flex flex-col h-screen">
+    <header id="Header" class="bg-base-200/80 backdrop-blur-sm border-b border-base-300 safe-area-top sticky top-0 z-20">
+      <div class="navbar min-h-12">
+        <div class="navbar-start">
+          <button class="btn btn-ghost btn-square touch-target" onclick="navigateTo(&#39;admin_dashboard_page&#39;)">
+            <span class="iconify text-base-content" data-icon="heroicons:arrow-left" data-width="24"></span>
+          </button>
+        </div>
+        <div class="navbar-center">
+          <h1 class="text-lg font-medium text-base-content spacious-text">
+            订单管理
+          </h1>
+        </div>
+        <div class="navbar-end w-12"></div>
+      </div>
+    </header>
+    <section id="OrderStatusFilter" class="bg-base-100 p-3 border-b border-base-300 sticky top-[calc(3rem+env(safe-area-inset-top))] z-20">
+      <div class="flex gap-2 overflow-x-auto scrollbar-hide">
+        <button data-status="all" class="btn btn-sm btn-primary filter-tab active-filter">
+          全部订单</button><button data-status="pending" class="btn btn-sm btn-ghost filter-tab">
+          待发货</button><button data-status="completed" class="btn btn-sm btn-ghost filter-tab">
+          已完成</button><button data-status="cancelled" class="btn btn-sm btn-ghost filter-tab">
+          已取消
+        </button>
+      </div>
+    </section>
+    <main id="OrderList" class="flex-1 overflow-y-auto p-4 space-y-4 main-content OrderList spark-custom-OrderList OrderList">
+      <!-- Orders will be dynamically injected here -->
+      <div id="empty-state" class="h-full flex flex-col items-center justify-center text-center py-16 px-8">
+        <div class="w-20 h-20 rounded-full bg-base-200 flex items-center justify-center mb-6">
+          <span class="iconify text-base-content/40" data-icon="heroicons:clipboard-document-list" data-width="40"></span>
+        </div>
+        <h3 class="text-lg font-medium text-base-content mb-2">暂无订单数据</h3>
+        <p class="text-base-content/60 spacious-text mb-4">
+          当前筛选条件下没有找到相关订单
+        </p>
+        <div class="space-y-2 text-sm text-secondary-gray">
+          <p>• 您可以尝试切换不同的订单状态筛选</p>
+          <p>• 等待用户下单后订单将在此处显示</p>
+          <p>• 如有疑问请联系技术支持</p>
+        </div>
+        <button class="btn btn-outline btn-sm mt-6" onclick="location.reload()">
+          <span class="iconify" data-icon="heroicons:arrow-path" data-width="16"></span>
+          刷新页面
+        </button>
+      </div>
+    </main>
+    <footer id="BatchActionFooter" class="bg-base-200/80 backdrop-blur-sm border-t border-base-300 p-4 safe-area-bottom sticky bottom-0 z-20 hidden">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="selectAllCheckbox" class="checkbox checkbox-primary checkbox-sm"><span class="label-text text-base-content">全选</span></label><span class="text-sm text-secondary-gray">已选
+            <span id="selectedCount" class="font-medium text-base-content">0</span></span>
+        </div>
+        <button id="batchShipButton" disabled="" class="btn btn-primary btn-sm" onclick="showBatchShipModal()">
+          <span class="iconify" data-icon="heroicons:truck" data-width="16"></span>
+          批量发货
+        </button>
+      </div>
+    </footer>
+    <!-- Batch Ship Confirmation Modal -->
+    <dialog id="batch_ship_modal" class="modal">
+      <div class="modal-box bg-base-200">
+        <h3 class="font-bold text-lg text-base-content">确认批量发货</h3>
+        <p class="py-4 text-base-content/80">
+          您确定要为所有选中的“待发货”订单进行发货处理吗？此操作不可撤销。
+        </p>
+        <div class="modal-action">
+          <form method="dialog" class="flex gap-2 w-full">
+            <button class="btn flex-1">取消</button><button class="btn btn-primary flex-1" onclick="handleConfirmBatchShip()">
+              确认发货
+            </button>
+          </form>
+        </div>
+      </div>
+      <form method="dialog" class="modal-backdrop"><button>close</button></form>
+    </dialog>
+    <script>
+/* JavaScript code for common usage, should be wrapped in a closure */
+(function() {
+    // Navigation function for page transitions
+    window.navigateTo = function(targetPageId) {
+        // Trigger navigation to another page using the provided snippet
+        const isInIframe = window.self !== window.top;
+        const targetFileName = `${targetPageId}.html`;
+        if (isInIframe) {
+            window.parent.postMessage({
+                type: &#39;iframeNavigation&#39;,
+                targetPageId: targetPageId
+            }, &#39;*&#39;);
+        } else {
+            window.location.href = targetFileName;
+        }
+    };
+
+    // Utility function to handle back navigation
+    window.handleBackNavigation = function() {
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            navigateTo(&#39;home_page&#39;);
+        }
+    };
+
+    // Function to show toast notifications
+    window.showToast = function(message, type = &#39;info&#39;) {
+        const toast = document.createElement(&#39;div&#39;);
+        toast.className = `toast toast-bottom toast-center z-50`;
+        toast.innerHTML = `<div class="alert alert-${type}"><span>${message}</span></div>`;
+        document.body.appendChild(toast);
+        
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        }, 3000);
+    };
+
+    // Smooth scroll to top function
+    window.scrollToTop = function() {
+        window.scrollTo({
+            top: 0,
+            behavior: &#39;smooth&#39;
+        });
+    };
+
+    // Function to update bottom dock active state
+    window.updateBottomDockActive = function(activeTabId) {
+        const dockItems = document.querySelectorAll(&#39;[data-section-id="common_bottom_dock"] .dock-item&#39;);
+        dockItems.forEach(item => {
+            if (item.dataset.tabId === activeTabId) {
+                item.classList.add(&#39;dock-item-active&#39;);
+            } else {
+                item.classList.remove(&#39;dock-item-active&#39;);
+            }
+        });
+    };
+
+    // Initialize global app state
+    window.APP_GLOBALS = window.APP_GLOBALS || {};
+    
+    // Shopping cart management
+    window.APP_GLOBALS.cart = window.APP_GLOBALS.cart || [];
+    
+    window.addToCart = function(product) {
+        const existingItem = window.APP_GLOBALS.cart.find(item => item.id === product.id);
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            window.APP_GLOBALS.cart.push({...product, quantity: 1});
+        }
+        showToast(&#39;商品已添加到购物车&#39;, &#39;success&#39;);
+        updateCartBadge();
+    };
+
+    window.removeFromCart = function(productId) {
+        window.APP_GLOBALS.cart = window.APP_GLOBALS.cart.filter(item => item.id !== productId);
+        updateCartBadge();
+    };
+
+    window.updateCartQuantity = function(productId, quantity) {
+        const item = window.APP_GLOBALS.cart.find(item => item.id === productId);
+        if (item) {
+            if (quantity <= 0) {
+                removeFromCart(productId);
+            } else {
+                item.quantity = quantity;
+            }
+        }
+        updateCartBadge();
+    };
+
+    window.getCartTotal = function() {
+        return window.APP_GLOBALS.cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    };
+
+    window.getCartItemCount = function() {
+        return window.APP_GLOBALS.cart.reduce((total, item) => total + item.quantity, 0);
+    };
+
+    function updateCartBadge() {
+        const cartBadge = document.querySelector(&#39;[data-section-id="common_bottom_dock"] .cart-badge&#39;);
+        const count = getCartItemCount();
+        if (cartBadge) {
+            if (count > 0) {
+                cartBadge.textContent = count > 99 ? &#39;99+&#39; : count;
+                cartBadge.classList.remove(&#39;hidden&#39;);
+            } else {
+                cartBadge.classList.add(&#39;hidden&#39;);
+            }
+        }
+    }
+
+    // User session management
+    window.APP_GLOBALS.user = window.APP_GLOBALS.user || null;
+    window.APP_GLOBALS.isAdmin = window.APP_GLOBALS.isAdmin || false;
+
+    window.setUser = function(user, isAdmin = false) {
+        window.APP_GLOBALS.user = user;
+        window.APP_GLOBALS.isAdmin = isAdmin;
+    };
+
+    window.logout = function() {
+        window.APP_GLOBALS.user = null;
+        window.APP_GLOBALS.isAdmin = false;
+        window.APP_GLOBALS.cart = [];
+        navigateTo(&#39;login_selection_page&#39;);
+    };
+
+    // Form validation utilities
+    window.validateEmail = function(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    };
+
+    window.validatePhone = function(phone) {
+        const re = /^1[3-9]\d{9}$/;
+        return re.test(phone);
+    };
+
+    window.validatePassword = function(password) {
+        return password.length >= 6;
+    };
+
+})();
+</script><script>
+document.addEventListener(&#39;DOMContentLoaded&#39;, function () {
+// 订单数据将从实际的用户下单情况中获取，默认为空
+    const mockOrders = [];
+
+    let currentFilter = &#39;all&#39;;
+
+    const orderListContainer = document.getElementById(&#39;OrderList&#39;);
+    const emptyState = document.getElementById(&#39;empty-state&#39;);
+    const filterTabs = document.querySelectorAll(&#39;.filter-tab&#39;);
+    const selectAllCheckbox = document.getElementById(&#39;selectAllCheckbox&#39;);
+    const batchActionFooter = document.getElementById(&#39;BatchActionFooter&#39;);
+    const batchShipButton = document.getElementById(&#39;batchShipButton&#39;);
+    const selectedCountSpan = document.getElementById(&#39;selectedCount&#39;);
+    
+    function getStatusInfo(status) {
+        switch (status) {
+            case &#39;pending&#39;: return { text: &#39;待发货&#39;, badgeClass: &#39;badge-pending&#39; };
+            case &#39;completed&#39;: return { text: &#39;已完成&#39;, badgeClass: &#39;badge-completed&#39; };
+            case &#39;cancelled&#39;: return { text: &#39;已取消&#39;, badgeClass: &#39;badge-cancelled&#39; };
+            default: return { text: &#39;未知&#39;, badgeClass: &#39;&#39; };
+        }
+    }
+
+    function createOrderCard(order) {
+        const { text, badgeClass } = getStatusInfo(order.status);
+        const card = document.createElement(&#39;div&#39;);
+        card.className = &#39;card order-card&#39;;
+        card.setAttribute(&#39;data-order-id&#39;, order.id);
+        card.setAttribute(&#39;data-status&#39;, order.status);
+        card.setAttribute(&#39;data-repeatable&#39;, &#39;true&#39;);
+
+        const isShippable = order.status === &#39;pending&#39;;
+
+        const productsHtml = order.products.map(p => `
+            <div class="flex items-center justify-between py-2">
+                <div class="flex items-center gap-3">
+                    <img src="${p.image}" alt="${p.name}" class="w-12 h-12 object-cover product-image">
+                    <div>
+                        <p class="text-sm font-medium text-base-content">${p.name}</p>
+                        <p class="text-xs text-secondary-gray mt-1">规格: ${p.spec}</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <p class="text-sm text-base-content/80">x${p.quantity}</p>
+                    <p class="text-sm font-medium text-base-content">¥${p.price}</p>
+                </div>
+            </div>
+        `).join(&#39;&#39;);
+
+        card.innerHTML = `
+            <div class="card-body p-4">
+                <div class="flex justify-between items-start gap-4">
+                    <div class="flex-1">
+                        <p class="text-xs text-secondary-gray">订单号: ${order.id}</p>
+                        <p class="text-sm text-base-content mt-1">用户: ${order.user}</p>
+                    </div>
+                    <div class="text-right flex-shrink-0">
+                        <span class="badge badge-sm status-badge ${badgeClass}">${text}</span>
+                        <p class="text-lg font-semibold text-primary mt-1">¥${order.amount}</p>
+                    </div>
+                </div>
+                <p class="text-xs text-secondary-gray mt-1">下单时间: ${order.time}</p>
+                <div class="divider my-2"></div>
+                <div class="flex justify-between items-center">
+                    <label class="flex items-center gap-2 cursor-pointer p-2 -m-2">
+                        <input type="checkbox" class="checkbox checkbox-primary checkbox-sm order-checkbox" data-order-id="${order.id}">
+                        <span class="label-text text-sm">选择</span>
+                    </label>
+                    <div class="flex items-center gap-2">
+                        <button class="btn btn-xs btn-ghost" onclick="toggleOrderDetails(this)">
+                            <span>详情</span>
+                            <span class="iconify" data-icon="heroicons:chevron-down" data-width="16"></span>
+                        </button>
+                        <button class="btn btn-xs ${isShippable ? &#39;btn-primary&#39; : &#39;btn-ghost&#39;}" ${!isShippable ? &#39;disabled&#39; : &#39;&#39;} onclick="shipOrder(&#39;${order.id}&#39;, event)">
+                            ${isShippable ? &#39;<span class="iconify" data-icon="heroicons:truck" data-width="14"></span> 发货&#39; : &#39;<span>已完成</span>&#39;}
+                        </button>
+                    </div>
+                </div>
+                <div class="order-card-details">
+                    <div class="border-t border-base-300/50 pt-2">${productsHtml}</div>
+                </div>
+            </div>
+        `;
+        return card;
+    }
+
+    function renderOrders() {
+        orderListContainer.innerHTML = &#39;&#39;; // Clear existing
+        const filteredOrders = mockOrders.filter(order => currentFilter === &#39;all&#39; || order.status === currentFilter);
+
+        if (filteredOrders.length > 0) {
+            filteredOrders.forEach(order => {
+                orderListContainer.appendChild(createOrderCard(order));
+            });
+            emptyState.classList.add(&#39;hidden&#39;);
+        } else {
+            emptyState.classList.remove(&#39;hidden&#39;);
+        }
+        addCardEventListeners();
+        updateSelectedState();
+    }
+    
+    function addCardEventListeners() {
+        document.querySelectorAll(&#39;.order-checkbox&#39;).forEach(cb => {
+            cb.addEventListener(&#39;change&#39;, updateSelectedState);
+        });
+    }
+
+    function updateSelectedState() {
+        const visibleCheckboxes = Array.from(document.querySelectorAll(&#39;.order-checkbox&#39;));
+        const checkedCount = visibleCheckboxes.filter(cb => cb.checked).length;
+        
+        selectedCountSpan.textContent = checkedCount;
+
+        if (checkedCount > 0) {
+            batchActionFooter.classList.remove(&#39;hidden&#39;);
+            batchShipButton.disabled = false;
+        } else {
+            batchActionFooter.classList.add(&#39;hidden&#39;);
+            batchShipButton.disabled = true;
+        }
+
+        const allVisibleChecked = visibleCheckboxes.length > 0 &amp;&amp; checkedCount === visibleCheckboxes.length;
+        selectAllCheckbox.checked = allVisibleChecked;
+        selectAllCheckbox.indeterminate = checkedCount > 0 &amp;&amp; !allVisibleChecked;
+    }
+
+    filterTabs.forEach(tab => {
+        tab.addEventListener(&#39;click&#39;, () => {
+            currentFilter = tab.dataset.status;
+            filterTabs.forEach(t => {
+                t.classList.remove(&#39;btn-primary&#39;, &#39;active-filter&#39;);
+                t.classList.add(&#39;btn-ghost&#39;);
+            });
+            tab.classList.add(&#39;btn-primary&#39;, &#39;active-filter&#39;);
+            tab.classList.remove(&#39;btn-ghost&#39;);
+            renderOrders();
+        });
+    });
+
+    selectAllCheckbox.addEventListener(&#39;change&#39;, (e) => {
+        const isChecked = e.target.checked;
+        document.querySelectorAll(&#39;.order-checkbox&#39;).forEach(cb => {
+            const card = cb.closest(&#39;.order-card&#39;);
+            if (card.style.display !== &#39;none&#39;) {
+                 cb.checked = isChecked;
+            }
+        });
+        updateSelectedState();
+    });
+
+    window.toggleOrderDetails = (button) => {
+        const details = button.closest(&#39;.card-body&#39;).querySelector(&#39;.order-card-details&#39;);
+        const icon = button.querySelector(&#39;.iconify&#39;);
+        details.classList.toggle(&#39;expanded&#39;);
+        if (details.classList.contains(&#39;expanded&#39;)) {
+            icon.setAttribute(&#39;data-icon&#39;, &#39;heroicons:chevron-up&#39;);
+        } else {
+            icon.setAttribute(&#39;data-icon&#39;, &#39;heroicons:chevron-down&#39;);
+        }
+    };
+
+    window.shipOrder = (orderId, event) => {
+        event.stopPropagation();
+        const button = event.currentTarget;
+        const card = button.closest(&#39;.order-card&#39;);
+        
+        button.innerHTML = &#39;<span class="loading loading-spinner loading-xs"></span>&#39;;
+        button.disabled = true;
+
+        setTimeout(() => {
+            const orderIndex = mockOrders.findIndex(o => o.id === orderId);
+            if (orderIndex > -1) {
+                mockOrders[orderIndex].status = &#39;completed&#39;;
+            }
+            renderOrders(); // Re-render to reflect the change
+            showToast(`订单 ${orderId} 已发货`, &#39;success&#39;);
+        }, 1000);
+    };
+
+    window.showBatchShipModal = () => {
+        batch_ship_modal.showModal();
+    };
+
+    window.handleConfirmBatchShip = () => {
+        const selectedCheckboxes = document.querySelectorAll(&#39;.order-checkbox:checked&#39;);
+        let shippedCount = 0;
+        selectedCheckboxes.forEach(cb => {
+            const orderId = cb.dataset.orderId;
+            const orderIndex = mockOrders.findIndex(o => o.id === orderId &amp;&amp; o.status === &#39;pending&#39;);
+            if(orderIndex > -1) {
+                mockOrders[orderIndex].status = &#39;completed&#39;;
+                shippedCount++;
+            }
+        });
+        
+        if (shippedCount > 0) {
+            showToast(`成功发货 ${shippedCount} 个订单`, &#39;success&#39;);
+        } else {
+            showToast(&#39;没有可发货的订单被选中&#39;, &#39;info&#39;);
+        }
+        renderOrders();
+    };
+
+    // Initial render
+    renderOrders();
+});
+</script>
+  
+
+<script>
+    setTimeout(() => {
+      Holder.run({
+        domain: "placehold.co"
+      })
+    }, 100)
+  </script></body></html>'></iframe>
+                    </div>
+                  </div>
+
+                </body>
+                </html>
+            

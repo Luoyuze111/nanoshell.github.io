@@ -1,0 +1,697 @@
+
+                <!DOCTYPE html>
+                <html lang="zh">
+                <head>
+                  <meta charset="UTF-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  <title>用户登录页</title>
+                  <style>
+                    *,
+                    *::before,
+                    *::after {
+                      box-sizing: border-box;
+                      margin: 0;
+                    }
+                    .iframe-outer {
+                      position: fixed;
+                      top: 0;
+                      left: 0;
+                      bottom: 0;
+                      right: 0;
+                      display: flex;
+                      justify-content: center;
+                      background-color: #E0E0E0;
+                    }
+                    .iframe-wrapper {
+                      width: 100%;
+                      height: 100%;
+                      margin: 0 auto;
+                      transform-origin: center top;
+                      flex-shrink: 0;
+                    }
+                    #dynamicIframe {
+                      border: none;
+                      width: 100%;
+                      height: 100%;
+                    }
+                  </style>
+                  <script>
+                const width = 402
+                const height = 874
+                const resolutionRatio = width && height ? width / height : 1
+                const pageNameMap = {
+                  'login_selection_page': '登录选择页',
+    'admin_login_page': '管理员登录页',
+    'user_login_page': '用户登录页',
+    'product_detail_page': '商品详情页',
+    'payment_selection_page': '支付方式选择页',
+    'pending_order_page': '待处理订单页',
+    'shopping_cart_page': '购物车页',
+    'messages_page': '消息页',
+    'customer_service_chat_page': '客服聊天页',
+    'my_page': '我的页',
+    'user_info_page': '用户信息页',
+    'order_history_page': '订单记录页',
+    'settings_page': '设置页',
+    'admin_dashboard_page': '管理员仪表盘',
+    'admin_product_management_page': '商品管理页',
+    'admin_customer_service_page': '管理员客服页',
+    'page_857254': '封号页',
+    'page_860225': '订单管理页面',
+    'page_861458': '主页',
+    'page_863059': '微信支付',
+    'page_863244': '论坛交流'
+                }
+                function setIframeSize(w, h) {
+                  const currentContainerRadio = w / h
+                  let widthValue = w
+                  let heightValue = h
+                  let zoom = 1
+                  if (currentContainerRadio > resolutionRatio) {
+                    widthValue = h * resolutionRatio
+                    heightValue = h
+                  } else {
+                    widthValue = w
+                    heightValue = w / resolutionRatio
+                  }
+                  zoom = width ? widthValue / width : 1
+                  return {
+                    width: widthValue / zoom + 'px',
+                    height: heightValue / zoom + 'px',
+                    zoom,
+                  }
+                }
+                function adjustIframeSize() {
+                  const iframeWrapper = document.querySelector(".iframe-wrapper")
+                  const { width, height, zoom } = setIframeSize(window.innerWidth, window.innerHeight)
+                  iframeWrapper.style.height = height
+                  iframeWrapper.style.width = width
+                  iframeWrapper.style.transform = 'scale(' + zoom + ')'
+                }
+                function sanitizeFilename(name) {
+                  return name.replace(/[\/:*?"<>|]/g, '_')
+                }
+                function handlePostMessage(event) {
+                  if (!event.data) {
+                    return
+                  }
+                  const { type, targetPageId } = event.data
+                  const targetPageName = pageNameMap[targetPageId]
+                  if (type === "iframeNavigation" && targetPageId && targetPageName) {
+                    window.location.href = targetPageName + '.html'
+                  }
+                }
+                window.addEventListener('message', handlePostMessage)
+                window.onload = adjustIframeSize
+                window.onresize = adjustIframeSize
+                window.onunload = () => {
+                  window.removeEventListener('message', handlePostMessage)
+                }
+              </script>
+                </head>
+                <body>
+                  <div class="iframe-outer">
+                    <div class="iframe-wrapper">
+                      <iframe id="dynamicIframe" srcdoc='<html lang="简体中文" data-theme="business"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>用户登录页</title>
+    <link href="./assets/static/uxbot/daisyui@5.css" rel="stylesheet" type="text/css">
+    <script src="./assets/static/uxbot/tailwind-browser@4.js"></script>
+    <link href="./assets/static/uxbot/daisyui-themes.css" rel="stylesheet" type="text/css">
+    <script src="./assets/3/3.1.1/iconify.min.js"></script>
+    <style>
+/* CSS code for common usage*/
+/* daisyUI Theme Variables Customization
+* Based on the selected daisyUI theme and UI guidance requirements,
+* customize only the CSS variables that need to be different from the theme defaults.
+* Available theme variables for customization:
+*/
+
+/* Only modify if different from chosen theme defaults */
+:root {
+    /* Brand Colors based on UI guidance - deep navy blue corporate theme */
+    --color-primary: rgba(10, 28, 63, 1); /* #0A1C3F deep navy blue for CTAs */
+    --color-primary-content: rgba(248, 248, 248, 1); /* Off-white text on primary */
+    --color-secondary: rgba(44, 44, 44, 1); /* #2C2C2C charcoal for secondary elements */
+    --color-secondary-content: rgba(248, 248, 248, 1);
+    --color-accent: rgba(107, 114, 128, 1); /* #6B7280 medium grey for accents */
+    --color-accent-content: rgba(255, 255, 255, 1);
+
+    /* Base colors for dark corporate background */
+    --color-base-100: rgba(26, 26, 26, 1); /* #1A1A1A charcoal main background */
+    --color-base-200: rgba(44, 44, 44, 1); /* #2C2C2C graphite for cards */
+    --color-base-300: rgba(75, 85, 99, 1); /* #4B5563 for borders */
+    --color-base-content: rgba(248, 248, 248, 1); /* #F8F8F8 off-white text */
+
+    /* Semantic colors - muted and desaturated */
+    --color-success: rgba(34, 139, 34, 1); /* #228B22 muted dark green */
+    --color-success-content: rgba(255, 255, 255, 1);
+    --color-warning: rgba(184, 134, 11, 1); /* #B8860B subtle amber */
+    --color-warning-content: rgba(0, 0, 0, 1);
+    --color-error: rgba(139, 69, 19, 1); /* #8B4513 deep muted red */
+    --color-error-content: rgba(255, 255, 255, 1);
+    --color-info: rgba(70, 130, 180, 1); /* #4682B4 desaturated blue */
+    --color-info-content: rgba(255, 255, 255, 1);
+
+    /* Border radius for restrained rounded corners */
+    --radius-box: 0.375rem; /* 6px rounded corners */
+    --radius-field: 0.5rem; /* 8px for input fields */
+    --radius-selector: 0.25rem; /* 4px for smaller elements */
+
+    /* Border for subtle separations */
+    --border: 1px;
+}
+
+/* Mobile-specific optimizations */
+.mobile-container {
+    max-width: 402px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background-color: var(--color-base-100);
+}
+
+/* Touch-friendly buttons and interactive elements */
+.touch-target {
+    min-height: 48px;
+    min-width: 48px;
+}
+
+/* Secondary text color for metadata */
+.text-secondary-gray {
+    color: rgba(156, 163, 175, 1); /* #9CA3AF lighter grey for secondary text */
+}
+
+/* Safe area padding for mobile devices */
+.safe-area-top {
+    padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Material and craftsmanship feel with subtle micro-textures */
+.card-surface {
+    background: linear-gradient(135deg, var(--color-base-200) 0%, rgba(44, 44, 44, 0.95) 100%);
+    backdrop-filter: blur(10px);
+}
+
+/* Subtle shadow effects for depth */
+.elevated-surface {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+/* Typography adjustments for spacious line height */
+.spacious-text {
+    line-height: 1.6;
+}
+
+.comfortable-spacing {
+    margin-bottom: 1rem;
+}
+</style> <style>
+/* Custom styles for the login page */
+
+/* Micro-texture and frosted glass effect for the form background */
+.form-background-texture {
+    background-color: color-mix(in srgb, var(--color-base-200) 80%, transparent);
+    backdrop-filter: blur(10px);
+    background-image: url(&#39;data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="rgba(0,0,0,0.02)"/><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.02)"/></svg>&#39;);
+    border: 1px solid var(--color-base-300);
+}
+
+/* Subtle glow animation on focus for inputs */
+.input-animated-focus {
+    background-color: color-mix(in srgb, var(--color-base-100) 50%, transparent);
+    border-color: var(--color-base-300);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.input-animated-focus:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 25%, transparent);
+    background-color: var(--color-base-200);
+    outline: none;
+}
+
+.input.input-error {
+    border-color: var(--color-error);
+}
+
+.input.input-error:focus {
+    border-color: var(--color-error);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-error) 25%, transparent);
+}
+
+/* Soft transition animation for button clicks */
+.animated-button {
+    transition: transform 0.15s ease, background-color 0.2s ease;
+}
+
+.animated-button:active {
+    transform: scale(0.97);
+}
+
+/* Shake animation for form error feedback */
+@keyframes shake-horizontal {
+    10%, 90% { transform: translateX(-1px); }
+    20%, 80% { transform: translateX(2px); }
+    30%, 50%, 70% { transform: translateX(-4px); }
+    40%, 60% { transform: translateX(4px); }
+}
+
+.shake-animation {
+    animation: shake-horizontal 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+/* Typography override for spaciousness */
+.spacious-text {
+    line-height: 1.7;
+}
+
+</style>
+<script src="https://assets.qingshuxuetang.com/static/uxbot/25_6/holder.js"></script></head><body class="bg-base-100 text-base-content">```
+@DELIMITER@@@
+page_script
+```html
+<script>
+document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
+    // Initialize global scope if it doesn&#39;t exist
+    if (!window.APP_GLOBALS) window.APP_GLOBALS = {};
+
+    // Configure the common header
+    if (window.configureHeader) {
+        window.configureHeader({
+            title: &#39;登录&#39;,
+            showBackButton: true
+        });
+    }
+
+    const phoneInput = document.getElementById(&#39;phone-input&#39;);
+    const passwordInput = document.getElementById(&#39;password-input&#39;);
+
+    if (phoneInput) {
+        phoneInput.addEventListener(&#39;input&#39;, () => formatPhoneNumber(phoneInput));
+        phoneInput.addEventListener(&#39;blur&#39;, () => validatePhoneInput(phoneInput));
+    }
+    if (passwordInput) {
+        passwordInput.addEventListener(&#39;input&#39;, () => validatePasswordInput(passwordInput, false)); // Don&#39;t show error while typing
+        passwordInput.addEventListener(&#39;blur&#39;, () => validatePasswordInput(passwordInput, true));
+    }
+});
+
+function togglePasswordVisibility() {
+    const passwordInput = document.getElementById(&#39;password-input&#39;);
+    const toggleIcon = document.getElementById(&#39;password-toggle-icon&#39;);
+    const isPassword = passwordInput.type === &#39;password&#39;;
+
+    if (isPassword) {
+        passwordInput.type = &#39;text&#39;;
+        toggleIcon.dataset.icon = &#39;heroicons:eye-slash-20-solid&#39;;
+    } else {
+        passwordInput.type = &#39;password&#39;;
+        toggleIcon.dataset.icon = &#39;heroicons:eye-20-solid&#39;;
+    }
+}
+
+function formatPhoneNumber(input) {
+    let value = input.value.replace(/\D/g, &#39;&#39;);
+    let formattedValue = &#39;&#39;;
+
+    if (value.length > 0) {
+        formattedValue = value.substring(0, 3);
+    }
+    if (value.length > 3) {
+        formattedValue += &#39; &#39; + value.substring(3, 7);
+    }
+    if (value.length > 7) {
+        formattedValue += &#39; &#39; + value.substring(7, 11);
+    }
+    input.value = formattedValue;
+}
+
+function validatePhoneInput(input) {
+    const phoneError = document.getElementById(&#39;phone-error&#39;);
+    const value = input.value.replace(/\s/g, &#39;&#39;);
+    let isValid = true;
+    
+    if (value.length === 0) {
+        phoneError.textContent = &#39;手机号不能为空&#39;;
+        input.classList.add(&#39;input-error&#39;);
+        isValid = false;
+    } else if (!window.validatePhone(value)) {
+        phoneError.textContent = &#39;请输入有效的11位手机号&#39;;
+        input.classList.add(&#39;input-error&#39;);
+        isValid = false;
+    } else {
+        phoneError.textContent = &#39;&#39;;
+        input.classList.remove(&#39;input-error&#39;);
+    }
+    return isValid;
+}
+
+function validatePasswordInput(input, showRequiredError = true) {
+    const passwordError = document.getElementById(&#39;password-error&#39;);
+    let isValid = true;
+
+    if (input.value.length === 0 &amp;&amp; showRequiredError) {
+        passwordError.textContent = &#39;密码不能为空&#39;;
+        input.classList.add(&#39;input-error&#39;);
+        isValid = false;
+    } else if (input.value.length > 0 &amp;&amp; !window.validatePassword(input.value)) {
+        passwordError.textContent = &#39;密码长度至少为6位&#39;;
+        input.classList.add(&#39;input-error&#39;);
+        isValid = false;
+    } else {
+        passwordError.textContent = &#39;&#39;;
+        input.classList.remove(&#39;input-error&#39;);
+    }
+    return isValid;
+}
+
+function handleLogin() {
+    const phoneInput = document.getElementById(&#39;phone-input&#39;);
+    const passwordInput = document.getElementById(&#39;password-input&#39;);
+    
+    // Run validation on submit
+    const isPhoneValid = validatePhoneInput(phoneInput);
+    const isPasswordValid = validatePasswordInput(passwordInput);
+
+    if (isPhoneValid &amp;&amp; isPasswordValid) {
+        const phoneValueClean = phoneInput.value.replace(/\s/g, &#39;&#39;);
+        const passwordValue = passwordInput.value;
+        
+        // Mock implementation from user description
+        // Use a simple localStorage mock for persistence between &#39;sessions&#39;
+        let storedUserData = null;
+        try {
+            storedUserData = JSON.parse(localStorage.getItem(&#39;loginUserData&#39;));
+        } catch (e) {
+            console.error("Could not parse stored user data.");
+        }
+
+        if (!storedUserData || !storedUserData.variableA) {
+            // First time login for this &#39;user&#39;, store credentials
+            const newUser = { variableA: phoneValueClean, variableB: passwordValue };
+            localStorage.setItem(&#39;loginUserData&#39;, JSON.stringify(newUser));
+            showToast(&#39;注册并登录成功！&#39;, &#39;success&#39;);
+            setTimeout(() => navigateTo(&#39;page_861458&#39;), 1500);
+        } else {
+            // Existing user, check credentials
+            if (storedUserData.variableA === phoneValueClean &amp;&amp; storedUserData.variableB === passwordValue) {
+                // Login success
+                showToast(&#39;登录成功，欢迎回来！&#39;, &#39;success&#39;);
+                setTimeout(() => navigateTo(&#39;page_861458&#39;), 1500);
+            } else if (storedUserData.variableA === phoneValueClean &amp;&amp; storedUserData.variableB !== passwordValue) {
+                // Phone matches, password wrong
+                const passwordError = document.getElementById(&#39;password-error&#39;);
+                passwordInput.classList.add(&#39;input-error&#39;);
+                passwordError.textContent = &#39;密码错误&#39;;
+                triggerErrorAnimation();
+                showToast(&#39;密码错误，请重试&#39;, &#39;error&#39;);
+            } else {
+                 // Phone doesn&#39;t match, treat as a new user. Overwrite previous user.
+                const newUser = { variableA: phoneValueClean, variableB: passwordValue };
+                localStorage.setItem(&#39;loginUserData&#39;, JSON.stringify(newUser));
+                showToast(&#39;新用户注册并登录成功！&#39;, &#39;success&#39;);
+                setTimeout(() => navigateTo(&#39;page_861458&#39;), 1500);
+            }
+        }
+    } else {
+        triggerErrorAnimation();
+        showToast(&#39;请检查您输入的信息&#39;, &#39;error&#39;);
+    }
+}
+
+function triggerErrorAnimation() {
+    const form = document.querySelector(&#39;form&#39;);
+    form.classList.add(&#39;shake-animation&#39;);
+    setTimeout(() => {
+        form.classList.remove(&#39;shake-animation&#39;);
+    }, 500);
+}
+</script>
+  
+  
+    ``` @DELIMITER@@@ page_script ```html ``` @DELIMITER@@@ page_script ```html
+
+    <div class="mobile-container flex flex-col min-h-screen">
+      <div data-section-id="common_header" data-section-type="common_header" class="sticky top-0 z-40 bg-base-200 border-b border-base-300 safe-area-top elevated-surface">
+  <div class="navbar px-4 py-2 min-h-14">
+    <!-- Left side - Back button -->
+    <div class="navbar-start">
+      <button class="btn btn-ghost btn-sm btn-circle touch-target header-back-btn" onclick="handleBackNavigation()">
+        <span class="iconify text-base-content" data-icon="heroicons:arrow-left" data-width="20"></span>
+      </button>
+    </div>
+    <!-- Center - Title or Search -->
+    <div class="navbar-center flex-1 mx-4">
+      <!-- Default title display -->
+      <h1 class="text-lg font-semibold text-base-content header-title w-max spacious-text imcjk spark-custom-imcjk" id="imcjk">
+        请登录
+      </h1>
+      <!-- Search input (hidden by default) -->
+      <div class="form-control w-full max-w-xs header-search hidden">
+        <input type="text" placeholder="搜索商品..." class="input input-bordered input-sm w-full bg-base-100 text-base-content">
+      </div>
+    </div>
+    <!-- Right side - Action buttons -->
+    <div class="navbar-end">
+      <!-- Search toggle button --><button class="btn btn-ghost btn-sm btn-circle touch-target header-search-btn hidden">
+        <span class="iconify text-base-content" data-icon="heroicons:magnifying-glass" data-width="20"></span></button><!-- Cart button with badge -->
+      <div class="indicator header-cart-btn hidden">
+        <span class="indicator-item badge badge-primary cart-badge hidden">0</span><button class="btn btn-ghost btn-sm btn-circle touch-target" onclick="navigateTo(&#39;shopping_cart_page&#39;)">
+          <span class="iconify text-base-content" data-icon="heroicons:shopping-cart" data-width="20"></span>
+        </button>
+      </div>
+      <!-- More options menu -->
+      <div class="dropdown dropdown-end header-more-menu hidden">
+        <button tabindex="0" class="btn btn-ghost btn-sm btn-circle touch-target">
+          <span class="iconify text-base-content" data-icon="heroicons:ellipsis-vertical" data-width="20"></span>
+        </button>
+        <ul tabindex="0" class="dropdown-content z-50 menu p-2 shadow bg-base-200 rounded-box w-52 mt-2 elevated-surface">
+          <li>
+            <a class="text-base-content" onclick="showToast(&#39;分享功能开发中&#39;)">分享</a>
+          </li>
+          <li>
+            <a class="text-base-content" onclick="showToast(&#39;举报功能开发中&#39;)">举报</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Login Form Section -->
+      <main id="LoginPromptAndForm" class="flex-grow flex flex-col justify-center px-6 pb-8">
+        <div class="w-full max-w-sm mx-auto">
+          <div class="text-left mb-8">
+            <h1 class="text-3xl font-bold mb-2">欢迎回来</h1>
+            <p class="text-base-content/70 spacious-text">
+              请登录您的账户，立即体验！
+            </p>
+          </div>
+          <form novalidate="" class="w-full space-y-4 form-background-texture p-6 rounded-box shadow-lg" onsubmit="event.preventDefault(); handleLogin();">
+            <!-- Phone Input -->
+            <div class="form-control">
+              <label class="label"><span class="label-text">手机号</span></label><input id="phone-input" type="tel" placeholder="请输入您的手机号" maxlength="13" class="input input-bordered w-full input-animated-focus"><label class="label h-6"><span id="phone-error" class="label-text-alt text-error text-xs"></span></label>
+            </div>
+            <!-- Password Input -->
+            <div class="form-control">
+              <label class="label"><span class="label-text">密码</span></label>
+              <div class="relative">
+                <input id="password-input" type="password" placeholder="请输入您的密码" class="input input-bordered w-full pr-12 input-animated-focus"><button type="button" class="btn btn-ghost btn-sm absolute top-1/2 right-1 -translate-y-1/2 h-full" onclick="togglePasswordVisibility()">
+                  <span id="password-toggle-icon" class="iconify text-base-content/70" data-icon="heroicons:eye-20-solid" data-width="20"></span>
+                </button>
+              </div>
+              <label class="label h-6"><span id="password-error" class="label-text-alt text-error text-xs"></span></label>
+            </div>
+            <!-- Remember Me &amp; Forgot Password -->
+            <div class="flex justify-between items-center text-sm -mt-2">
+              <label class="label cursor-pointer gap-2 p-0"><input type="checkbox" class="checkbox checkbox-primary checkbox-sm"><span class="label-text text-sm">记住我</span></label><a class="link link-hover text-primary text-sm" onclick="navigateTo(&#39;registration_page&#39;)">忘记密码?</a>
+            </div>
+            <!-- Login Button -->
+            <div class="form-control pt-6">
+              <button type="submit" class="btn btn-primary w-full h-12 text-base font-semibold animated-button">
+                登录
+              </button>
+            </div>
+            <!-- Registration Link -->
+            <div class="text-center pt-4 text-sm">
+              <span class="text-base-content/70 iajwb spark-custom-iajwb" id="iajwb">新用户系统将自动注册并登录</span>
+            </div>
+          </form>
+        </div>
+      </main>
+      <!-- Footer Section -->
+      <footer id="Footer" class="py-6 px-6 text-center flex-shrink-0 safe-area-bottom">
+        <p class="text-xs text-base-content/50">
+          © 2025 Company Name. All Rights Reserved.
+        </p>
+      </footer>
+    </div>
+    <script>
+/* JavaScript code for common usage, should be wrapped in a closure */
+(function() {
+    // Navigation function for page transitions
+    window.navigateTo = function(targetPageId) {
+        // Trigger navigation to another page using the provided snippet
+        const isInIframe = window.self !== window.top;
+        const targetFileName = `${targetPageId}.html`;
+        if (isInIframe) {
+            window.parent.postMessage({
+                type: &#39;iframeNavigation&#39;,
+                targetPageId: targetPageId
+            }, &#39;*&#39;);
+        } else {
+            window.location.href = targetFileName;
+        }
+    };
+
+    // Utility function to handle back navigation
+    window.handleBackNavigation = function() {
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            navigateTo(&#39;home_page&#39;);
+        }
+    };
+
+    // Function to show toast notifications
+    window.showToast = function(message, type = &#39;info&#39;) {
+        const toast = document.createElement(&#39;div&#39;);
+        toast.className = `toast toast-bottom toast-center z-50`;
+        toast.innerHTML = `<div class="alert alert-${type}"><span>${message}</span></div>`;
+        document.body.appendChild(toast);
+        
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        }, 3000);
+    };
+
+    // Smooth scroll to top function
+    window.scrollToTop = function() {
+        window.scrollTo({
+            top: 0,
+            behavior: &#39;smooth&#39;
+        });
+    };
+
+    // Function to update bottom dock active state
+    window.updateBottomDockActive = function(activeTabId) {
+        const dockItems = document.querySelectorAll(&#39;[data-section-id="common_bottom_dock"] .dock-item&#39;);
+        dockItems.forEach(item => {
+            if (item.dataset.tabId === activeTabId) {
+                item.classList.add(&#39;dock-item-active&#39;);
+            } else {
+                item.classList.remove(&#39;dock-item-active&#39;);
+            }
+        });
+    };
+
+    // Initialize global app state
+    window.APP_GLOBALS = window.APP_GLOBALS || {};
+    
+    // Shopping cart management
+    window.APP_GLOBALS.cart = window.APP_GLOBALS.cart || [];
+    
+    window.addToCart = function(product) {
+        const existingItem = window.APP_GLOBALS.cart.find(item => item.id === product.id);
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            window.APP_GLOBALS.cart.push({...product, quantity: 1});
+        }
+        showToast(&#39;商品已添加到购物车&#39;, &#39;success&#39;);
+        updateCartBadge();
+    };
+
+    window.removeFromCart = function(productId) {
+        window.APP_GLOBALS.cart = window.APP_GLOBALS.cart.filter(item => item.id !== productId);
+        updateCartBadge();
+    };
+
+    window.updateCartQuantity = function(productId, quantity) {
+        const item = window.APP_GLOBALS.cart.find(item => item.id === productId);
+        if (item) {
+            if (quantity <= 0) {
+                removeFromCart(productId);
+            } else {
+                item.quantity = quantity;
+            }
+        }
+        updateCartBadge();
+    };
+
+    window.getCartTotal = function() {
+        return window.APP_GLOBALS.cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    };
+
+    window.getCartItemCount = function() {
+        return window.APP_GLOBALS.cart.reduce((total, item) => total + item.quantity, 0);
+    };
+
+    function updateCartBadge() {
+        const cartBadge = document.querySelector(&#39;[data-section-id="common_bottom_dock"] .cart-badge&#39;);
+        const count = getCartItemCount();
+        if (cartBadge) {
+            if (count > 0) {
+                cartBadge.textContent = count > 99 ? &#39;99+&#39; : count;
+                cartBadge.classList.remove(&#39;hidden&#39;);
+            } else {
+                cartBadge.classList.add(&#39;hidden&#39;);
+            }
+        }
+    }
+
+    // User session management
+    window.APP_GLOBALS.user = window.APP_GLOBALS.user || null;
+    window.APP_GLOBALS.isAdmin = window.APP_GLOBALS.isAdmin || false;
+
+    window.setUser = function(user, isAdmin = false) {
+        window.APP_GLOBALS.user = user;
+        window.APP_GLOBALS.isAdmin = isAdmin;
+    };
+
+    window.logout = function() {
+        window.APP_GLOBALS.user = null;
+        window.APP_GLOBALS.isAdmin = false;
+        window.APP_GLOBALS.cart = [];
+        navigateTo(&#39;login_selection_page&#39;);
+    };
+
+    // Form validation utilities
+    window.validateEmail = function(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    };
+
+    window.validatePhone = function(phone) {
+        const re = /^1[3-9]\d{9}$/;
+        return re.test(phone);
+    };
+
+    window.validatePassword = function(password) {
+        return password.length >= 6;
+    };
+
+})();
+</script><script></script>
+  
+
+<script>
+    setTimeout(() => {
+      Holder.run({
+        domain: "placehold.co"
+      })
+    }, 100)
+  </script></body></html>'></iframe>
+                    </div>
+                  </div>
+
+                </body>
+                </html>
+            

@@ -1,0 +1,935 @@
+
+                <!DOCTYPE html>
+                <html lang="zh">
+                <head>
+                  <meta charset="UTF-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  <title>订单记录页</title>
+                  <style>
+                    *,
+                    *::before,
+                    *::after {
+                      box-sizing: border-box;
+                      margin: 0;
+                    }
+                    .iframe-outer {
+                      position: fixed;
+                      top: 0;
+                      left: 0;
+                      bottom: 0;
+                      right: 0;
+                      display: flex;
+                      justify-content: center;
+                      background-color: #E0E0E0;
+                    }
+                    .iframe-wrapper {
+                      width: 100%;
+                      height: 100%;
+                      margin: 0 auto;
+                      transform-origin: center top;
+                      flex-shrink: 0;
+                    }
+                    #dynamicIframe {
+                      border: none;
+                      width: 100%;
+                      height: 100%;
+                    }
+                  </style>
+                  <script>
+                const width = 402
+                const height = 874
+                const resolutionRatio = width && height ? width / height : 1
+                const pageNameMap = {
+                  'login_selection_page': '登录选择页',
+    'admin_login_page': '管理员登录页',
+    'user_login_page': '用户登录页',
+    'product_detail_page': '商品详情页',
+    'payment_selection_page': '支付方式选择页',
+    'pending_order_page': '待处理订单页',
+    'shopping_cart_page': '购物车页',
+    'messages_page': '消息页',
+    'customer_service_chat_page': '客服聊天页',
+    'my_page': '我的页',
+    'user_info_page': '用户信息页',
+    'order_history_page': '订单记录页',
+    'settings_page': '设置页',
+    'admin_dashboard_page': '管理员仪表盘',
+    'admin_product_management_page': '商品管理页',
+    'admin_customer_service_page': '管理员客服页',
+    'page_857254': '封号页',
+    'page_860225': '订单管理页面',
+    'page_861458': '主页',
+    'page_863059': '微信支付',
+    'page_863244': '论坛交流'
+                }
+                function setIframeSize(w, h) {
+                  const currentContainerRadio = w / h
+                  let widthValue = w
+                  let heightValue = h
+                  let zoom = 1
+                  if (currentContainerRadio > resolutionRatio) {
+                    widthValue = h * resolutionRatio
+                    heightValue = h
+                  } else {
+                    widthValue = w
+                    heightValue = w / resolutionRatio
+                  }
+                  zoom = width ? widthValue / width : 1
+                  return {
+                    width: widthValue / zoom + 'px',
+                    height: heightValue / zoom + 'px',
+                    zoom,
+                  }
+                }
+                function adjustIframeSize() {
+                  const iframeWrapper = document.querySelector(".iframe-wrapper")
+                  const { width, height, zoom } = setIframeSize(window.innerWidth, window.innerHeight)
+                  iframeWrapper.style.height = height
+                  iframeWrapper.style.width = width
+                  iframeWrapper.style.transform = 'scale(' + zoom + ')'
+                }
+                function sanitizeFilename(name) {
+                  return name.replace(/[\/:*?"<>|]/g, '_')
+                }
+                function handlePostMessage(event) {
+                  if (!event.data) {
+                    return
+                  }
+                  const { type, targetPageId } = event.data
+                  const targetPageName = pageNameMap[targetPageId]
+                  if (type === "iframeNavigation" && targetPageId && targetPageName) {
+                    window.location.href = targetPageName + '.html'
+                  }
+                }
+                window.addEventListener('message', handlePostMessage)
+                window.onload = adjustIframeSize
+                window.onresize = adjustIframeSize
+                window.onunload = () => {
+                  window.removeEventListener('message', handlePostMessage)
+                }
+              </script>
+                </head>
+                <body>
+                  <div class="iframe-outer">
+                    <div class="iframe-wrapper">
+                      <iframe id="dynamicIframe" srcdoc='<html lang="zh" data-theme="business"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>订单记录页</title>
+    <link href="./assets/static/uxbot/daisyui@5.css" rel="stylesheet" type="text/css">
+    <script src="./assets/static/uxbot/tailwind-browser@4.js"></script>
+    <link href="./assets/static/uxbot/daisyui-themes.css" rel="stylesheet" type="text/css">
+    <script src="./assets/3/3.1.1/iconify.min.js"></script>
+    <style>
+/* CSS code for common usage*/
+/* daisyUI Theme Variables Customization
+* Based on the selected daisyUI theme and UI guidance requirements,
+* customize only the CSS variables that need to be different from the theme defaults.
+* Available theme variables for customization:
+*/
+
+/* Only modify if different from chosen theme defaults */
+:root {
+    /* Brand Colors based on UI guidance - deep navy blue corporate theme */
+    --color-primary: rgba(10, 28, 63, 1); /* #0A1C3F deep navy blue for CTAs */
+    --color-primary-content: rgba(248, 248, 248, 1); /* Off-white text on primary */
+    --color-secondary: rgba(44, 44, 44, 1); /* #2C2C2C charcoal for secondary elements */
+    --color-secondary-content: rgba(248, 248, 248, 1);
+    --color-accent: rgba(107, 114, 128, 1); /* #6B7280 medium grey for accents */
+    --color-accent-content: rgba(255, 255, 255, 1);
+
+    /* Base colors for dark corporate background */
+    --color-base-100: rgba(26, 26, 26, 1); /* #1A1A1A charcoal main background */
+    --color-base-200: rgba(44, 44, 44, 1); /* #2C2C2C graphite for cards */
+    --color-base-300: rgba(75, 85, 99, 1); /* #4B5563 for borders */
+    --color-base-content: rgba(248, 248, 248, 1); /* #F8F8F8 off-white text */
+
+    /* Semantic colors - muted and desaturated */
+    --color-success: rgba(34, 139, 34, 1); /* #228B22 muted dark green */
+    --color-success-content: rgba(255, 255, 255, 1);
+    --color-warning: rgba(184, 134, 11, 1); /* #B8860B subtle amber */
+    --color-warning-content: rgba(0, 0, 0, 1);
+    --color-error: rgba(139, 69, 19, 1); /* #8B4513 deep muted red */
+    --color-error-content: rgba(255, 255, 255, 1);
+    --color-info: rgba(70, 130, 180, 1); /* #4682B4 desaturated blue */
+    --color-info-content: rgba(255, 255, 255, 1);
+
+    /* Border radius for restrained rounded corners */
+    --radius-box: 0.375rem; /* 6px rounded corners */
+    --radius-field: 0.5rem; /* 8px for input fields */
+    --radius-selector: 0.25rem; /* 4px for smaller elements */
+
+    /* Border for subtle separations */
+    --border: 1px;
+}
+
+/* Mobile-specific optimizations */
+.mobile-container {
+    max-width: 402px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background-color: var(--color-base-100);
+}
+
+/* Touch-friendly buttons and interactive elements */
+.touch-target {
+    min-height: 48px;
+    min-width: 48px;
+}
+
+/* Secondary text color for metadata */
+.text-secondary-gray {
+    color: rgba(156, 163, 175, 1); /* #9CA3AF lighter grey for secondary text */
+}
+
+/* Safe area padding for mobile devices */
+.safe-area-top {
+    padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Material and craftsmanship feel with subtle micro-textures */
+.card-surface {
+    background: linear-gradient(135deg, var(--color-base-200) 0%, rgba(44, 44, 44, 0.95) 100%);
+    backdrop-filter: blur(10px);
+}
+
+/* Subtle shadow effects for depth */
+.elevated-surface {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+/* Typography adjustments for spacious line height */
+.spacious-text {
+    line-height: 1.6;
+}
+
+.comfortable-spacing {
+    margin-bottom: 1rem;
+}
+</style>
+    <style>
+.line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.btn {
+    transition: transform 0.1s ease-in-out, background-color 0.2s;
+}
+
+.btn:active {
+    transform: scale(0.96);
+}
+
+.collapse-arrow .collapse-title:after {
+    transition: transform 0.2s ease;
+}
+
+.collapse:not(.collapse-open) .collapse-title {
+    padding-bottom: 0.75rem; /* Equivalent to py-3 when closed */
+}
+
+/* Ensure sticky header is correctly positioned */
+.sticky {
+    top: 0;
+}
+@supports (padding-top: env(safe-area-inset-top)) {
+    .sticky.top-\[56px\] {
+        top: calc(56px + env(safe-area-inset-top));
+    }
+}
+</style>
+<script src="https://assets.qingshuxuetang.com/static/uxbot/25_6/holder.js"></script></head>
+<body class="mobile-container bg-base-100">
+    <div data-section-id="common_header" data-section-type="common_header" class="sticky top-0 z-40 bg-base-200 border-b border-base-300 safe-area-top elevated-surface">
+    <div class="navbar px-4 py-2 min-h-14">
+        <!-- Left side - Back button -->
+        <div class="navbar-start">
+            <button class="btn btn-ghost btn-sm btn-circle touch-target header-back-btn" onclick="handleBackNavigation()">
+                <span class="iconify text-base-content" data-icon="heroicons:arrow-left" data-width="20"></span>
+            </button>
+        </div>
+
+        <!-- Center - Title or Search -->
+        <div class="navbar-center flex-1 mx-4">
+            <!-- Default title display -->
+            <h1 class="text-lg font-semibold text-base-content header-title w-max spacious-text">页面标题</h1>
+            
+            <!-- Search input (hidden by default) -->
+            <div class="form-control w-full max-w-xs header-search hidden">
+                <input type="text" placeholder="搜索商品..." class="input input-bordered input-sm w-full bg-base-100 text-base-content">
+            </div>
+        </div>
+
+        <!-- Right side - Action buttons -->
+        <div class="navbar-end">
+            <!-- Search toggle button -->
+            <button class="btn btn-ghost btn-sm btn-circle touch-target header-search-btn hidden">
+                <span class="iconify text-base-content" data-icon="heroicons:magnifying-glass" data-width="20"></span>
+            </button>
+
+            <!-- Cart button with badge -->
+            <div class="indicator header-cart-btn hidden">
+                <span class="indicator-item badge badge-primary cart-badge hidden">0</span>
+                <button class="btn btn-ghost btn-sm btn-circle touch-target" onclick="navigateTo(&#39;shopping_cart_page&#39;)">
+                    <span class="iconify text-base-content" data-icon="heroicons:shopping-cart" data-width="20"></span>
+                </button>
+            </div>
+
+            <!-- More options menu -->
+            <div class="dropdown dropdown-end header-more-menu hidden">
+                <button tabindex="0" class="btn btn-ghost btn-sm btn-circle touch-target">
+                    <span class="iconify text-base-content" data-icon="heroicons:ellipsis-vertical" data-width="20"></span>
+                </button>
+                <ul tabindex="0" class="dropdown-content z-50 menu p-2 shadow bg-base-200 rounded-box w-52 mt-2 elevated-surface">
+                    <li><a onclick="showToast(&#39;分享功能开发中&#39;)" class="text-base-content">分享</a></li>
+                    <li><a onclick="showToast(&#39;举报功能开发中&#39;)" class="text-base-content">举报</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+[data-section-id="common_header"] .navbar {
+    height: 56px;
+}
+
+[data-section-id="common_header"] .header-back-btn:hover {
+    background-color: var(--color-base-300);
+    transition: background-color 0.2s ease;
+}
+
+[data-section-id="common_header"] .header-title {
+    text-align: center;
+    line-height: 1.2;
+}
+
+[data-section-id="common_header"] .header-search input:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+[data-section-id="common_header"] .btn-circle:hover {
+    transform: scale(1.05);
+    transition: transform 0.1s ease;
+}
+
+[data-section-id="common_header"] .cart-badge {
+    font-size: 10px;
+    min-height: 16px;
+    height: 16px;
+    padding: 0 4px;
+}
+</style>
+
+<script>
+(function() {
+    // Header configuration function
+    window.configureHeader = function(options = {}) {
+        const header = document.querySelector(&#39;[data-section-id="common_header"]&#39;);
+        if (!header) return;
+
+        const {
+            title = &#39;页面标题&#39;,
+            showBackButton = true,
+            showSearchButton = false,
+            showSearchInput = false,
+            showCartButton = false,
+            showMoreMenu = false,
+            onSearch = null,
+            onCart = null
+        } = options;
+
+        // Update title
+        const titleElement = header.querySelector(&#39;.header-title&#39;);
+        titleElement.textContent = title;
+
+        // Toggle back button
+        const backBtn = header.querySelector(&#39;.header-back-btn&#39;);
+        backBtn.style.display = showBackButton ? &#39;flex&#39; : &#39;none&#39;;
+
+        // Toggle search elements
+        const searchBtn = header.querySelector(&#39;.header-search-btn&#39;);
+        const searchInput = header.querySelector(&#39;.header-search&#39;);
+        searchBtn.classList.toggle(&#39;hidden&#39;, !showSearchButton);
+        searchInput.classList.toggle(&#39;hidden&#39;, !showSearchInput);
+        titleElement.classList.toggle(&#39;hidden&#39;, showSearchInput);
+
+        // Toggle cart button
+        const cartBtn = header.querySelector(&#39;.header-cart-btn&#39;);
+        cartBtn.classList.toggle(&#39;hidden&#39;, !showCartButton);
+
+        // Toggle more menu
+        const moreMenu = header.querySelector(&#39;.header-more-menu&#39;);
+        moreMenu.classList.toggle(&#39;hidden&#39;, !showMoreMenu);
+
+        // Handle search toggle
+        if (showSearchButton &amp;&amp; !showSearchInput) {
+            searchBtn.onclick = function() {
+                searchInput.classList.remove(&#39;hidden&#39;);
+                titleElement.classList.add(&#39;hidden&#39;);
+                searchBtn.classList.add(&#39;hidden&#39;);
+                const input = searchInput.querySelector(&#39;input&#39;);
+                input.focus();
+            };
+        }
+
+        // Handle search input
+        if (showSearchInput &amp;&amp; onSearch) {
+            const input = searchInput.querySelector(&#39;input&#39;);
+            input.addEventListener(&#39;input&#39;, function(e) {
+                onSearch(e.target.value);
+            });
+        }
+
+        // Update cart badge
+        if (showCartButton) {
+            updateCartBadge();
+        }
+    };
+
+    function updateCartBadge() {
+        const cartBadge = document.querySelector(&#39;[data-section-id="common_header"] .cart-badge&#39;);
+        const count = window.getCartItemCount ? window.getCartItemCount() : 0;
+        if (cartBadge) {
+            if (count > 0) {
+                cartBadge.textContent = count > 99 ? &#39;99+&#39; : count;
+                cartBadge.classList.remove(&#39;hidden&#39;);
+            } else {
+                cartBadge.classList.add(&#39;hidden&#39;);
+            }
+        }
+    }
+
+    // Default header configuration
+    document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
+        configureHeader();
+    });
+
+})();
+</script>
+
+    <main class="flex flex-col flex-1 pb-24">
+        <!-- 订单筛选与排序区域 -->
+        <section id="OrderFilterAndSortSection" class="p-4 bg-base-100 sticky top-[56px] z-30 border-b border-base-300 hidden">
+            <div class="flex items-center justify-end gap-2">
+                <div class="dropdown dropdown-end">
+                    <button tabindex="0" role="button" class="btn btn-ghost btn-sm touch-target flex items-center gap-1">
+                        <span class="iconify" data-icon="heroicons:funnel" data-width="16"></span>
+                        <span>筛选</span>
+                    </button>
+                    <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-200 rounded-box w-40 mt-2">
+                        <li><a>全部</a></li>
+                        <li><a>待付款</a></li>
+                        <li><a>待发货</a></li>
+                        <li><a>已完成</a></li>
+                        <li><a>已取消</a></li>
+                    </ul>
+                </div>
+                <div class="dropdown dropdown-end">
+                    <button tabindex="0" role="button" class="btn btn-ghost btn-sm touch-target flex items-center gap-1">
+                        <span class="iconify" data-icon="heroicons:arrows-up-down" data-width="16"></span>
+                        <span>排序</span>
+                    </button>
+                    <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-200 rounded-box w-52 mt-2">
+                        <li><a>时间：从新到旧</a></li>
+                        <li><a>时间：从旧到新</a></li>
+                        <li><a>金额：从高到低</a></li>
+                        <li><a>金额：从低到高</a></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 订单列表区域 -->
+        <section id="OrderListSection" class="p-4 flex flex-col gap-4 hidden">
+            <!-- 订单卡片 1: 已完成 -->
+            <div data-repeatable="true" class="card card-surface elevated-surface rounded-lg overflow-hidden">
+                <div class="p-4">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs text-secondary-gray">订单号: 20251012001</span>
+                        <div class="badge badge-success badge-sm text-success-content">已完成</div>
+                    </div>
+                    <div class="flex gap-4">
+                        <img alt="无线降噪耳机" class="w-20 h-20 object-cover rounded-md border border-base-300 flex-shrink-0" data-src="placehold.co/80x80.png?text=Wireless+Earphones">
+                        <div class="flex-1">
+                            <p class="font-semibold text-sm line-clamp-2 spacious-text">新款无线降噪耳机，沉浸式音质体验</p>
+                            <p class="text-xs text-secondary-gray mt-1">x 1</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-t border-base-300 p-4">
+                    <div class="flex justify-end items-center mb-4">
+                        <p class="text-sm">总金额: <span class="font-bold text-lg text-primary">¥799.00</span></p>
+                    </div>
+                    <div class="card-actions justify-end gap-2">
+                        <button class="btn btn-ghost btn-sm" onclick="navigateTo(&#39;customer_service_chat_page&#39;)">发起售后</button>
+                        <button class="btn btn-primary btn-sm" onclick="navigateTo(&#39;payment_selection_page&#39;)">再次购买</button>
+                    </div>
+                </div>
+                <div class="collapse collapse-arrow bg-base-200/50 rounded-none">
+                    <input type="checkbox" class="peer">
+                    <div class="collapse-title text-xs font-medium min-h-0 py-3">查看配送与支付详情</div>
+                    <div class="collapse-content text-xs bg-base-200/50">
+                        <div class="px-4 pb-4 flex flex-col gap-3">
+                            <div>
+                                <h4 class="font-semibold mb-1">配送信息</h4>
+                                <p class="text-secondary-gray">快递单号: SF123456789</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">支付详情</h4>
+                                <p class="text-secondary-gray">支付时间: 2025-10-12 14:30</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 订单卡片 2: 待付款 -->
+            <div data-repeatable="true" class="card card-surface elevated-surface rounded-lg overflow-hidden">
+                <div class="p-4">
+                     <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs text-secondary-gray">订单号: 20251018005</span>
+                        <div class="badge badge-warning badge-sm text-warning-content">待付款</div>
+                    </div>
+                    <div class="flex gap-4">
+                        <img alt="智能手表" class="w-20 h-20 object-cover rounded-md border border-base-300 flex-shrink-0" data-src="placehold.co/80x80.png?text=Smart+Watch">
+                        <div class="flex-1">
+                            <p class="font-semibold text-sm line-clamp-2 spacious-text">多功能智能手表，健康监测与运动伴侣</p>
+                            <p class="text-xs text-secondary-gray mt-1">x 1</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-t border-base-300 p-4">
+                    <div class="flex justify-end items-center mb-4">
+                        <p class="text-sm">需付款: <span class="font-bold text-lg text-warning">¥1299.00</span></p>
+                    </div>
+                    <div class="card-actions justify-end gap-2">
+                        <button class="btn btn-ghost btn-sm" onclick="cancelOrder()">取消订单</button>
+                        <button class="btn btn-warning btn-sm" onclick="navigateTo(&#39;payment_selection_page&#39;)">立即支付</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 订单卡片 3: 待发货 -->
+            <div data-repeatable="true" class="card card-surface elevated-surface rounded-lg overflow-hidden">
+                 <div class="p-4">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs text-secondary-gray">订单号: 20251017003</span>
+                        <div class="badge badge-info badge-sm text-info-content">待发货</div>
+                    </div>
+                    <div class="flex gap-4">
+                        <img alt="机械键盘" class="w-20 h-20 object-cover rounded-md border border-base-300 flex-shrink-0" data-src="placehold.co/80x80.png?text=Mechanical+Keyboard">
+                        <div class="flex-1">
+                            <p class="font-semibold text-sm line-clamp-2 spacious-text">RGB幻彩机械键盘，青轴手感</p>
+                            <p class="text-xs text-secondary-gray mt-1">x 1</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-t border-base-300 p-4">
+                    <div class="flex justify-end items-center mb-4">
+                         <p class="text-sm">总金额: <span class="font-bold text-lg text-primary">¥459.00</span></p>
+                    </div>
+                    <div class="card-actions justify-end gap-2">
+                        <button class="btn btn-primary btn-sm" onclick="navigateTo(&#39;customer_service_chat_page&#39;)">催发货</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 订单卡片 4: 已取消 -->
+            <div data-repeatable="true" class="card card-surface elevated-surface rounded-lg overflow-hidden opacity-60">
+                <div class="p-4">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs text-secondary-gray">订单号: 20251015002</span>
+                        <div class="badge badge-neutral badge-sm">已取消</div>
+                    </div>
+                    <div class="flex gap-4">
+                        <img alt="便携显示器" class="w-20 h-20 object-cover rounded-md border border-base-300 flex-shrink-0" data-src="placehold.co/80x80.png?text=Portable+Monitor">
+                        <div class="flex-1">
+                            <p class="font-semibold text-sm line-clamp-2 spacious-text">15.6英寸超薄便携显示器</p>
+                            <p class="text-xs text-secondary-gray mt-1">x 1</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-t border-base-300 p-4">
+                    <div class="flex justify-end items-center">
+                        <p class="text-sm">总金额: <span class="font-bold text-lg text-base-content/50 line-through">¥999.00</span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 空订单记录提示 -->
+        <section id="EmptyOrderSection" class="flex-1 flex flex-col items-center justify-center p-8 text-center">
+            <span class="iconify text-base-content/30" data-icon="heroicons:archive-box-x-mark" data-width="80"></span>
+            <p class="text-base-content/70 mt-6 mb-8 spacious-text">您还没有任何订单哦~</p>
+            <button class="btn btn-primary" onclick="navigateTo(&#39;home_page&#39;)">去逛逛</button>
+        </section>
+    </main>
+
+    <div data-section-id="common_bottom_dock" data-section-type="common_section" class="fixed bottom-0 left-0 right-0 z-40 bg-base-200 border-t border-base-300 safe-area-bottom elevated-surface">
+    <div class="dock bg-base-200 py-2 px-4 justify-center">
+        <!-- 主页 -->
+        <button class="dock-item dock-item-active flex-col items-center justify-center touch-target" data-tab-id="home_page" onclick="navigateTo(&#39;home_page&#39;)">
+            <span class="iconify text-xl mb-1" data-icon="heroicons:home" data-width="24"></span>
+            <span class="dock-item-label text-xs">主页</span>
+        </button>
+
+        <!-- 购物车 -->
+        <div class="indicator">
+            <span class="indicator-item badge badge-primary cart-badge hidden">0</span>
+            <button class="dock-item flex-col items-center justify-center touch-target" data-tab-id="shopping_cart_page" onclick="navigateTo(&#39;shopping_cart_page&#39;)">
+                <span class="iconify text-xl mb-1" data-icon="heroicons:shopping-cart" data-width="24"></span>
+                <span class="dock-item-label text-xs">购物车</span>
+            </button>
+        </div>
+
+        <!-- 消息 -->
+        <button class="dock-item flex-col items-center justify-center touch-target" data-tab-id="messages_page" onclick="navigateTo(&#39;messages_page&#39;)">
+            <span class="iconify text-xl mb-1" data-icon="heroicons:chat-bubble-left-right" data-width="24"></span>
+            <span class="dock-item-label text-xs">消息</span>
+        </button>
+
+        <!-- 我的 -->
+        <button class="dock-item flex-col items-center justify-center touch-target" data-tab-id="my_page" onclick="navigateTo(&#39;my_page&#39;)">
+            <span class="iconify text-xl mb-1" data-icon="heroicons:user" data-width="24"></span>
+            <span class="dock-item-label text-xs">我的</span>
+        </button>
+    </div>
+</div>
+
+<style>
+[data-section-id="common_bottom_dock"] .dock {
+    height: 56px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    max-width: 402px;
+    margin: 0 auto;
+}
+
+[data-section-id="common_bottom_dock"] .dock-item {
+    background: transparent;
+    border: none;
+    padding: 4px 8px;
+    border-radius: var(--radius-selector);
+    min-width: 60px;
+    color: var(--color-accent);
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+[data-section-id="common_bottom_dock"] .dock-item:hover {
+    background-color: var(--color-base-300);
+}
+
+[data-section-id="common_bottom_dock"] .dock-item-active {
+    color: var(--color-primary) !important;
+}
+
+[data-section-id="common_bottom_dock"] .dock-item-active .iconify {
+    color: var(--color-primary);
+}
+
+[data-section-id="common_bottom_dock"] .dock-item-label {
+    font-size: 12px;
+    line-height: 1;
+    margin-top: 2px;
+}
+
+[data-section-id="common_bottom_dock"] .dock-item:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
+}
+
+[data-section-id="common_bottom_dock"] .cart-badge {
+    font-size: 10px;
+    min-height: 16px;
+    height: 16px;
+    padding: 0 4px;
+}
+
+/* Add bottom padding to body to prevent content from being hidden behind dock */
+body {
+    padding-bottom: 72px; /* 56px dock height + 16px safe area */
+}
+</style>
+
+<script>
+(function() {
+    // Function to update active tab in bottom dock
+    window.updateBottomDockActive = function(activeTabId) {
+        const dockItems = document.querySelectorAll(&#39;[data-section-id="common_bottom_dock"] .dock-item&#39;);
+        dockItems.forEach(item => {
+            if (item.dataset.tabId === activeTabId) {
+                item.classList.add(&#39;dock-item-active&#39;);
+            } else {
+                item.classList.remove(&#39;dock-item-active&#39;);
+            }
+        });
+    };
+
+    // Function to update cart badge
+    function updateCartBadge() {
+        const cartBadge = document.querySelector(&#39;[data-section-id="common_bottom_dock"] .cart-badge&#39;);
+        const count = window.getCartItemCount ? window.getCartItemCount() : 0;
+        if (cartBadge) {
+            if (count > 0) {
+                cartBadge.textContent = count > 99 ? &#39;99+&#39; : count;
+                cartBadge.classList.remove(&#39;hidden&#39;);
+            } else {
+                cartBadge.classList.add(&#39;hidden&#39;);
+            }
+        }
+    }
+
+    // Add ripple effect on touch
+    document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
+        const dockItems = document.querySelectorAll(&#39;[data-section-id="common_bottom_dock"] .dock-item&#39;);
+        dockItems.forEach(item => {
+            item.addEventListener(&#39;touchstart&#39;, function() {
+                this.style.transform = &#39;scale(0.95)&#39;;
+            });
+            
+            item.addEventListener(&#39;touchend&#39;, function() {
+                setTimeout(() => {
+                    this.style.transform = &#39;scale(1)&#39;;
+                }, 100);
+            });
+        });
+
+        // Initial cart badge update
+        updateCartBadge();
+    });
+
+    // Listen for cart updates to refresh badge
+    document.addEventListener(&#39;cartUpdated&#39;, updateCartBadge);
+
+})();
+</script>
+    <script>
+/* JavaScript code for common usage, should be wrapped in a closure */
+(function() {
+    // Navigation function for page transitions
+    window.navigateTo = function(targetPageId) {
+        // Trigger navigation to another page using the provided snippet
+        const isInIframe = window.self !== window.top;
+        const targetFileName = `${targetPageId}.html`;
+        if (isInIframe) {
+            window.parent.postMessage({
+                type: &#39;iframeNavigation&#39;,
+                targetPageId: targetPageId
+            }, &#39;*&#39;);
+        } else {
+            window.location.href = targetFileName;
+        }
+    };
+
+    // Utility function to handle back navigation
+    window.handleBackNavigation = function() {
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            navigateTo(&#39;home_page&#39;);
+        }
+    };
+
+    // Function to show toast notifications
+    window.showToast = function(message, type = &#39;info&#39;) {
+        const toast = document.createElement(&#39;div&#39;);
+        toast.className = `toast toast-bottom toast-center z-50`;
+        toast.innerHTML = `<div class="alert alert-${type}"><span>${message}</span></div>`;
+        document.body.appendChild(toast);
+        
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        }, 3000);
+    };
+
+    // Smooth scroll to top function
+    window.scrollToTop = function() {
+        window.scrollTo({
+            top: 0,
+            behavior: &#39;smooth&#39;
+        });
+    };
+
+    // Function to update bottom dock active state
+    window.updateBottomDockActive = function(activeTabId) {
+        const dockItems = document.querySelectorAll(&#39;[data-section-id="common_bottom_dock"] .dock-item&#39;);
+        dockItems.forEach(item => {
+            if (item.dataset.tabId === activeTabId) {
+                item.classList.add(&#39;dock-item-active&#39;);
+            } else {
+                item.classList.remove(&#39;dock-item-active&#39;);
+            }
+        });
+    };
+
+    // Initialize global app state
+    window.APP_GLOBALS = window.APP_GLOBALS || {};
+    
+    // Shopping cart management
+    window.APP_GLOBALS.cart = window.APP_GLOBALS.cart || [];
+    
+    window.addToCart = function(product) {
+        const existingItem = window.APP_GLOBALS.cart.find(item => item.id === product.id);
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            window.APP_GLOBALS.cart.push({...product, quantity: 1});
+        }
+        showToast(&#39;商品已添加到购物车&#39;, &#39;success&#39;);
+        updateCartBadge();
+    };
+
+    window.removeFromCart = function(productId) {
+        window.APP_GLOBALS.cart = window.APP_GLOBALS.cart.filter(item => item.id !== productId);
+        updateCartBadge();
+    };
+
+    window.updateCartQuantity = function(productId, quantity) {
+        const item = window.APP_GLOBALS.cart.find(item => item.id === productId);
+        if (item) {
+            if (quantity <= 0) {
+                removeFromCart(productId);
+            } else {
+                item.quantity = quantity;
+            }
+        }
+        updateCartBadge();
+    };
+
+    window.getCartTotal = function() {
+        return window.APP_GLOBALS.cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    };
+
+    window.getCartItemCount = function() {
+        return window.APP_GLOBALS.cart.reduce((total, item) => total + item.quantity, 0);
+    };
+
+    function updateCartBadge() {
+        const cartBadge = document.querySelector(&#39;[data-section-id="common_bottom_dock"] .cart-badge&#39;);
+        const count = getCartItemCount();
+        if (cartBadge) {
+            if (count > 0) {
+                cartBadge.textContent = count > 99 ? &#39;99+&#39; : count;
+                cartBadge.classList.remove(&#39;hidden&#39;);
+            } else {
+                cartBadge.classList.add(&#39;hidden&#39;);
+            }
+        }
+    }
+
+    // User session management
+    window.APP_GLOBALS.user = window.APP_GLOBALS.user || null;
+    window.APP_GLOBALS.isAdmin = window.APP_GLOBALS.isAdmin || false;
+
+    window.setUser = function(user, isAdmin = false) {
+        window.APP_GLOBALS.user = user;
+        window.APP_GLOBALS.isAdmin = isAdmin;
+    };
+
+    window.logout = function() {
+        window.APP_GLOBALS.user = null;
+        window.APP_GLOBALS.isAdmin = false;
+        window.APP_GLOBALS.cart = [];
+        navigateTo(&#39;login_selection_page&#39;);
+    };
+
+    // Form validation utilities
+    window.validateEmail = function(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    };
+
+    window.validatePhone = function(phone) {
+        const re = /^1[3-9]\d{9}$/;
+        return re.test(phone);
+    };
+
+    window.validatePassword = function(password) {
+        return password.length >= 6;
+    };
+
+})();
+</script>
+    <script>
+document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
+    // Configure the header for the order history page
+    if (window.configureHeader) {
+        window.configureHeader({
+            title: &#39;订单记录&#39;,
+            showBackButton: true
+        });
+    }
+
+    // Set the active tab in the bottom navigation dock
+    if (window.updateBottomDockActive) {
+        window.updateBottomDockActive(&#39;my_page&#39;);
+    }
+
+    // This logic determines whether to show the order list or the empty state.
+    // To demonstrate the empty state as default per instructions, `hasOrders` is false.
+    // To see the populated list, change `hasOrders` to true.
+    const hasOrders = false; // Set to `true` to view the order list
+
+    const orderListSection = document.getElementById(&#39;OrderListSection&#39;);
+    const filterSortSection = document.getElementById(&#39;OrderFilterAndSortSection&#39;);
+    const emptySection = document.getElementById(&#39;EmptyOrderSection&#39;);
+
+    if (hasOrders) {
+        orderListSection.classList.remove(&#39;hidden&#39;);
+        filterSortSection.classList.remove(&#39;hidden&#39;);
+        emptySection.classList.add(&#39;hidden&#39;);
+    } else {
+        orderListSection.classList.add(&#39;hidden&#39;);
+        filterSortSection.classList.add(&#39;hidden&#39;);
+        emptySection.classList.remove(&#39;hidden&#39;);
+    }
+
+    // Close dropdown on item click
+    const dropdownItems = document.querySelectorAll(&#39;.dropdown-content a&#39;);
+    dropdownItems.forEach(item => {
+        item.addEventListener(&#39;click&#39;, () => {
+            const dropdown = item.closest(&#39;.dropdown&#39;);
+            if (dropdown &amp;&amp; dropdown.hasAttribute(&#39;tabindex&#39;)) {
+               dropdown.blur();
+            }
+        });
+    });
+
+});
+
+// Stub function for cancelling an order
+function cancelOrder() {
+    // In a real app, this would trigger an API call.
+    if(window.showToast) {
+        window.showToast(&#39;订单已取消&#39;, &#39;info&#39;);
+    }
+    // Here you might remove the card or update its state visually.
+}
+</script>
+
+<script>
+    setTimeout(() => {
+      Holder.run({
+        domain: "placehold.co"
+      })
+    }, 100)
+  </script></body></html>'></iframe>
+                    </div>
+                  </div>
+
+                </body>
+                </html>
+            

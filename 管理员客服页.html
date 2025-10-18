@@ -1,0 +1,868 @@
+
+                <!DOCTYPE html>
+                <html lang="zh">
+                <head>
+                  <meta charset="UTF-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  <title>管理员客服页</title>
+                  <style>
+                    *,
+                    *::before,
+                    *::after {
+                      box-sizing: border-box;
+                      margin: 0;
+                    }
+                    .iframe-outer {
+                      position: fixed;
+                      top: 0;
+                      left: 0;
+                      bottom: 0;
+                      right: 0;
+                      display: flex;
+                      justify-content: center;
+                      background-color: #E0E0E0;
+                    }
+                    .iframe-wrapper {
+                      width: 100%;
+                      height: 100%;
+                      margin: 0 auto;
+                      transform-origin: center top;
+                      flex-shrink: 0;
+                    }
+                    #dynamicIframe {
+                      border: none;
+                      width: 100%;
+                      height: 100%;
+                    }
+                  </style>
+                  <script>
+                const width = 402
+                const height = 874
+                const resolutionRatio = width && height ? width / height : 1
+                const pageNameMap = {
+                  'login_selection_page': '登录选择页',
+    'admin_login_page': '管理员登录页',
+    'user_login_page': '用户登录页',
+    'product_detail_page': '商品详情页',
+    'payment_selection_page': '支付方式选择页',
+    'pending_order_page': '待处理订单页',
+    'shopping_cart_page': '购物车页',
+    'messages_page': '消息页',
+    'customer_service_chat_page': '客服聊天页',
+    'my_page': '我的页',
+    'user_info_page': '用户信息页',
+    'order_history_page': '订单记录页',
+    'settings_page': '设置页',
+    'admin_dashboard_page': '管理员仪表盘',
+    'admin_product_management_page': '商品管理页',
+    'admin_customer_service_page': '管理员客服页',
+    'page_857254': '封号页',
+    'page_860225': '订单管理页面',
+    'page_861458': '主页',
+    'page_863059': '微信支付',
+    'page_863244': '论坛交流'
+                }
+                function setIframeSize(w, h) {
+                  const currentContainerRadio = w / h
+                  let widthValue = w
+                  let heightValue = h
+                  let zoom = 1
+                  if (currentContainerRadio > resolutionRatio) {
+                    widthValue = h * resolutionRatio
+                    heightValue = h
+                  } else {
+                    widthValue = w
+                    heightValue = w / resolutionRatio
+                  }
+                  zoom = width ? widthValue / width : 1
+                  return {
+                    width: widthValue / zoom + 'px',
+                    height: heightValue / zoom + 'px',
+                    zoom,
+                  }
+                }
+                function adjustIframeSize() {
+                  const iframeWrapper = document.querySelector(".iframe-wrapper")
+                  const { width, height, zoom } = setIframeSize(window.innerWidth, window.innerHeight)
+                  iframeWrapper.style.height = height
+                  iframeWrapper.style.width = width
+                  iframeWrapper.style.transform = 'scale(' + zoom + ')'
+                }
+                function sanitizeFilename(name) {
+                  return name.replace(/[\/:*?"<>|]/g, '_')
+                }
+                function handlePostMessage(event) {
+                  if (!event.data) {
+                    return
+                  }
+                  const { type, targetPageId } = event.data
+                  const targetPageName = pageNameMap[targetPageId]
+                  if (type === "iframeNavigation" && targetPageId && targetPageName) {
+                    window.location.href = targetPageName + '.html'
+                  }
+                }
+                window.addEventListener('message', handlePostMessage)
+                window.onload = adjustIframeSize
+                window.onresize = adjustIframeSize
+                window.onunload = () => {
+                  window.removeEventListener('message', handlePostMessage)
+                }
+              </script>
+                </head>
+                <body>
+                  <div class="iframe-outer">
+                    <div class="iframe-wrapper">
+                      <iframe id="dynamicIframe" srcdoc='<html lang="zh" data-theme="business"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>管理员客服页</title>
+    <link href="./assets/static/uxbot/daisyui@5.css" rel="stylesheet" type="text/css">
+    <script src="./assets/static/uxbot/tailwind-browser@4.js"></script>
+    <link href="./assets/static/uxbot/daisyui-themes.css" rel="stylesheet" type="text/css">
+    <script src="./assets/3/3.1.1/iconify.min.js"></script>
+    <style>
+/* CSS code for common usage*/
+/* daisyUI Theme Variables Customization
+* Based on the selected daisyUI theme and UI guidance requirements,
+* customize only the CSS variables that need to be different from the theme defaults.
+* Available theme variables for customization:
+*/
+
+/* Only modify if different from chosen theme defaults */
+:root {
+    /* Brand Colors based on UI guidance - deep navy blue corporate theme */
+    --color-primary: rgba(10, 28, 63, 1); /* #0A1C3F deep navy blue for CTAs */
+    --color-primary-content: rgba(248, 248, 248, 1); /* Off-white text on primary */
+    --color-secondary: rgba(44, 44, 44, 1); /* #2C2C2C charcoal for secondary elements */
+    --color-secondary-content: rgba(248, 248, 248, 1);
+    --color-accent: rgba(107, 114, 128, 1); /* #6B7280 medium grey for accents */
+    --color-accent-content: rgba(255, 255, 255, 1);
+
+    /* Base colors for dark corporate background */
+    --color-base-100: rgba(26, 26, 26, 1); /* #1A1A1A charcoal main background */
+    --color-base-200: rgba(44, 44, 44, 1); /* #2C2C2C graphite for cards */
+    --color-base-300: rgba(75, 85, 99, 1); /* #4B5563 for borders */
+    --color-base-content: rgba(248, 248, 248, 1); /* #F8F8F8 off-white text */
+
+    /* Semantic colors - muted and desaturated */
+    --color-success: rgba(34, 139, 34, 1); /* #228B22 muted dark green */
+    --color-success-content: rgba(255, 255, 255, 1);
+    --color-warning: rgba(184, 134, 11, 1); /* #B8860B subtle amber */
+    --color-warning-content: rgba(0, 0, 0, 1);
+    --color-error: rgba(139, 69, 19, 1); /* #8B4513 deep muted red */
+    --color-error-content: rgba(255, 255, 255, 1);
+    --color-info: rgba(70, 130, 180, 1); /* #4682B4 desaturated blue */
+    --color-info-content: rgba(255, 255, 255, 1);
+
+    /* Border radius for restrained rounded corners */
+    --radius-box: 0.375rem; /* 6px rounded corners */
+    --radius-field: 0.5rem; /* 8px for input fields */
+    --radius-selector: 0.25rem; /* 4px for smaller elements */
+
+    /* Border for subtle separations */
+    --border: 1px;
+}
+
+/* Mobile-specific optimizations */
+.mobile-container {
+    max-width: 402px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background-color: var(--color-base-100);
+}
+
+/* Touch-friendly buttons and interactive elements */
+.touch-target {
+    min-height: 48px;
+    min-width: 48px;
+}
+
+/* Secondary text color for metadata */
+.text-secondary-gray {
+    color: rgba(156, 163, 175, 1); /* #9CA3AF lighter grey for secondary text */
+}
+
+/* Safe area padding for mobile devices */
+.safe-area-top {
+    padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Material and craftsmanship feel with subtle micro-textures */
+.card-surface {
+    background: linear-gradient(135deg, var(--color-base-200) 0%, rgba(44, 44, 44, 0.95) 100%);
+    backdrop-filter: blur(10px);
+}
+
+/* Subtle shadow effects for depth */
+.elevated-surface {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+/* Typography adjustments for spacious line height */
+.spacious-text {
+    line-height: 1.6;
+}
+
+.comfortable-spacing {
+    margin-bottom: 1rem;
+}
+</style>
+    <style>
+/* Page-specific styles for admin customer service */
+.mobile-container::before {
+    content: &#39;&#39;;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.02) 1px, transparent 0);
+    background-size: 24px 24px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+main {
+    position: relative;
+    z-index: 1;
+}
+
+#AdminChatMessages {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+#AdminChatMessages::-webkit-scrollbar {
+    display: none;
+}
+
+/* Chat bubble with material feel and restrained rounded corners */
+.chat-bubble {
+    border-radius: var(--radius-box);
+    box-shadow: 0 2px 4px -2px rgba(0,0,0,0.2), 0 4px 5px -2px rgba(0,0,0,0.14);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(8px);
+}
+
+.chat-bubble-primary {
+    background: linear-gradient(135deg, var(--color-primary), oklab(from var(--color-primary) l-0.05 c h));
+}
+
+.chat-bubble-secondary {
+    background: var(--color-base-300);
+}
+
+/* Avatar styling */
+.chat-image .w-10 {
+    border-radius: var(--radius-box);
+}
+
+/* Input area styling */
+#AdminChatInput {
+    border-top: 1px solid var(--color-base-300);
+}
+
+#chatInput {
+    transition: all 0.2s ease-in-out;
+    border-radius: var(--radius-field);
+    min-height: 48px;
+    border-color: var(--color-base-300);
+}
+
+#chatInput:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px var(--color-primary-content/10);
+    outline: none;
+}
+
+#chatInput:disabled {
+    background-color: var(--color-base-200);
+    opacity: 0.6;
+}
+
+/* Button enhancements */
+.btn-circle {
+    border-radius: var(--radius-box);
+}
+
+.btn:disabled {
+    background-color: var(--color-base-300);
+    color: var(--color-base-content);
+    opacity: 0.5;
+}
+
+#newRequestAlert {
+    animation: slideInUp 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.chat {
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Emphasis on &#39;转人工&#39; text */
+.chat-bubble .font-bold {
+    color: var(--color-base-content); /* Ensures high contrast */
+    font-weight: 700;
+}
+</style>
+<script src="https://assets.qingshuxuetang.com/static/uxbot/25_6/holder.js"></script></head>
+<body class="bg-base-100">
+    <div class="flex flex-col h-screen mobile-container">
+        <!-- Header -->
+        <div data-section-id="common_header" data-section-type="common_header" class="sticky top-0 z-40 bg-base-200 border-b border-base-300 safe-area-top elevated-surface">
+    <div class="navbar px-4 py-2 min-h-14">
+        <!-- Left side - Back button -->
+        <div class="navbar-start">
+            <button class="btn btn-ghost btn-sm btn-circle touch-target header-back-btn" onclick="handleBackNavigation()">
+                <span class="iconify text-base-content" data-icon="heroicons:arrow-left" data-width="20"></span>
+            </button>
+        </div>
+
+        <!-- Center - Title or Search -->
+        <div class="navbar-center flex-1 mx-4">
+            <!-- Default title display -->
+            <h1 class="text-lg font-semibold text-base-content header-title w-max spacious-text">页面标题</h1>
+            
+            <!-- Search input (hidden by default) -->
+            <div class="form-control w-full max-w-xs header-search hidden">
+                <input type="text" placeholder="搜索商品..." class="input input-bordered input-sm w-full bg-base-100 text-base-content">
+            </div>
+        </div>
+
+        <!-- Right side - Action buttons -->
+        <div class="navbar-end">
+            <!-- Search toggle button -->
+            <button class="btn btn-ghost btn-sm btn-circle touch-target header-search-btn hidden">
+                <span class="iconify text-base-content" data-icon="heroicons:magnifying-glass" data-width="20"></span>
+            </button>
+
+            <!-- Cart button with badge -->
+            <div class="indicator header-cart-btn hidden">
+                <span class="indicator-item badge badge-primary cart-badge hidden">0</span>
+                <button class="btn btn-ghost btn-sm btn-circle touch-target" onclick="navigateTo(&#39;shopping_cart_page&#39;)">
+                    <span class="iconify text-base-content" data-icon="heroicons:shopping-cart" data-width="20"></span>
+                </button>
+            </div>
+
+            <!-- More options menu -->
+            <div class="dropdown dropdown-end header-more-menu hidden">
+                <button tabindex="0" class="btn btn-ghost btn-sm btn-circle touch-target">
+                    <span class="iconify text-base-content" data-icon="heroicons:ellipsis-vertical" data-width="20"></span>
+                </button>
+                <ul tabindex="0" class="dropdown-content z-50 menu p-2 shadow bg-base-200 rounded-box w-52 mt-2 elevated-surface">
+                    <li><a onclick="showToast(&#39;分享功能开发中&#39;)" class="text-base-content">分享</a></li>
+                    <li><a onclick="showToast(&#39;举报功能开发中&#39;)" class="text-base-content">举报</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+[data-section-id="common_header"] .navbar {
+    height: 56px;
+}
+
+[data-section-id="common_header"] .header-back-btn:hover {
+    background-color: var(--color-base-300);
+    transition: background-color 0.2s ease;
+}
+
+[data-section-id="common_header"] .header-title {
+    text-align: center;
+    line-height: 1.2;
+}
+
+[data-section-id="common_header"] .header-search input:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+[data-section-id="common_header"] .btn-circle:hover {
+    transform: scale(1.05);
+    transition: transform 0.1s ease;
+}
+
+[data-section-id="common_header"] .cart-badge {
+    font-size: 10px;
+    min-height: 16px;
+    height: 16px;
+    padding: 0 4px;
+}
+</style>
+
+<script>
+(function() {
+    // Header configuration function
+    window.configureHeader = function(options = {}) {
+        const header = document.querySelector(&#39;[data-section-id="common_header"]&#39;);
+        if (!header) return;
+
+        const {
+            title = &#39;页面标题&#39;,
+            showBackButton = true,
+            showSearchButton = false,
+            showSearchInput = false,
+            showCartButton = false,
+            showMoreMenu = false,
+            onSearch = null,
+            onCart = null
+        } = options;
+
+        // Update title
+        const titleElement = header.querySelector(&#39;.header-title&#39;);
+        titleElement.textContent = title;
+
+        // Toggle back button
+        const backBtn = header.querySelector(&#39;.header-back-btn&#39;);
+        backBtn.style.display = showBackButton ? &#39;flex&#39; : &#39;none&#39;;
+
+        // Toggle search elements
+        const searchBtn = header.querySelector(&#39;.header-search-btn&#39;);
+        const searchInput = header.querySelector(&#39;.header-search&#39;);
+        searchBtn.classList.toggle(&#39;hidden&#39;, !showSearchButton);
+        searchInput.classList.toggle(&#39;hidden&#39;, !showSearchInput);
+        titleElement.classList.toggle(&#39;hidden&#39;, showSearchInput);
+
+        // Toggle cart button
+        const cartBtn = header.querySelector(&#39;.header-cart-btn&#39;);
+        cartBtn.classList.toggle(&#39;hidden&#39;, !showCartButton);
+
+        // Toggle more menu
+        const moreMenu = header.querySelector(&#39;.header-more-menu&#39;);
+        moreMenu.classList.toggle(&#39;hidden&#39;, !showMoreMenu);
+
+        // Handle search toggle
+        if (showSearchButton &amp;&amp; !showSearchInput) {
+            searchBtn.onclick = function() {
+                searchInput.classList.remove(&#39;hidden&#39;);
+                titleElement.classList.add(&#39;hidden&#39;);
+                searchBtn.classList.add(&#39;hidden&#39;);
+                const input = searchInput.querySelector(&#39;input&#39;);
+                input.focus();
+            };
+        }
+
+        // Handle search input
+        if (showSearchInput &amp;&amp; onSearch) {
+            const input = searchInput.querySelector(&#39;input&#39;);
+            input.addEventListener(&#39;input&#39;, function(e) {
+                onSearch(e.target.value);
+            });
+        }
+
+        // Update cart badge
+        if (showCartButton) {
+            updateCartBadge();
+        }
+    };
+
+    function updateCartBadge() {
+        const cartBadge = document.querySelector(&#39;[data-section-id="common_header"] .cart-badge&#39;);
+        const count = window.getCartItemCount ? window.getCartItemCount() : 0;
+        if (cartBadge) {
+            if (count > 0) {
+                cartBadge.textContent = count > 99 ? &#39;99+&#39; : count;
+                cartBadge.classList.remove(&#39;hidden&#39;);
+            } else {
+                cartBadge.classList.add(&#39;hidden&#39;);
+            }
+        }
+    }
+
+    // Default header configuration
+    document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
+        configureHeader();
+    });
+
+})();
+</script>
+
+        <!-- Main Chat Area -->
+        <main id="AdminChatMessages" class="flex-1 overflow-y-auto p-4 relative">
+            
+            <!-- Empty State - Default when no customer messages -->
+            <div id="emptyState" class="flex flex-col items-center justify-center h-full text-center space-y-6">
+                <div class="w-20 h-20 rounded-lg bg-base-200 flex items-center justify-center elevated-surface card-surface">
+                    <span class="iconify text-4xl text-base-content/40" data-icon="heroicons:chat-bubble-left-right" data-width="44"></span>
+                </div>
+                <div>
+                    <h3 class="text-lg font-medium text-base-content spacious-text">等待客户咨询</h3>
+                    <p class="text-sm text-base-content/60 spacious-text max-w-xs mt-2 comfortable-spacing">当有客户发送转人工请求时，对话将在此处显示。</p>
+                </div>
+            </div>
+
+            <!-- Chat Messages Container (Hidden by default) -->
+            <div id="chatContainer" class="space-y-6 hidden">
+                <!-- Date Divider -->
+                <div class="divider text-xs text-base-content/50 font-medium">今天 2025-10-18</div>
+
+                <!-- Initial User Message Requesting Service -->
+                <div data-type="container" data-repeatable="true" class="chat chat-start">
+                    <div class="chat-image">
+                        <div class="w-10 h-10 rounded-lg bg-base-300 flex items-center justify-center card-surface text-base-content font-bold">用</div>
+                    </div>
+                    <div class="flex flex-col items-start">
+                        <div class="chat-header text-xs text-base-content/60 mb-1 spacious-text">
+                            用户_138****1234
+                            <time class="ml-2 opacity-80">14:30</time>
+                        </div>
+                        <div data-type="text" class="chat-bubble chat-bubble-secondary spacious-text">您好，我想<span class="font-bold text-base-content">转人工</span>服务，咨询一下订单问题。</div>
+                    </div>
+                </div>
+            </div>
+
+             <!-- New Request Alert (Hidden by default) -->
+            <div id="newRequestAlert" class="hidden absolute bottom-4 left-4 right-4 z-50">
+                <div role="alert" class="alert alert-info elevated-surface">
+                    <span class="iconify" data-icon="heroicons:chat-bubble-left-ellipsis" data-width="24"></span>
+                    <div class="flex-1">
+                        <h3 class="font-bold">新的人工服务请求</h3>
+                        <div class="text-xs">一位客户正在请求帮助。</div>
+                    </div>
+                    <button class="btn btn-sm btn-primary" onclick="acceptChat()">接入</button>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Chat Input Area (Fixed at bottom) -->
+        <section id="AdminChatInput" class="fixed bottom-0 left-0 right-0 mx-auto max-w-[402px] bg-base-200 z-30 elevated-surface safe-area-bottom">
+            <div class="flex items-end gap-2 p-3 border-t border-base-300/50">
+                <button title="快捷回复" data-type="button" class="btn btn-ghost btn-circle touch-target" onclick="handleQuickReply()" disabled="">
+                    <span class="iconify text-base-content/70" data-icon="heroicons:bolt" data-width="20"></span>
+                </button>
+                <button title="上传图片" data-type="button" class="btn btn-ghost btn-circle touch-target" onclick="handleUploadImage()" disabled="">
+                    <span class="iconify text-base-content/70" data-icon="heroicons:photo" data-width="20"></span>
+                </button>
+                <textarea id="chatInput" placeholder="等待客户发起对话" rows="1" data-type="input" disabled="" class="textarea textarea-bordered flex-1 resize-none bg-base-100 text-base-content spacious-text"></textarea>
+                <button title="发送" data-type="button" id="sendButton" class="btn btn-primary btn-circle touch-target" onclick="sendMessage()" disabled="">
+                    <span class="iconify" data-icon="heroicons:paper-airplane" data-width="20"></span>
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+/* JavaScript code for common usage, should be wrapped in a closure */
+(function() {
+    // Navigation function for page transitions
+    window.navigateTo = function(targetPageId) {
+        // Trigger navigation to another page using the provided snippet
+        const isInIframe = window.self !== window.top;
+        const targetFileName = `${targetPageId}.html`;
+        if (isInIframe) {
+            window.parent.postMessage({
+                type: &#39;iframeNavigation&#39;,
+                targetPageId: targetPageId
+            }, &#39;*&#39;);
+        } else {
+            window.location.href = targetFileName;
+        }
+    };
+
+    // Utility function to handle back navigation
+    window.handleBackNavigation = function() {
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            navigateTo(&#39;home_page&#39;);
+        }
+    };
+
+    // Function to show toast notifications
+    window.showToast = function(message, type = &#39;info&#39;) {
+        const toast = document.createElement(&#39;div&#39;);
+        toast.className = `toast toast-bottom toast-center z-50`;
+        toast.innerHTML = `<div class="alert alert-${type}"><span>${message}</span></div>`;
+        document.body.appendChild(toast);
+        
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        }, 3000);
+    };
+
+    // Smooth scroll to top function
+    window.scrollToTop = function() {
+        window.scrollTo({
+            top: 0,
+            behavior: &#39;smooth&#39;
+        });
+    };
+
+    // Function to update bottom dock active state
+    window.updateBottomDockActive = function(activeTabId) {
+        const dockItems = document.querySelectorAll(&#39;[data-section-id="common_bottom_dock"] .dock-item&#39;);
+        dockItems.forEach(item => {
+            if (item.dataset.tabId === activeTabId) {
+                item.classList.add(&#39;dock-item-active&#39;);
+            } else {
+                item.classList.remove(&#39;dock-item-active&#39;);
+            }
+        });
+    };
+
+    // Initialize global app state
+    window.APP_GLOBALS = window.APP_GLOBALS || {};
+    
+    // Shopping cart management
+    window.APP_GLOBALS.cart = window.APP_GLOBALS.cart || [];
+    
+    window.addToCart = function(product) {
+        const existingItem = window.APP_GLOBALS.cart.find(item => item.id === product.id);
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            window.APP_GLOBALS.cart.push({...product, quantity: 1});
+        }
+        showToast(&#39;商品已添加到购物车&#39;, &#39;success&#39;);
+        updateCartBadge();
+    };
+
+    window.removeFromCart = function(productId) {
+        window.APP_GLOBALS.cart = window.APP_GLOBALS.cart.filter(item => item.id !== productId);
+        updateCartBadge();
+    };
+
+    window.updateCartQuantity = function(productId, quantity) {
+        const item = window.APP_GLOBALS.cart.find(item => item.id === productId);
+        if (item) {
+            if (quantity <= 0) {
+                removeFromCart(productId);
+            } else {
+                item.quantity = quantity;
+            }
+        }
+        updateCartBadge();
+    };
+
+    window.getCartTotal = function() {
+        return window.APP_GLOBALS.cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    };
+
+    window.getCartItemCount = function() {
+        return window.APP_GLOBALS.cart.reduce((total, item) => total + item.quantity, 0);
+    };
+
+    function updateCartBadge() {
+        const cartBadge = document.querySelector(&#39;[data-section-id="common_bottom_dock"] .cart-badge&#39;);
+        const count = getCartItemCount();
+        if (cartBadge) {
+            if (count > 0) {
+                cartBadge.textContent = count > 99 ? &#39;99+&#39; : count;
+                cartBadge.classList.remove(&#39;hidden&#39;);
+            } else {
+                cartBadge.classList.add(&#39;hidden&#39;);
+            }
+        }
+    }
+
+    // User session management
+    window.APP_GLOBALS.user = window.APP_GLOBALS.user || null;
+    window.APP_GLOBALS.isAdmin = window.APP_GLOBALS.isAdmin || false;
+
+    window.setUser = function(user, isAdmin = false) {
+        window.APP_GLOBALS.user = user;
+        window.APP_GLOBALS.isAdmin = isAdmin;
+    };
+
+    window.logout = function() {
+        window.APP_GLOBALS.user = null;
+        window.APP_GLOBALS.isAdmin = false;
+        window.APP_GLOBALS.cart = [];
+        navigateTo(&#39;login_selection_page&#39;);
+    };
+
+    // Form validation utilities
+    window.validateEmail = function(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    };
+
+    window.validatePhone = function(phone) {
+        const re = /^1[3-9]\d{9}$/;
+        return re.test(phone);
+    };
+
+    window.validatePassword = function(password) {
+        return password.length >= 6;
+    };
+
+})();
+</script>
+    <script>
+document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
+    // Configure page header
+    if (window.configureHeader) {
+        window.configureHeader({
+            title: &#39;管理员客服&#39;,
+            showBackButton: true
+        });
+    }
+
+    const chatInput = document.getElementById(&#39;chatInput&#39;);
+    const sendButton = document.getElementById(&#39;sendButton&#39;);
+
+    // Auto-resize textarea
+    chatInput.addEventListener(&#39;input&#39;, function() {
+        this.style.height = &#39;auto&#39;;
+        this.style.height = (this.scrollHeight) + &#39;px&#39;;
+        // Enable/disable send button based on content
+        sendButton.disabled = this.value.trim() === &#39;&#39;;
+    });
+    
+    // Simulate a customer request arriving
+    setTimeout(() => {
+        const newRequestAlert = document.getElementById(&#39;newRequestAlert&#39;);
+        if (newRequestAlert) {
+            newRequestAlert.classList.remove(&#39;hidden&#39;);
+        }
+    }, 3000);
+});
+
+function acceptChat() {
+    // Hide alert and empty state
+    const newRequestAlert = document.getElementById(&#39;newRequestAlert&#39;);
+    const emptyState = document.getElementById(&#39;emptyState&#39;);
+    newRequestAlert.classList.add(&#39;hidden&#39;);
+    emptyState.classList.add(&#39;hidden&#39;);
+
+    // Show chat container
+    const chatContainer = document.getElementById(&#39;chatContainer&#39;);
+    chatContainer.classList.remove(&#39;hidden&#39;);
+
+    // Enable input controls
+    const chatInput = document.getElementById(&#39;chatInput&#39;);
+    const quickReplyBtn = document.querySelector(&#39;button[title="快捷回复"]&#39;);
+    const uploadImageBtn = document.querySelector(&#39;button[title="上传图片"]&#39;);
+    
+    chatInput.disabled = false;
+    chatInput.placeholder = &#39;输入回复消息...&#39;;
+    quickReplyBtn.disabled = false;
+    uploadImageBtn.disabled = false;
+    
+    chatInput.focus();
+
+    // Scroll to the bottom of the chat
+    const chatArea = document.getElementById(&#39;AdminChatMessages&#39;);
+    setTimeout(() => {
+        chatArea.scrollTop = chatArea.scrollHeight;
+    }, 100);
+    
+    // Send an initial automated response
+    setTimeout(() => {
+        const initialReply = "您好，我是人工客服，很高兴为您服务。请问有什么可以帮您？";
+        addMessage(initialReply, &#39;admin&#39;);
+    }, 1000);
+}
+
+function sendMessage() {
+    const chatInput = document.getElementById(&#39;chatInput&#39;);
+    const message = chatInput.value.trim();
+    if (message) {
+        addMessage(message, &#39;admin&#39;);
+        chatInput.value = &#39;&#39;;
+        chatInput.style.height = &#39;auto&#39;; // Reset height
+        document.getElementById(&#39;sendButton&#39;).disabled = true; // Disable after sending
+
+        // Simulate a user response for demo purposes
+        setTimeout(() => {
+            const userResponse = "好的，我的订单号是20251018XXXX，一直没有物流更新。";
+            addMessage(userResponse, &#39;user&#39;);
+        }, 1500);
+    }
+}
+
+function addMessage(text, sender) {
+    const chatContainer = document.getElementById(&#39;chatContainer&#39;);
+    const messageEl = document.createElement(&#39;div&#39;);
+    messageEl.setAttribute(&#39;data-type&#39;, &#39;container&#39;);
+    messageEl.setAttribute(&#39;data-repeatable&#39;, &#39;true&#39;);
+
+    const time = new Date().toLocaleTimeString(&#39;zh-CN&#39;, { hour: &#39;2-digit&#39;, minute: &#39;2-digit&#39; });
+
+    if (sender === &#39;admin&#39;) {
+        messageEl.className = &#39;chat chat-end&#39;;
+        messageEl.innerHTML = `
+            <div class="flex flex-col items-end">
+                <div class="chat-header text-xs text-base-content/60 mb-1 spacious-text">
+                    <time class="mr-2 opacity-80">${time}</time>
+                    客服_小王
+                </div>
+                <div data-type="text" class="chat-bubble chat-bubble-primary spacious-text">${text}</div>
+            </div>
+        `;
+    } else { // user
+        messageEl.className = &#39;chat chat-start&#39;;
+        messageEl.innerHTML = `
+            <div class="chat-image">
+                <div class="w-10 h-10 rounded-lg bg-base-300 flex items-center justify-center card-surface text-base-content font-bold">用</div>
+            </div>
+            <div class="flex flex-col items-start">
+                <div class="chat-header text-xs text-base-content/60 mb-1 spacious-text">
+                    用户_138****1234
+                    <time class="ml-2 opacity-80">${time}</time>
+                </div>
+                <div data-type="text" class="chat-bubble chat-bubble-secondary spacious-text">${text}</div>
+            </div>
+        `;
+    }
+    
+    chatContainer.appendChild(messageEl);
+
+    // Scroll to the new message
+    const chatArea = document.getElementById(&#39;AdminChatMessages&#39;);
+    chatArea.scrollTop = chatArea.scrollHeight;
+}
+
+function handleQuickReply() {
+    const chatInput = document.getElementById(&#39;chatInput&#39;);
+    if (!chatInput.disabled) {
+        const reply = "请您提供一下订单号，我帮您查询一下。";
+        chatInput.value = reply;
+        chatInput.focus();
+        chatInput.dispatchEvent(new Event(&#39;input&#39;)); // Trigger input event to resize and enable send button
+        showToast(&#39;已使用快捷回复&#39;, &#39;success&#39;);
+    }
+}
+
+function handleUploadImage() {
+    if (!document.getElementById(&#39;chatInput&#39;).disabled) {
+        showToast(&#39;图片上传功能开发中&#39;, &#39;info&#39;);
+    }
+}
+</script>
+
+<script>
+    setTimeout(() => {
+      Holder.run({
+        domain: "placehold.co"
+      })
+    }, 100)
+  </script></body></html>'></iframe>
+                    </div>
+                  </div>
+
+                </body>
+                </html>
+            
